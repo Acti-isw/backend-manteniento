@@ -1,0 +1,141 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model AccionesStock {
+  idAccion       Int              @id(map: "PK_idAccion") @default(autoincrement())
+  nombre         String           @db.VarChar(100)
+  createAT       DateTime?        @default(now(), map: "DF__AccionesS__creat__6A30C649") @db.DateTime
+  updateAT       DateTime?        @db.DateTime
+  isDelete       Boolean?         @default(false, map: "DF__AccionesS__isDel__6B24EA82")
+  idUsuario      Int?
+  Usuarios       Usuarios?        @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK__AccionesS__idUsu__4CA06362")
+  HistorialStock HistorialStock[]
+}
+
+model Categoria {
+  idCategoria Int       @id(map: "PK_idCategoria") @default(autoincrement())
+  nombre      String    @db.VarChar(100)
+  createAT    DateTime? @default(now(), map: "DF__Categoria__creat__5441852A") @db.DateTime
+  updateAT    DateTime? @db.DateTime
+  isDelete    Boolean?  @default(false, map: "DF__Categoria__isDel__5535A963")
+  idUsuario   Int?
+  Usuarios    Usuarios? @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK__Categoria__idUsu__46E78A0C")
+  Item        Item[]
+}
+
+model Herramientas {
+  idHerramientas            Int                         @id(map: "PK_idHerramientas") @default(autoincrement())
+  idItem                    Int?
+  codigoItson               String                      @db.VarChar(50)
+  disponible                Boolean?
+  createAT                  DateTime?                   @default(now(), map: "DF__Herramien__creat__75A278F5") @db.DateTime
+  updateAT                  DateTime?                   @db.DateTime
+  isDelete                  Boolean?                    @default(false, map: "DF__Herramien__isDel__76969D2E")
+  idUsuario                 Int?
+  Item                      Item?                       @relation(fields: [idItem], references: [idItem], onDelete: NoAction, onUpdate: NoAction, map: "FK__Herramien__idIte__5070F446")
+  Usuarios                  Usuarios?                   @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK__Herramien__idUsu__5165187F")
+  SalidaEntradaHerramientas SalidaEntradaHerramientas[]
+}
+
+model HistorialStock {
+  idHistorialStock Int            @id(map: "PK_idHistorialStock") @default(autoincrement())
+  stockAnterior    Int
+  stockNuevo       Int
+  idItem           Int?
+  idAccion         Int?
+  idUsuario        Int?
+  fecha            DateTime?      @default(now(), map: "DF__Historial__fecha__71D1E811") @db.DateTime
+  AccionesStock    AccionesStock? @relation(fields: [idAccion], references: [idAccion], onDelete: NoAction, onUpdate: NoAction, map: "FK__Historial__idAcc__4E88ABD4")
+  Item             Item?          @relation(fields: [idItem], references: [idItem], onDelete: NoAction, onUpdate: NoAction, map: "FK__Historial__idIte__4D94879B")
+  Usuarios         Usuarios?      @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK__Historial__idUsu__4F7CD00D")
+}
+
+model Inventario {
+  idInventario Int       @id(map: "PK_idInventario") @default(autoincrement())
+  idItem       Int?
+  stockActual  Int
+  stockMin     Int
+  stockMax     Int
+  createAT     DateTime? @default(now(), map: "DF__Inventari__creat__656C112C") @db.DateTime
+  updateAT     DateTime? @db.DateTime
+  isDelete     Boolean?  @default(false, map: "DF__Inventari__isDel__66603565")
+  idUsuario    Int?
+  Item         Item?     @relation(fields: [idItem], references: [idItem], onDelete: NoAction, onUpdate: NoAction, map: "FK__Inventari__idIte__4AB81AF0")
+  Usuarios     Usuarios? @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK__Inventari__idUsu__4BAC3F29")
+}
+
+model Item {
+  idItem         Int              @id(map: "PK_idItem") @default(autoincrement())
+  nombre         String           @db.VarChar(100)
+  descripcion    String?          @db.VarChar(100)
+  imagen         String?          @db.VarChar(100)
+  idUnidad       Int?
+  idCategoria    Int?
+  createAT       DateTime?        @default(now(), map: "DF__Item__createAT__5FB337D6") @db.DateTime
+  updateAT       DateTime?        @db.DateTime
+  isDelete       Boolean?         @default(false, map: "DF__Item__isDelete__60A75C0F")
+  idUsuario      Int?
+  Herramientas   Herramientas[]
+  HistorialStock HistorialStock[]
+  Inventario     Inventario[]
+  Categoria      Categoria?       @relation(fields: [idCategoria], references: [idCategoria], onDelete: NoAction, onUpdate: NoAction, map: "FK__Item__idCategori__49C3F6B7")
+  Unidades       Unidades?        @relation(fields: [idUnidad], references: [idUnidad], onDelete: NoAction, onUpdate: NoAction, map: "FK__Item__idUnidad__48CFD27E")
+  Usuarios       Usuarios?        @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK_Item_Usuarios")
+}
+
+model SalidaEntradaHerramientas {
+  idSalidaEntradaHerramientas Int           @id(map: "PK_idSalidaEntradaHerramientas") @default(autoincrement())
+  idHerramientas              Int?
+  idUsuario                   Int?
+  motivo                      String        @db.VarChar(200)
+  fecha                       DateTime?     @db.DateTime
+  isSalida                    Boolean?
+  Herramientas                Herramientas? @relation(fields: [idHerramientas], references: [idHerramientas], onDelete: NoAction, onUpdate: NoAction, map: "FK_SalidaEntradaHerramientas_Herramientas")
+  Usuarios                    Usuarios?     @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK__SalidaEnt__idUsu__534D60F1")
+}
+
+model Unidades {
+  idUnidad  Int       @id(map: "PK_idUnidad") @default(autoincrement())
+  nombre    String    @db.VarChar(100)
+  createAT  DateTime? @default(now(), map: "DF__Unidades__create__59063A47") @db.DateTime
+  updateAT  DateTime? @db.DateTime
+  isDelete  Boolean?  @default(false, map: "DF__Unidades__isDele__59FA5E80")
+  idUsuario Int?
+  Item      Item[]
+  Usuarios  Usuarios? @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK__Unidades__idUsua__47DBAE45")
+}
+
+model Usuarios {
+  idUsuario                 Int                         @id(map: "PK_idUsuarios") @default(autoincrement())
+  nombreCompleto            String                      @db.VarChar(60)
+  usuario                   String                      @db.VarChar(45)
+  password                  String                      @db.VarChar(100)
+  idRole                    Int?
+  createAT                  DateTime?                   @default(now(), map: "DF__Usuarios__create__4F7CD00D") @db.DateTime
+  updateAT                  DateTime?                   @default(now(), map: "DF__Usuarios__update__5070F446") @db.DateTime
+  isDelete                  Boolean?                    @default(false, map: "DF__Usuarios__isDele__5165187F")
+  AccionesStock             AccionesStock[]
+  Categoria                 Categoria[]
+  Herramientas              Herramientas[]
+  HistorialStock            HistorialStock[]
+  Inventario                Inventario[]
+  Item                      Item[]
+  SalidaEntradaHerramientas SalidaEntradaHerramientas[]
+  Unidades                  Unidades[]
+  Role                      Role?                       @relation(fields: [idRole], references: [idRole], onDelete: NoAction, onUpdate: NoAction, map: "FK_Usuarios_Role")
+}
+
+model Role {
+  idRole   Int        @id(map: "PK_idRole") @default(autoincrement())
+  name     String?    @db.VarChar(45)
+  createAT DateTime?  @default(now(), map: "DF__Role__createAT__49C3F6B7") @db.DateTime
+  updateAT DateTime?  @default(now(), map: "DF__Role__updateAT__4AB81AF0") @db.DateTime
+  isDelete Boolean?   @default(false, map: "DF__Role__isDelete__4BAC3F29")
+  Usuarios Usuarios[]
+}
