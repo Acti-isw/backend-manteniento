@@ -92,10 +92,11 @@ model Item {
 model SalidaEntradaHerramientas {
   idSalidaEntradaHerramientas Int           @id(map: "PK_idSalidaEntradaHerramientas") @default(autoincrement())
   idHerramientas              Int?
-  idUsuario                   Int?
+  idEmpleado                  Int?
   motivo                      String        @db.VarChar(200)
-  fecha                       DateTime?     @db.DateTime
   isSalida                    Boolean?
+  createAT                    DateTime?     @default(now(), map: "DF__SalidaEnt__creat__03F0984C") @db.DateTime
+  idUsuario                   Int?
   Herramientas                Herramientas? @relation(fields: [idHerramientas], references: [idHerramientas], onDelete: NoAction, onUpdate: NoAction, map: "FK_SalidaEntradaHerramientas_Herramientas")
   Usuarios                    Usuarios?     @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK__SalidaEnt__idUsu__534D60F1")
 }
@@ -133,7 +134,7 @@ model Usuarios {
 
 model Role {
   idRole   Int        @id(map: "PK_idRole") @default(autoincrement())
-  name     String?    @db.VarChar(45)
+  nombre   String?    @db.VarChar(45)
   createAT DateTime?  @default(now(), map: "DF__Role__createAT__49C3F6B7") @db.DateTime
   updateAT DateTime?  @default(now(), map: "DF__Role__updateAT__4AB81AF0") @db.DateTime
   isDelete Boolean?   @default(false, map: "DF__Role__isDelete__4BAC3F29")
