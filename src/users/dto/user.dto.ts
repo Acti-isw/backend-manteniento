@@ -5,10 +5,11 @@ import {
   IsEnum,
   IsBoolean,
   IsDate,
+  IsOptional,
 } from 'class-validator';
 
 export class UserDTO {
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   idUsuario: number;
 
@@ -24,15 +25,7 @@ export class UserDTO {
   @IsString()
   password: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   idRole: number;
-
-  @IsNotEmpty()
-  @IsBoolean()
-  eliminado: boolean;
-
-  @IsNotEmpty()
-  @IsDate()
-  fechaHoraCambio: Date;
 }
