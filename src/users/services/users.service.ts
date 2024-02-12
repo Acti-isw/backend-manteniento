@@ -28,7 +28,23 @@ export class UsersService {
 
   async findUserById(id: number): Promise<Usuarios> {
     try {
-      return await this.prisma.usuarios.findFirst();
+      return await this.prisma.usuarios.findFirst({
+        where: {
+          idUsuario: id,
+        },
+      });
+    } catch (error) {
+      throw new Error('Error en findUserById');
+    }
+  }
+
+  async findUserByUsername(username: string): Promise<Usuarios> {
+    try {
+      return await this.prisma.usuarios.findFirst({
+        where: {
+          usuario: username,
+        },
+      });
     } catch (error) {
       throw new Error('Error en findUserById');
     }
