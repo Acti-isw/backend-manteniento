@@ -1,16 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { Body, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { InventarioDTO } from '../dto/inventario.dto';
 import { Inventario, visInventario } from '@prisma/client';
+import { pick } from 'lodash';
+import { plainToClass } from 'class-transformer';
+import { cleanObjectBasedOnDTO } from 'src/utils/cleanObjectBasedOnDTO';
 
 @Injectable()
 export class InventarioService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createInventory(inventario: InventarioDTO): Promise<Inventario> {
+  private readonly propertiesDTO = [
+    'idInventario',
+    'idItem',
+    'stockActual',
+    'stockMin',
+    'stockMax',
+    'createAT',
+    'updateAT',
+    'isDelete',
+    'idUsuario',
+  ];
+
+  async createInventory(
+    @Body() inventario: InventarioDTO,
+  ): Promise<Inventario> {
     try {
+      const filteredInvData = pick(inventario, this.propertiesDTO);
+      const inventarioDto = plainToClass(InventarioDTO, filteredInvData);
+
       return this.prisma.inventario.create({
-        data: inventario,
+        data: inventarioDto,
       });
     } catch (error) {
       throw new Error('Error en createInventory' + error);

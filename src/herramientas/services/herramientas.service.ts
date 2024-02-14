@@ -5,15 +5,31 @@ import {
   HerramientasUpdateDTO,
 } from '../dto/herramientas.dto';
 import { Herramientas } from '@prisma/client';
+import { pick } from 'lodash';
+import { plainToClass } from 'class-transformer';
+import { cleanObjectBasedOnDTO } from 'src/utils/cleanObjectBasedOnDTO';
 
 @Injectable()
 export class HerramientasService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private readonly propertiesDTO = [
+    'idHerramientas',
+    'idItem',
+    'codigoItson',
+    'disponible',
+    'createAT',
+    'updateAT',
+    'isDelete',
+    'idUsuario',
+  ];
   async createTool(herramienta: HerramientasDTO): Promise<Herramientas> {
     try {
+      const filteredHerData = pick(herramienta, this.propertiesDTO);
+      const herramientasDto = plainToClass(HerramientasDTO, filteredHerData);
+
       return await this.prisma.herramientas.create({
-        data: herramienta,
+        data: herramientasDto,
       });
     } catch (error) {
       throw new Error('Error en createTool' + error);
