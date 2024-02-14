@@ -6,4 +6,7 @@ SELECT
   rol.nombre
 FROM
   [dbo].[Usuarios] AS usu
-  JOIN [dbo].[Role] AS rol ON rol.idRole = usu.idRole;
+  JOIN [dbo].[Role] AS rol ON rol.idRole = usu.idRole
+WHERE
+  usu.isDelete = 0;
+

@@ -34,10 +34,12 @@ model Herramientas {
   idHerramientas            Int                         @id(map: "PK_idHerramientas") @default(autoincrement())
   idItem                    Int
   codigoItson               String                      @db.VarChar(50)
+
   disponible                Boolean                     @default(false, map: "DF__Herramien__dispo__75A278F5")
   createAT                  DateTime?                   @default(now(), map: "DF__Herramien__creat__76969D2E") @db.DateTime
   updateAT                  DateTime?                   @db.DateTime
   isDelete                  Boolean?                    @default(false, map: "DF__Herramien__isDel__778AC167")
+
   idUsuario                 Int
   Item                      Item                        @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK__Herramien__idIte__5070F446")
   Usuarios                  Usuarios                    @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__Herramien__idUsu__5165187F")
@@ -134,12 +136,54 @@ model Usuarios {
 }
 
 model Role {
-  idRole   Int        @id(map: "PK_idRole") @default(autoincrement())
-  nombre   String?    @db.VarChar(45)
-  createAT DateTime?  @default(now(), map: "DF__Role__createAT__49C3F6B7") @db.DateTime
-  updateAT DateTime?  @default(now(), map: "DF__Role__updateAT__4AB81AF0") @db.DateTime
-  isDelete Boolean?   @default(false, map: "DF__Role__isDelete__4BAC3F29")
-  Usuarios Usuarios[]
+  idRole   Int       @id(map: "PK_idRole") @default(autoincrement())
+  nombre   String?   @db.VarChar(45)
+  createAT DateTime? @default(now(), map: "DF__Role__createAT__49C3F6B7") @db.DateTime
+  updateAT DateTime? @default(now(), map: "DF__Role__updateAT__4AB81AF0") @db.DateTime
+  isDelete Boolean?  @default(false, map: "DF__Role__isDelete__4BAC3F29")
+}
+
+view visInventario {
+  idInventario    Int     @unique
+  nombreItem      String  @db.VarChar(100)
+  descripcion     String? @db.VarChar(100)
+  imagen          String? @db.VarChar(100)
+  nombreUnidad    String  @db.VarChar(100)
+  nombreCategoria String  @db.VarChar(100)
+  stockActual     Int
+  stockMin        Int
+  stockMax        Int
+}
+
+view visHerramientas {
+  idHerramientas Int     @unique
+  nombre         String  @db.VarChar(100)
+  codigoItson    String  @db.VarChar(50)
+  disponible     Boolean
+}
+
+view visItems {
+  idItem       Int      @unique
+  nombreItem   String   @db.VarChar(100)
+  descripcion  String?  @db.VarChar(100)
+  imagen       String?  @db.VarChar(100)
+  nombreUnidad String   @db.VarChar(100)
+  nombre       String   @db.VarChar(100)
+  isDelete     Boolean?
+}
+
+view visSalidaEntradaHerramientas {
+  idSalidaEntradaHerramientas Int    @unique
+  nombre                      String @db.VarChar(100)
+  idEmpleado                  Int?
+}
+
+view visUsuarios {
+  idUsuario      Int     @unique
+  nombreCompleto String  @db.VarChar(60)
+  usuario        String  @db.VarChar(45)
+  password       String  @db.VarChar(100)
+  nombre         String? @db.VarChar(45)
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
