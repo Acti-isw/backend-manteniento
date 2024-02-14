@@ -9,7 +9,6 @@ import { HerramientasModule } from './herramientas/herramientas.module';
 import { ItemModule } from './item/item.module';
 import { InventarioModule } from './inventario/inventario.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,7 +23,6 @@ import { InventarioModule } from './inventario/inventario.module';
     HerramientasModule,
     ItemModule,
     InventarioModule,
-
   ],
 })
 export class AppModule {}
