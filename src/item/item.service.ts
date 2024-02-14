@@ -8,6 +8,7 @@ export class ItemService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createItem(item: ItemDTO): Promise<Item> {
+    // crear sentencias para insertar herramientas
     try {
       return await this.prisma.item.create({
         data: item,

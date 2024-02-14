@@ -33,6 +33,7 @@ export class ItemController {
   async findCategoryById(@Param('id') id: number) {
     return this.itemService.findItemById(id);
   }
+
   @Delete(':id')
   async deleteItemById(@Param('id') id: number) {
     return this.itemService.deleteItem(id);
