@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CategoriaModule } from './categoria/categoria.module';
 import { UnidadesModule } from './unidades/unidades.module';
 import { HerramientasModule } from './herramientas/herramientas.module';
+import { ItemModule } from './item/item.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { HerramientasModule } from './herramientas/herramientas.module';
     CategoriaModule,
     UnidadesModule,
     HerramientasModule,
+    ItemModule,
   ],
 })
 export class AppModule {}
