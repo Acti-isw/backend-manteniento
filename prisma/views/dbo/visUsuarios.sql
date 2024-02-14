@@ -9,3 +9,4 @@ FROM
   JOIN [dbo].[Role] AS rol ON rol.idRole = usu.idRole
 WHERE
   usu.isDelete = 0;
+
