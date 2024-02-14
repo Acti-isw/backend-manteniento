@@ -7,6 +7,7 @@ import { CategoriaModule } from './categoria/categoria.module';
 import { UnidadesModule } from './unidades/unidades.module';
 import { HerramientasModule } from './herramientas/herramientas.module';
 import { InventarioModule } from './inventario/inventario.module';
+import { ItemModule } from './item/item.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { InventarioModule } from './inventario/inventario.module';
     UnidadesModule,
     HerramientasModule,
     InventarioModule,
+    ItemModule,
   ],
 })
 export class AppModule {}

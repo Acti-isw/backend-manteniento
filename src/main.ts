@@ -16,14 +16,14 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
+      transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
-      transform: true,
     }),
   );
 
-  const reflector = app.get(Reflector);
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
+  // const reflector = app.get(Reflector);
+  // app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
   const config = new DocumentBuilder()
     .setTitle(SWAGGER_TITTLE)
