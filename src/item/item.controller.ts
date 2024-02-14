@@ -9,8 +9,10 @@ import {
 } from '@nestjs/common';
 import { ItemService } from './item.service';
 import { ItemDTO, ItemUpdateDTO } from './dto/item.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('items')
+@ApiTags('items')
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 

@@ -1,8 +1,10 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { InventarioService } from '../services/inventario.service';
 import { InventarioDTO, InventarioUpdateDTO } from '../dto/inventario.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('inventarios')
+@ApiTags('inventarios')
 export class InventarioController {
   constructor(private readonly inventarioServices: InventarioService) {}
 
