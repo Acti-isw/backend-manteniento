@@ -8,9 +8,12 @@ import {
   SWAGGER_TITTLE,
   SWAGGER_VERSION,
 } from './constants/swagger';
+import { CORS } from './constants/cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.enableCors(CORS);
 
   app.setGlobalPrefix('api/');
 
@@ -22,8 +25,8 @@ async function bootstrap() {
     }),
   );
 
-  // const reflector = app.get(Reflector);
-  // app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
+  const reflector = app.get(Reflector);
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
   const config = new DocumentBuilder()
     .setTitle(SWAGGER_TITTLE)
