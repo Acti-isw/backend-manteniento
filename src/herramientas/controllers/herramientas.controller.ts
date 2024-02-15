@@ -4,8 +4,10 @@ import {
   HerramientasDTO,
   HerramientasUpdateDTO,
 } from '../dto/herramientas.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('herramientas')
+@ApiTags('herramientas')
 export class HerramientasController {
   constructor(private readonly herramientasService: HerramientasService) {}
 

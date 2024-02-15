@@ -31,13 +31,15 @@ model Categoria {
 }
 
 model Herramientas {
-  idHerramientas            Int                         @id(map: "PK_idHerramientas") @default(autoincrement())
-  idItem                    Int
-  codigoItson               String                      @db.VarChar(50)
-  disponible                Boolean
-  createAT                  DateTime?                   @default(now(), map: "DF__Herramien__creat__75A278F5") @db.DateTime
-  updateAT                  DateTime?                   @db.DateTime
-  isDelete                  Boolean?                    @default(false, map: "DF__Herramien__isDel__76969D2E")
+  idHerramientas Int    @id(map: "PK_idHerramientas") @default(autoincrement())
+  idItem         Int
+  codigoItson    String @db.VarChar(50)
+
+  disponible Boolean   @default(false, map: "DF__Herramien__dispo__75A278F5")
+  createAT   DateTime? @default(now(), map: "DF__Herramien__creat__76969D2E") @db.DateTime
+  updateAT   DateTime? @db.DateTime
+  isDelete   Boolean?  @default(false, map: "DF__Herramien__isDel__778AC167")
+
   idUsuario                 Int
   Item                      Item                        @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK__Herramien__idIte__5070F446")
   Usuarios                  Usuarios                    @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__Herramien__idUsu__5165187F")
@@ -96,7 +98,7 @@ model SalidaEntradaHerramientas {
   idEmpleado                  Int?
   motivo                      String       @db.VarChar(200)
   isSalida                    Boolean?
-  createAT                    DateTime?    @default(now(), map: "DF__SalidaEnt__creat__03F0984C") @db.DateTime
+  createAT                    DateTime?    @default(now(), map: "DF__SalidaEnt__creat__7C4F7684") @db.DateTime
   idUsuario                   Int
   Herramientas                Herramientas @relation(fields: [idHerramientas], references: [idHerramientas], onUpdate: NoAction, map: "FK_SalidaEntradaHerramientas_Herramientas")
   Usuarios                    Usuarios     @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__SalidaEnt__idUsu__534D60F1")
@@ -118,7 +120,7 @@ model Usuarios {
   nombreCompleto            String                      @db.VarChar(60)
   usuario                   String                      @db.VarChar(45)
   password                  String                      @db.VarChar(100)
-  idRole                    Int?
+  idRole                    Int
   createAT                  DateTime?                   @default(now(), map: "DF__Usuarios__create__4F7CD00D") @db.DateTime
   updateAT                  DateTime?                   @default(now(), map: "DF__Usuarios__update__5070F446") @db.DateTime
   isDelete                  Boolean?                    @default(false, map: "DF__Usuarios__isDele__5165187F")
@@ -130,14 +132,16 @@ model Usuarios {
   Item                      Item[]
   SalidaEntradaHerramientas SalidaEntradaHerramientas[]
   Unidades                  Unidades[]
+  Role                      Role                        @relation(fields: [idRole], references: [idRole], onUpdate: NoAction, map: "FK_Usuarios_Role")
 }
 
 model Role {
-  idRole   Int       @id(map: "PK_idRole") @default(autoincrement())
-  nombre   String?   @db.VarChar(45)
-  createAT DateTime? @default(now(), map: "DF__Role__createAT__49C3F6B7") @db.DateTime
-  updateAT DateTime? @default(now(), map: "DF__Role__updateAT__4AB81AF0") @db.DateTime
-  isDelete Boolean?  @default(false, map: "DF__Role__isDelete__4BAC3F29")
+  idRole   Int        @id(map: "PK_idRole") @default(autoincrement())
+  nombre   String?    @db.VarChar(45)
+  createAT DateTime?  @default(now(), map: "DF__Role__createAT__49C3F6B7") @db.DateTime
+  updateAT DateTime?  @default(now(), map: "DF__Role__updateAT__4AB81AF0") @db.DateTime
+  isDelete Boolean?   @default(false, map: "DF__Role__isDelete__4BAC3F29")
+  Usuarios Usuarios[]
 }
 
 view visInventario {

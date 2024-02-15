@@ -12,3 +12,4 @@ FROM
   JOIN [dbo].[Unidades] AS und ON und.idUnidad = ite.idUnidad
 WHERE
   ite.isDelete = 0;
+

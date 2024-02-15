@@ -24,6 +24,7 @@ export class ItemService {
   ];
 
   async createItem(item: ItemDTO): Promise<Item> {
+    // crear sentencias para insertar herramientas
     try {
       const filteredItemData = pick(item, this.propertiesDTO);
       const itemDto = plainToClass(ItemDTO, filteredItemData);
