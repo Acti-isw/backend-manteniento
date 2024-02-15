@@ -8,6 +8,7 @@ import { UnidadesModule } from './unidades/unidades.module';
 import { HerramientasModule } from './herramientas/herramientas.module';
 import { InventarioModule } from './inventario/inventario.module';
 import { ItemModule } from './item/item.module';
+import { SalidaEntradaHerramientasModule } from './salida-entrada-herramientas/salida-entrada-herramientas.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ItemModule } from './item/item.module';
     HerramientasModule,
     ItemModule,
     InventarioModule,
+    SalidaEntradaHerramientasModule,
   ],
 })
 export class AppModule {}
