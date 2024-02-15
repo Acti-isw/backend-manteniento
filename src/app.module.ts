@@ -6,7 +6,6 @@ import { ConfigModule } from '@nestjs/config';
 import { CategoriaModule } from './categoria/categoria.module';
 import { UnidadesModule } from './unidades/unidades.module';
 import { HerramientasModule } from './herramientas/herramientas.module';
-import { ItemModule } from './item/item.module';
 import { InventarioModule } from './inventario/inventario.module';
 import { ItemModule } from './item/item.module';
 
@@ -24,7 +23,6 @@ import { ItemModule } from './item/item.module';
     HerramientasModule,
     ItemModule,
     InventarioModule,
-    ItemModule,
   ],
 })
 export class AppModule {}
