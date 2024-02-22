@@ -1,13 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import {
   HerramientasDTO,
   HerramientasUpdateDTO,
 } from '../dto/herramientas.dto';
 import { Herramientas } from '@prisma/client';
-import { pick } from 'lodash';
+import { isEmpty, pick } from 'lodash';
 import { plainToClass } from 'class-transformer';
-import { cleanObjectBasedOnDTO } from 'src/utils/cleanObjectBasedOnDTO';
 
 @Injectable()
 export class HerramientasService {
@@ -24,48 +23,53 @@ export class HerramientasService {
     'idUsuario',
   ];
   async createTool(herramienta: HerramientasDTO): Promise<Herramientas> {
-    try {
-      const filteredHerData = pick(herramienta, this.propertiesDTO);
-      const herramientasDto = plainToClass(HerramientasDTO, filteredHerData);
+    const filteredHerData = pick(herramienta, this.propertiesDTO);
+    const herramientasDto = plainToClass(HerramientasDTO, filteredHerData);
 
-      return await this.prisma.herramientas.create({
-        data: herramientasDto,
-      });
-    } catch (error) {
-      throw new Error('Error en createTool' + error);
-    }
+    return await this.prisma.herramientas.create({
+      data: herramientasDto,
+    });
   }
 
   async updateTool(herramienta: HerramientasUpdateDTO): Promise<Herramientas> {
-    try {
-      const { idHerramientas, ...dataUpdate } = herramienta;
-      return await this.prisma.herramientas.update({
-        where: { idHerramientas },
-        data: {
-          ...dataUpdate,
-          updateAT: new Date(),
-        },
-      });
-    } catch (error) {
-      throw new Error('Error en updateTool' + error);
-    }
+    const { idHerramientas, ...dataUpdate } = herramienta;
+    return await this.prisma.herramientas.update({
+      where: { idHerramientas },
+      data: {
+        ...dataUpdate,
+        updateAT: new Date(),
+      },
+    });
   }
 
   async findTools(): Promise<Herramientas[]> {
-    try {
-      return this.prisma.herramientas.findMany();
-    } catch (error) {
-      throw new Error('Error en findTools' + error);
+    const tools = await this.prisma.herramientas.findMany();
+    if (isEmpty(tools)) {
+      throw new NotFoundException('No se encontraton herramientas');
     }
+    return tools;
   }
 
   async findToolById(id: number): Promise<Herramientas> {
-    try {
-      return this.prisma.herramientas.findFirst({
-        where: { idHerramientas: id },
-      });
-    } catch (error) {
-      throw new Error('Error en findTools' + error);
+    const tool = await this.prisma.herramientas.findFirst({
+      where: { idHerramientas: id },
+    });
+
+    if (!tool) {
+      throw new NotFoundException(`No se encontro la herramienta con id:${id}`);
     }
+    return tool;
+  }
+
+  async deleteTool(idHerramientas: number): Promise<Herramientas> {
+    return await this.prisma.herramientas.update({
+      where: {
+        idHerramientas,
+      },
+      data: {
+        isDelete: true,
+        updateAT: new Date(),
+      },
+    });
   }
 }
