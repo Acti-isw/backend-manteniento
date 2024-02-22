@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { HerramientasService } from '../services/herramientas.service';
 import {
   HerramientasDTO,
@@ -29,5 +37,10 @@ export class HerramientasController {
   @Get(':id')
   async findToolById(@Param('id') id: number) {
     return this.herramientasService.findToolById(id);
+  }
+
+  @Delete(':id')
+  async deleteToolById(@Param('id') id: number) {
+    return this.herramientasService.deleteTool(id);
   }
 }

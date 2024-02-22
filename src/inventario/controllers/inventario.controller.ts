@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { InventarioService } from '../services/inventario.service';
 import { InventarioDTO, InventarioUpdateDTO } from '../dto/inventario.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -26,5 +26,10 @@ export class InventarioController {
   @Get(':id')
   async findInventoryById(@Param('id') id: number) {
     return this.inventarioServices.findInventoryById(id);
+  }
+
+  @Delete(':id')
+  async deleteInventoryById(@Param('id') id: number) {
+    return this.inventarioServices.deleteInventory(id);
   }
 }

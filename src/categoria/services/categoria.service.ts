@@ -2,59 +2,60 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CategoriaDTO, CategoriaUpdateDTO } from '../dto/categoria.dto';
 import { Categoria } from '@prisma/client';
+import { isEmpty } from 'lodash';
 
 @Injectable()
 export class CategoriaService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createCategory(categoria: CategoriaDTO): Promise<Categoria> {
-    try {
-      return await this.prisma.categoria.create({
-        data: categoria,
-      });
-    } catch (error) {
-      throw new Error('Error en createCategory');
-    }
+    return await this.prisma.categoria.create({
+      data: categoria,
+    });
   }
 
   async updateCategory(categoria: CategoriaUpdateDTO): Promise<Categoria> {
-    try {
-      const { idCategoria, ...dataToUpdate } = categoria; // Extraer idCategoria y crear un nuevo objeto sin esa propiedad
-      return await this.prisma.categoria.update({
-        where: {
-          idCategoria,
-        },
-        data: {
-          ...dataToUpdate,
-          updateAT: new Date(),
-        },
-      });
-    } catch (error) {
-      throw new Error('Error en updateCategory' + error);
-    }
+    const { idCategoria, ...dataToUpdate } = categoria; // Extraer idCategoria y crear un nuevo objeto sin esa propiedad
+    return await this.prisma.categoria.update({
+      where: {
+        idCategoria,
+      },
+      data: {
+        ...dataToUpdate,
+        updateAT: new Date(),
+      },
+    });
   }
 
   async findCategories(): Promise<Categoria[]> {
-    try {
-      return this.prisma.categoria.findMany();
-    } catch (error) {
-      throw new Error('Error en findCategories');
+    const categories = await this.prisma.categoria.findMany();
+
+    if (isEmpty(categories)) {
+      throw new NotFoundException('No se encontraron categorias');
     }
+    return categories;
   }
 
   async findCategoryById(id: number): Promise<Categoria> {
-    try {
-      const catetegory = await this.prisma.categoria.findFirst({
-        where: { idCategoria: id },
-      });
+    const catetegory = await this.prisma.categoria.findFirst({
+      where: { idCategoria: id },
+    });
 
-      if (!catetegory) {
-        //console.log("entro",catetegory)
-        //throw new NotFoundException(`No se encontro la categoria con id:${id}`);
-      }
-      return catetegory;
-    } catch (error) {
-      throw new Error('Error en findCategoryById' + error);
+    if (!catetegory) {
+      throw new NotFoundException(`No se encontro la categoria con id:${id}`);
     }
+    return catetegory;
+  }
+
+  async deleteCategory(idCategoria: number): Promise<Categoria> {
+    return await this.prisma.categoria.update({
+      where: {
+        idCategoria,
+      },
+      data: {
+        isDelete: true,
+        updateAT: new Date(),
+      },
+    });
   }
 }

@@ -9,8 +9,16 @@ import { HerramientasModule } from './herramientas/herramientas.module';
 import { InventarioModule } from './inventario/inventario.module';
 import { ItemModule } from './item/item.module';
 import { SalidaEntradaHerramientasModule } from './salida-entrada-herramientas/salida-entrada-herramientas.module';
+//import { APP_FILTER } from '@nestjs/core';
+//import { PrismaClientExceptionFilter } from './prisma/prisma-client-exception.filter';
 
 @Module({
+  // providers: [
+  //   {
+  //     provide: APP_FILTER,
+  //     useClass: PrismaClientExceptionFilter,
+  //   },
+  // ],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
