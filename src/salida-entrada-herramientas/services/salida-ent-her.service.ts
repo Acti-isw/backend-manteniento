@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import {
   SalidaEntHerDTO,
   SalidaEntHerUpdateDTO,
 } from '../dto/salidaEntHer.dto';
 import { SalidaEntradaHerramientas } from '@prisma/client';
+import { isEmpty } from 'lodash';
 
 @Injectable()
 export class SalidaEntHerService {
@@ -13,48 +14,46 @@ export class SalidaEntHerService {
   async createSalEntHer(
     registro: SalidaEntHerDTO,
   ): Promise<SalidaEntradaHerramientas> {
-    try {
-      return await this.prisma.salidaEntradaHerramientas.create({
-        data: registro,
-      });
-    } catch (error) {
-      throw new Error('Error en createSalEntHer' + error);
-    }
+    return await this.prisma.salidaEntradaHerramientas.create({
+      data: registro,
+    });
   }
 
   async updateSalEntHer(registro: SalidaEntHerUpdateDTO) {
-    try {
-      const { idSalidaEntradaHerramientas, ...registroUpdate } = registro;
-      return await this.prisma.salidaEntradaHerramientas.update({
-        where: {
-          idSalidaEntradaHerramientas,
-        },
-        data: {
-          ...registroUpdate,
-        },
-      });
-    } catch (error) {
-      throw new Error('Error en createSalEntHer' + error);
-    }
+    const { idSalidaEntradaHerramientas, ...registroUpdate } = registro;
+    return await this.prisma.salidaEntradaHerramientas.update({
+      where: {
+        idSalidaEntradaHerramientas,
+      },
+      data: {
+        ...registroUpdate,
+      },
+    });
   }
 
   async findSalEntHer(): Promise<SalidaEntradaHerramientas[]> {
-    try {
-      return await this.prisma.salidaEntradaHerramientas.findMany();
-    } catch (error) {
-      throw new Error('Error en createSalEntHer' + error);
+    const salEntradas = await this.prisma.salidaEntradaHerramientas.findMany();
+
+    if (isEmpty(salEntradas)) {
+      throw new NotFoundException(
+        'No se encontraron salidas y entradas de herramientas',
+      );
     }
+    return salEntradas;
   }
 
   async findSalEntHerById(id: number): Promise<SalidaEntradaHerramientas> {
-    try {
-      return await this.prisma.salidaEntradaHerramientas.findFirst({
-        where: {
-          idSalidaEntradaHerramientas: id,
-        },
-      });
-    } catch (error) {
-      throw new Error('Error en createSalEntHer' + error);
+    const salEntrada = await this.prisma.salidaEntradaHerramientas.findFirst({
+      where: {
+        idSalidaEntradaHerramientas: id,
+      },
+    });
+
+    if (!salEntrada) {
+      throw new NotFoundException(
+        `No se enctro salida entrada para la herramienta con id:${id}`,
+      );
     }
+    return salEntrada;
   }
 }

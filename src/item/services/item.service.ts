@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Item, visItems } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ItemDTO, ItemUpdateDTO } from '../dto/item.dto';
-import { pick } from 'lodash';
+import { isEmpty, pick } from 'lodash';
 import { plainToClass } from 'class-transformer';
 import { cleanObjectBasedOnDTO } from 'src/utils/cleanObjectBasedOnDTO';
 
@@ -25,66 +25,57 @@ export class ItemService {
 
   async createItem(item: ItemDTO): Promise<Item> {
     // crear sentencias para insertar herramientas
-    try {
-      const filteredItemData = pick(item, this.propertiesDTO);
-      const itemDto = plainToClass(ItemDTO, filteredItemData);
+    const filteredItemData = pick(item, this.propertiesDTO);
+    const itemDto = plainToClass(ItemDTO, filteredItemData);
 
-      return await this.prisma.item.create({
-        data: itemDto,
-      });
-    } catch (error) {
-      throw new Error('Error en createItem' + error);
-    }
+    return await this.prisma.item.create({
+      data: itemDto,
+    });
   }
   async updateItem(item: ItemUpdateDTO): Promise<Item> {
-    try {
-      const { idItem, ...data } = item;
+    const { idItem, ...data } = item;
 
-      return await this.prisma.item.update({
-        where: {
-          idItem,
-        },
-        data: {
-          ...data,
-          updateAT: new Date(),
-        },
-      });
-    } catch (error) {
-      throw new Error('Error en updateItem');
-    }
+    return await this.prisma.item.update({
+      where: {
+        idItem,
+      },
+      data: {
+        ...data,
+        updateAT: new Date(),
+      },
+    });
   }
 
   async findItemById(id: number): Promise<visItems> {
-    try {
-      return await this.prisma.visItems.findUnique({
-        where: {
-          idItem: id,
-        },
-      });
-    } catch (error) {
-      throw new Error('Error en findItemById');
+    const items = await this.prisma.visItems.findUnique({
+      where: {
+        idItem: id,
+      },
+    });
+
+    if (!items) {
+      throw new NotFoundException(`No se encontro el item con id:${id}`);
     }
+
+    return items;
   }
   async findItems(): Promise<visItems[]> {
-    try {
-      return await this.prisma.visItems.findMany();
-    } catch (error) {
-      throw new Error('Error en findItems');
+    const item = await this.prisma.visItems.findMany();
+    if (isEmpty(item)) {
+      throw new NotFoundException('No se encontraron items');
     }
+    return item;
   }
+
   async deleteItem(idItem: number): Promise<Item> {
-    try {
-      return await this.prisma.item.update({
-        where: {
-          idItem,
-        },
-        data: {
-          isDelete: true,
-          updateAT: new Date(),
-        },
-      });
-    } catch (error) {
-      throw new Error('Error en deleteItem');
-    }
+    return await this.prisma.item.update({
+      where: {
+        idItem,
+      },
+      data: {
+        isDelete: true,
+        updateAT: new Date(),
+      },
+    });
   }
 }

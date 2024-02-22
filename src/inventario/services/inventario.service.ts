@@ -1,10 +1,9 @@
-import { Body, Injectable } from '@nestjs/common';
+import { Body, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { InventarioDTO } from '../dto/inventario.dto';
 import { Inventario, visInventario } from '@prisma/client';
-import { pick } from 'lodash';
+import { isEmpty, pick } from 'lodash';
 import { plainToClass } from 'class-transformer';
-import { cleanObjectBasedOnDTO } from 'src/utils/cleanObjectBasedOnDTO';
 
 @Injectable()
 export class InventarioService {
@@ -25,48 +24,53 @@ export class InventarioService {
   async createInventory(
     @Body() inventario: InventarioDTO,
   ): Promise<Inventario> {
-    try {
-      const filteredInvData = pick(inventario, this.propertiesDTO);
-      const inventarioDto = plainToClass(InventarioDTO, filteredInvData);
+    const filteredInvData = pick(inventario, this.propertiesDTO);
+    const inventarioDto = plainToClass(InventarioDTO, filteredInvData);
 
-      return this.prisma.inventario.create({
-        data: inventarioDto,
-      });
-    } catch (error) {
-      throw new Error('Error en createInventory' + error);
-    }
+    return await this.prisma.inventario.create({
+      data: inventarioDto,
+    });
   }
 
   async updateInventory(inventario: InventarioDTO): Promise<Inventario> {
-    try {
-      const { idInventario, ...dataUpdate } = inventario;
-      return this.prisma.inventario.update({
-        where: { idInventario },
-        data: {
-          ...dataUpdate,
-          updateAT: new Date(),
-        },
-      });
-    } catch (error) {
-      throw new Error('Error en updateInventory' + error);
-    }
+    const { idInventario, ...dataUpdate } = inventario;
+    return await this.prisma.inventario.update({
+      where: { idInventario },
+      data: {
+        ...dataUpdate,
+        updateAT: new Date(),
+      },
+    });
   }
 
   async findInventories(): Promise<visInventario[]> {
-    try {
-      return this.prisma.visInventario.findMany();
-    } catch (error) {
-      throw new Error('Error en findInventories' + error);
+    const inventories = await this.prisma.visInventario.findMany();
+    if (isEmpty(inventories)) {
+      throw new NotFoundException('No se encontraron inventarios');
     }
+    return inventories;
   }
 
   async findInventoryById(id: number): Promise<visInventario> {
-    try {
-      return this.prisma.visInventario.findFirst({
-        where: { idInventario: id },
-      });
-    } catch (error) {
-      throw new Error('Error en findInventories' + error);
+    const inventory = await this.prisma.visInventario.findFirst({
+      where: { idInventario: id },
+    });
+
+    if (!inventory) {
+      throw new NotFoundException(`No se encontro el inventario con id:${id}`);
     }
+    return inventory;
+  }
+
+  async deleteInventory(idInventario: number): Promise<Inventario> {
+    return await this.prisma.inventario.update({
+      where: {
+        idInventario,
+      },
+      data: {
+        isDelete: true,
+        updateAT: new Date(),
+      },
+    });
   }
 }
