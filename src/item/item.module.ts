@@ -8,9 +8,12 @@ import { ItemInventarioHerramientaService } from './services/item_inventario-her
 import { HerramientasModule } from 'src/herramientas/herramientas.module';
 import { ItemInventarioHerramientaController } from './controllers/item-inventario-herramienta.controller';
 
-
 @Module({
-  providers: [ItemService, ItemInventarioService, ItemInventarioHerramientaService],
+  providers: [
+    ItemService,
+    ItemInventarioService,
+    ItemInventarioHerramientaService,
+  ],
   controllers: [ItemController, ItemInventarioHerramientaController],
   imports: [PrismaModule, InventarioModule, HerramientasModule],
 })

@@ -6,6 +6,6 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 @Module({
   providers: [SalidaEntHerService],
   controllers: [SalidaEntHerController],
-  imports:[PrismaModule]
+  imports: [PrismaModule],
 })
 export class SalidaEntradaHerramientasModule {}
