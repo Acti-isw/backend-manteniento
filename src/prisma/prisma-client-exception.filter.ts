@@ -10,17 +10,20 @@ import { Response } from 'express';
 import { errorMappings } from './prisma-erorrs-mappings';
 import {
   PrismaClientKnownRequestError,
+  PrismaClientValidationError,
   PrismaClientUnknownRequestError,
 } from '@prisma/client/runtime/library';
 
 @Catch(
   Prisma.PrismaClientKnownRequestError,
+  Prisma.PrismaClientValidationError,
   Prisma.PrismaClientUnknownRequestError,
 )
 export class PrismaClientExceptionFilter extends BaseExceptionFilter {
   catch(
     exception:
       | Prisma.PrismaClientKnownRequestError
+      | Prisma.PrismaClientValidationError
       | Prisma.PrismaClientUnknownRequestError,
     host: ArgumentsHost,
   ) {
@@ -51,10 +54,21 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
       }
     }
 
+    if (exception instanceof PrismaClientValidationError) {
+      const status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+      const messageDetails = `at path: ${request.url.split('/')[request.url.split('/').length - 2]} :: ${exception.message.split('Argument')[1]}`;
+
+      response.status(status).json({
+        message: `Prisma Validation error ${messageDetails}`,
+        statusCode: status,
+      });
+    }
+
     if (exception instanceof PrismaClientUnknownRequestError) {
       const status = HttpStatus.INTERNAL_SERVER_ERROR;
 
-      const messageDetails = `at path: ${request.url.split('/')[request.url.split('/').length - 1]} :: ${exception.message.split('message')[1]}`
+      const messageDetails = `at path: ${request.url.split('/')[request.url.split('/').length - 1]} :: ${exception.message.split('message')[1]}`;
 
       response.status(status).json({
         message: `Unknown Prisma error ${messageDetails}`,
