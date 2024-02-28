@@ -1,5 +1,5 @@
 export interface IPayloadToken {
-    sub: string;
+    username: string;
     role: string;
   }
   
@@ -10,14 +10,14 @@ export interface IPayloadToken {
   
   export interface IAuthTokenResult {
     role: string;
-    sub: string;
+    username: string;
     iat: number;
     exp: number;
   }
   
   export interface IUseToken {
     role: string;
-    sub: string;
+    username: string;
     isExpired: boolean;
   }
   

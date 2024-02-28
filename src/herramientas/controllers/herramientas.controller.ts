@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { HerramientasService } from '../services/herramientas.service';
 import {
@@ -13,7 +14,9 @@ import {
   HerramientasUpdateDTO,
 } from '../dto/herramientas.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
 
+@UseGuards(AuthenticationGuard)
 @Controller('herramientas')
 @ApiTags('herramientas')
 export class HerramientasController {

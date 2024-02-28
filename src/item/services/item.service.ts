@@ -4,7 +4,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ItemDTO, ItemUpdateDTO } from '../dto/item.dto';
 import { isEmpty, pick } from 'lodash';
 import { plainToClass } from 'class-transformer';
-import { cleanObjectBasedOnDTO } from 'src/utils/cleanObjectBasedOnDTO';
 
 @Injectable()
 export class ItemService {
