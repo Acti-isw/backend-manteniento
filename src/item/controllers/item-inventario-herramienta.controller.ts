@@ -1,7 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ItemInventarioService } from '../services/item-inventario.service';
 import { ItemInventarioHerramientaService } from '../services/item_inventario-herramienta.service';
 import { ItemInventarioHerramientaDTO } from '../dto/item_inventario-herramienta.dto';
+import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
 
 @Controller('item-inventario-herramienta')
 export class ItemInventarioHerramientaController {
@@ -10,6 +11,7 @@ export class ItemInventarioHerramientaController {
     private readonly iteInvHerService: ItemInventarioHerramientaService,
   ) {}
 
+  @UseGuards(AuthenticationGuard)
   @Post('createIteInvHer')
   async createIteInvHer(@Body() data: ItemInventarioHerramientaDTO) {
     //4 -> es una categoria herramienta

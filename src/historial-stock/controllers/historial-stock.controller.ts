@@ -1,6 +1,8 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { HistorialStockService } from '../services/historial-stock.service';
+import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
 
+@UseGuards(AuthenticationGuard)
 @Controller('historial-stock')
 export class HistorialStockController {
   constructor(private readonly historialStockService: HistorialStockService) {}

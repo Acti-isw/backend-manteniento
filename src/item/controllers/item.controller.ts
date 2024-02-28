@@ -6,10 +6,13 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ItemService } from '../services/item.service';
 import { ItemDTO, ItemUpdateDTO } from '../dto/item.dto';
+import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
 
+@UseGuards(AuthenticationGuard)
 @Controller('items')
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
@@ -33,7 +36,7 @@ export class ItemController {
   async findCategoryById(@Param('id') id: number) {
     return this.itemService.findItemById(id);
   }
-  
+
   @Delete(':id')
   async deleteItemById(@Param('id') id: number) {
     return this.itemService.deleteItem(id);

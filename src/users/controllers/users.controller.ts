@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
@@ -12,7 +13,9 @@ import { UserDTO } from '../dto/user.dto';
 import { TransformDataInterceptor } from 'src/interceptors/transform-data.interceptor';
 import { UserResponseDTO } from '../dto/userResponse.dto';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
 
+@UseGuards(AuthenticationGuard)
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
