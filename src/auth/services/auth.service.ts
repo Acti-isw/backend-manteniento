@@ -11,7 +11,7 @@ export class AuthService {
   async validateUser(username: string, password: string) {
     const userByUsername = await this.userService.findUserByUsername(username);
 
-    if (userByUsername) {
+    if (userByUsername && !userByUsername.isDelete) {
       const match = userByUsername.password === password;
       if (match) return userByUsername;
     }
@@ -35,7 +35,7 @@ export class AuthService {
 
     const payload: IPayloadToken = {
       role: getUser.idRole + '',
-      sub: getUser.idUsuario + '',
+      username: getUser.usuario,
     };
 
     return {
@@ -44,7 +44,12 @@ export class AuthService {
         secret: process.env.JWT_SECRET,
         expires: '1h',
       }),
-      user,
+      user: {
+        idUsuario: user.idUsuario,
+        nombreCompleto: user.nombreCompleto,
+        usuario: user.usuario,
+        idRole: user.idRole,
+      },
     };
   }
 }
