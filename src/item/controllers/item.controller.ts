@@ -11,8 +11,9 @@ import {
 import { ItemService } from '../services/item.service';
 import { ItemDTO, ItemUpdateDTO } from '../dto/item.dto';
 import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
-@UseGuards(AuthenticationGuard)
+@UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('items')
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}

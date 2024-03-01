@@ -3,8 +3,9 @@ import { CategoriaService } from '../services/categoria.service';
 import { CategoriaDTO, CategoriaUpdateDTO } from '../dto/categoria.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
-@UseGuards(AuthenticationGuard)
+@UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('categorias')
 @ApiTags('categorias')
 export class CategoriaController {

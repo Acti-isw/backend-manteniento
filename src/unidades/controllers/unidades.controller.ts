@@ -12,8 +12,9 @@ import { UnidadesService } from '../services/unidades.service';
 import { UnidadesDTO, UnidadesUpdateDTO } from '../dto/unidades.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
-@UseGuards(AuthenticationGuard)
+@UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('unidades')
 @ApiTags('unidades')
 export class UnidadesController {

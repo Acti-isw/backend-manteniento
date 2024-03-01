@@ -141,14 +141,26 @@ model Usuarios {
   Item                      Item[]
   SalidaEntradaHerramientas SalidaEntradaHerramientas[]
   Unidades                  Unidades[]
+  Role                      Role?                       @relation(fields: [idRole], references: [idRole], onDelete: NoAction, onUpdate: NoAction, map: "FK_Usuarios_Role")
 }
 
 model Role {
-  idRole   Int       @id(map: "PK_idRole") @default(autoincrement())
-  nombre   String?   @db.VarChar(45)
-  createAT DateTime? @default(now(), map: "DF__Role__createAT__49C3F6B7") @db.DateTime
-  updateAT DateTime? @default(now(), map: "DF__Role__updateAT__4AB81AF0") @db.DateTime
-  isDelete Boolean?  @default(false, map: "DF__Role__isDelete__4BAC3F29")
+  idRole   Int        @id(map: "PK_idRole") @default(autoincrement())
+  nombre   String?    @db.VarChar(45)
+  createAT DateTime?  @default(now(), map: "DF__Role__createAT__49C3F6B7") @db.DateTime
+  updateAT DateTime?  @default(now(), map: "DF__Role__updateAT__4AB81AF0") @db.DateTime
+  isDelete Boolean?   @default(false, map: "DF__Role__isDelete__4BAC3F29")
+  Usuarios Usuarios[]
+}
+
+model sysdiagrams {
+  name         String @db.NVarChar(128)
+  principal_id Int
+  diagram_id   Int    @id(map: "PK__sysdiagr__C2B05B61C2D6580D") @default(autoincrement())
+  version      Int?
+  definition   Bytes?
+
+  @@unique([principal_id, name], map: "UK_principal_name")
 }
 
 view visInventario {
