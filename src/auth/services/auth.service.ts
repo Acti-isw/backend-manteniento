@@ -34,7 +34,7 @@ export class AuthService {
     const getUser = await this.userService.findUserById(user.idUsuario);
 
     const payload: IPayloadToken = {
-      role: getUser.idRole + '',
+      role: getUser.Role.nombre,
       username: getUser.usuario,
     };
 
