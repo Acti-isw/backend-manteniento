@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Usuarios } from '@prisma/client';
+import { Role, Usuarios } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserDTO } from '../dto/user.dto';
 import { isEmpty } from 'lodash';
@@ -12,16 +12,19 @@ export class UsersService {
     return await this.prisma.usuarios.create({ data });
   }
 
-  async findUsers(): Promise<Usuarios[]> {
-    const users = await this.prisma.usuarios.findMany();
+  async findUsers() {
+    const users = await this.prisma.usuarios.findMany({
+      include: { Role: { select: { idRole: true, nombre: true } } },
+    });
     if (isEmpty(users)) {
       throw new NotFoundException('No se encontraron usuarios');
     }
     return users;
   }
 
-  async findUserById(id: number): Promise<Usuarios> {
+  async findUserById(id: number) {
     const user = await this.prisma.usuarios.findFirst({
+      include: { Role: { select: { idRole: true, nombre: true } } },
       where: {
         idUsuario: id,
       },

@@ -2,8 +2,9 @@ import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/comm
 import { SalidaEntHerService } from '../services/salida-ent-her.service';
 import { SalidaEntHerDTO, SalidaEntHerUpdateDTO } from '../dto/salidaEntHer.dto';
 import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
-@UseGuards(AuthenticationGuard)
+@UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('salida-ent-her')
 export class SalidaEntHerController {
   constructor(private readonly salidaEntHerServices: SalidaEntHerService) {}

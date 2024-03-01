@@ -15,8 +15,9 @@ import {
 } from '../dto/herramientas.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
-@UseGuards(AuthenticationGuard)
+@UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('herramientas')
 @ApiTags('herramientas')
 export class HerramientasController {

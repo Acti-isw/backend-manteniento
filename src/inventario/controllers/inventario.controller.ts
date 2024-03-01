@@ -3,8 +3,9 @@ import { InventarioService } from '../services/inventario.service';
 import { InventarioDTO, InventarioUpdateDTO } from '../dto/inventario.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
-@UseGuards(AuthenticationGuard)
+@UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('inventarios')
 @ApiTags('inventarios')
 export class InventarioController {
