@@ -12,6 +12,7 @@ import { SalidaEntradaHerramientasModule } from './salida-entrada-herramientas/s
 //import { APP_FILTER } from '@nestjs/core';
 //import { PrismaClientExceptionFilter } from './prisma/prisma-client-exception.filter';
 import { HistorialStockModule } from './historial-stock/historial-stock.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   // providers: [
@@ -35,6 +36,7 @@ import { HistorialStockModule } from './historial-stock/historial-stock.module';
     InventarioModule,
     SalidaEntradaHerramientasModule,
     HistorialStockModule,
+    SeedModule,
   ],
 })
 export class AppModule {}
