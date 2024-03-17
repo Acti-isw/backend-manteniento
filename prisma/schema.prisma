@@ -129,6 +129,7 @@ model Usuarios {
   nombreCompleto            String                      @db.VarChar(60)
   usuario                   String                      @db.VarChar(45)
   password                  String                      @db.VarChar(100)
+  avatar                    String?                     @db.VarChar(Max)
   idRole                    Int?
   createAT                  DateTime?                   @default(now(), map: "DF__Usuarios__create__4F7CD00D") @db.DateTime
   updateAT                  DateTime?                   @default(now(), map: "DF__Usuarios__update__5070F446") @db.DateTime

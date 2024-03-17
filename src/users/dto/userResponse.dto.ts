@@ -5,6 +5,7 @@ export class UserResponseDTO implements Usuarios{
     idUsuario: number;
     nombreCompleto: string;
     usuario: string;
+    avatar: string;
     idRole: number;
     createAT: Date;
     updateAT: Date;
