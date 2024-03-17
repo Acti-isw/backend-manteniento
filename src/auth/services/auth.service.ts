@@ -39,18 +39,16 @@ export class AuthService {
     };
 
     return {
+      idUsuario: user.idUsuario,
+      nombreCompleto: user.nombreCompleto,
+      usuario: user.usuario,
+      idRole: user.idRole,
+      avatar: user.avatar,
       accesToken: await this.signJWT({
         payload,
         secret: process.env.JWT_SECRET,
         expires: '1h',
       }),
-      user: {
-        idUsuario: user.idUsuario,
-        nombreCompleto: user.nombreCompleto,
-        usuario: user.usuario,
-        idRole: user.idRole,
-        avatar: user.avatar
-      },
     };
   }
 }
