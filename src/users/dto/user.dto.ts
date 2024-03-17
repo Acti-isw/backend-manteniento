@@ -25,6 +25,9 @@ export class UserDTO {
   @IsString()
   password: string;
 
+  @IsString()
+  avatar: string;
+
   @IsOptional()
   @IsNumber()
   idRole: number;
