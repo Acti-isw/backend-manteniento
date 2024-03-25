@@ -11,7 +11,7 @@ export class ItemInventarioHerramientaDTO implements ItemInventarioDTO, Herramie
   @IsOptional()
   idItem: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   codigoItson: string;
 

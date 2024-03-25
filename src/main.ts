@@ -10,13 +10,19 @@ import {
 } from './constants/swagger';
 import { CORS } from './constants/cors';
 import { PrismaClientExceptionFilter } from './prisma/prisma-client-exception.filter';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule,{rawBody:true});
+  
 
   app.enableCors(CORS);
 
   app.setGlobalPrefix('api/');
+
+  // Aumentar el límite de tamaño de la entidad de solicitud a 50 MB (o el tamaño que desees)
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
   app.useGlobalPipes(
     new ValidationPipe({
