@@ -80,7 +80,7 @@ model Item {
   idItem         Int              @id(map: "PK_idItem") @default(autoincrement())
   nombre         String           @db.VarChar(100)
   descripcion    String?          @db.VarChar(100)
-  imagen         String?          @db.VarChar(100)
+  imagen         String?          @db.VarChar(Max)
   idUnidad       Int
   idCategoria    Int
   createAT       DateTime?        @default(now(), map: "DF__Item__createAT__5FB337D6") @db.DateTime
@@ -184,13 +184,13 @@ view visHerramientas {
 }
 
 view visItems {
-  idItem       Int      @unique
-  nombreItem   String   @db.VarChar(100)
-  descripcion  String?  @db.VarChar(100)
-  imagen       String?  @db.VarChar(100)
-  nombreUnidad String   @db.VarChar(100)
-  nombre       String   @db.VarChar(100)
-  isDelete     Boolean?
+  idItem          Int      @unique
+  nombreItem      String   @db.VarChar(100)
+  descripcion     String?  @db.VarChar(100)
+  imagen          String?  @db.VarChar(Max)
+  nombreUnidad    String   @db.VarChar(100)
+  nombreCategoria String   @db.VarChar(100)
+  isDelete        Boolean?
 }
 
 view visSalidaEntradaHerramientas {
