@@ -4,7 +4,10 @@ import {
   SalidaEntHerDTO,
   SalidaEntHerUpdateDTO,
 } from '../dto/salidaEntHer.dto';
-import { SalidaEntradaHerramientas } from '@prisma/client';
+import {
+  SalidaEntradaHerramientas,
+  visSalidaEntradaHerramientas,
+} from '@prisma/client';
 import { isEmpty } from 'lodash';
 
 @Injectable()
@@ -31,8 +34,9 @@ export class SalidaEntHerService {
     });
   }
 
-  async findSalEntHer(): Promise<SalidaEntradaHerramientas[]> {
-    const salEntradas = await this.prisma.salidaEntradaHerramientas.findMany();
+  async findSalEntHer(): Promise<visSalidaEntradaHerramientas[]> {
+    const salEntradas =
+      await this.prisma.visSalidaEntradaHerramientas.findMany();
 
     if (isEmpty(salEntradas)) {
       throw new NotFoundException(
@@ -42,16 +46,18 @@ export class SalidaEntHerService {
     return salEntradas;
   }
 
-  async findSalEntHerById(id: number): Promise<SalidaEntradaHerramientas> {
-    const salEntrada = await this.prisma.salidaEntradaHerramientas.findFirst({
-      where: {
-        idSalidaEntradaHerramientas: id,
+  async findSalEntHerById(id: number): Promise<visSalidaEntradaHerramientas> {
+    const salEntrada = await this.prisma.visSalidaEntradaHerramientas.findFirst(
+      {
+        where: {
+          idSalidaEntradaHerramientas: id,
+        },
       },
-    });
+    );
 
     if (!salEntrada) {
       throw new NotFoundException(
-        `No se enctro salida entrada para la herramienta con id:${id}`,
+        `No se enctro salida entrada para la id:${id}`,
       );
     }
     return salEntrada;
