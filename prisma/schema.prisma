@@ -106,8 +106,8 @@ model SalidaEntradaHerramientas {
   isSalida                    Boolean?
   createAT                    DateTime?    @default(now(), map: "DF__SalidaEnt__creat__03F0984C") @db.DateTime
   idUsuario                   Int
-  Herramientas                Herramientas @relation(fields: [idHerramientas], references: [idHerramientas], onUpdate: NoAction, map: "FK_SalidaEntradaHerramientas_Herramientas")
   Usuarios                    Usuarios     @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__SalidaEnt__idUsu__534D60F1")
+  Herramientas                Herramientas @relation(fields: [idHerramientas], references: [idHerramientas], onUpdate: NoAction, map: "FK_SalidaEntradaHerramientas_Herramientas")
 
   @@index([idEmpleado], map: "IX_SalidaEntradaHerramientas_idEmpleado")
   @@index([idHerramientas], map: "IX_SalidaEntradaHerramientas_idHerramientas")
@@ -166,9 +166,10 @@ model sysdiagrams {
 
 view visInventario {
   idInventario    Int     @unique
+  idItem          Int
   nombreItem      String  @db.VarChar(100)
   descripcion     String? @db.VarChar(100)
-  imagen          String? @db.VarChar(100)
+  imagen          String? @db.VarChar(Max)
   nombreUnidad    String  @db.VarChar(100)
   nombreCategoria String  @db.VarChar(100)
   stockActual     Int
@@ -205,4 +206,17 @@ view visUsuarios {
   usuario        String  @db.VarChar(45)
   password       String  @db.VarChar(100)
   nombre         String? @db.VarChar(45)
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visHistorialStock {
+  idHistorialStock Int
+  idItem           Int?
+  item             String? @db.VarChar(100)
+  stockNuevo       Int
+  stockAnterior    Int?
+  accion           String? @db.VarChar(100)
+  usuario          String? @db.VarChar(45)
+
+  @@ignore
 }

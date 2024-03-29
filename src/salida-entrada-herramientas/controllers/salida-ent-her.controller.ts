@@ -1,11 +1,24 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { SalidaEntHerService } from '../services/salida-ent-her.service';
-import { SalidaEntHerDTO, SalidaEntHerUpdateDTO } from '../dto/salidaEntHer.dto';
+import {
+  SalidaEntHerDTO,
+  SalidaEntHerUpdateDTO,
+} from '../dto/salidaEntHer.dto';
 import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('salida-ent-her')
+@ApiTags('salida-ent-her')
 export class SalidaEntHerController {
   constructor(private readonly salidaEntHerServices: SalidaEntHerService) {}
 

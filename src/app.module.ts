@@ -13,6 +13,7 @@ import { SalidaEntradaHerramientasModule } from './salida-entrada-herramientas/s
 //import { PrismaClientExceptionFilter } from './prisma/prisma-client-exception.filter';
 import { HistorialStockModule } from './historial-stock/historial-stock.module';
 import { SeedModule } from './seed/seed.module';
+import { RoleModule } from './roles/roles.module';
 
 @Module({
   // providers: [
@@ -37,6 +38,7 @@ import { SeedModule } from './seed/seed.module';
     SalidaEntradaHerramientasModule,
     HistorialStockModule,
     SeedModule,
+    RoleModule,
   ],
 })
 export class AppModule {}

@@ -13,8 +13,7 @@ import { PrismaClientExceptionFilter } from './prisma/prisma-client-exception.fi
 import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule,{rawBody:true});
-  
+  const app = await NestFactory.create(AppModule, { rawBody: true });
 
   app.enableCors(CORS);
 

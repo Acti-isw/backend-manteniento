@@ -12,7 +12,7 @@ export class HistorialStockService {
       include: {
         AccionesStock: { select: { nombre: true } },
         Item: { select: { nombre: true } },
-        Usuarios: { select: { nombreCompleto: true } },
+        Usuarios: { select: { usuario: true } },
       },
     });
     if (isEmpty(historiales)) {
@@ -27,7 +27,7 @@ export class HistorialStockService {
       include: {
         AccionesStock: { select: { nombre: true } },
         Item: { select: { nombre: true } },
-        Usuarios: { select: { nombreCompleto: true } },
+        Usuarios: { select: { usuario: true } },
       },
     });
     if (!historial) {

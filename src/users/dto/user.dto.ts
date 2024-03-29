@@ -1,12 +1,4 @@
-import {
-  IsNotEmpty,
-  IsString,
-  IsNumber,
-  IsEnum,
-  IsBoolean,
-  IsDate,
-  IsOptional,
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsOptional } from 'class-validator';
 
 export class UserDTO {
   @IsOptional()
@@ -26,6 +18,7 @@ export class UserDTO {
   password: string;
 
   @IsString()
+  @IsOptional()
   avatar: string;
 
   @IsOptional()

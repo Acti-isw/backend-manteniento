@@ -1,5 +1,6 @@
 SELECT
   inv.idInventario,
+  ite.idItem,
   ite.nombre AS nombreItem,
   ite.descripcion,
   ite.imagen,
@@ -14,4 +15,5 @@ FROM
   JOIN [dbo].[Unidades] AS und ON und.idUnidad = ite.idUnidad
   JOIN [dbo].[Categoria] AS cat ON cat.idCategoria = ite.idCategoria
 WHERE
-  inv.isDelete = 0;
+  inv.isDelete = 0
+  AND ite.isDelete = 0;

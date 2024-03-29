@@ -4,8 +4,10 @@ import { ItemInventarioHerramientaService } from '../services/item_inventario-he
 import { ItemInventarioHerramientaDTO } from '../dto/item_inventario-herramienta.dto';
 import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('item-inventario-herramienta')
+@ApiTags('item-inventario-herramienta')
 export class ItemInventarioHerramientaController {
   constructor(
     private readonly iteInvService: ItemInventarioService,
