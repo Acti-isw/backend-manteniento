@@ -1,0 +1,43 @@
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { SalidaEntradaItemService } from '../services/salida-entrada-item.service';
+import {
+  SalidaEntItemDTO,
+  SalidaEntItemUpdateDTO,
+} from '../dto/dto/salidaEntItem.dto';
+
+@UseGuards(AuthenticationGuard, RolesGuard)
+@Controller('salida-ent-item')
+@ApiTags('salida-ent-item')
+export class SalidaEntradaItemController {
+  constructor(
+    private readonly salidaEntItemServices: SalidaEntradaItemService,
+  ) {}
+
+  @Post('create')
+  async createSalEntHer(@Body() registro: SalidaEntItemDTO) {
+    return this.salidaEntItemServices.createSalEntItem(registro);
+  }
+  @Put('update')
+  async updateSalEntHer(@Body() registro: SalidaEntItemUpdateDTO) {
+    return this.salidaEntItemServices.updateSalEntItem(registro);
+  }
+  @Get('all')
+  async findSalEntHer() {
+    return this.salidaEntItemServices.findSalEntItem();
+  }
+  @Get(':id')
+  async findSalEntHerById(@Param('id') id: number) {
+    return this.salidaEntItemServices.findSalEntItemById(id);
+  }
+}
