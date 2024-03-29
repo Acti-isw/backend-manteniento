@@ -1,6 +1,8 @@
 SELECT
   inv.idInventario,
   ite.idItem,
+  cat.idCategoria,
+  und.idUnidad,
   ite.nombre AS nombreItem,
   ite.descripcion,
   ite.imagen,

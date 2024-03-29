@@ -53,6 +53,8 @@ model HistorialStock {
   stockNuevo       Int
   idItem           Int
   idAccion         Int
+  motivo           String?       @db.VarChar(Max)
+  idEmpleado       Int?
   idUsuario        Int
   fecha            DateTime      @default(now(), map: "DF__Historial__fecha__71D1E811") @db.DateTime
   AccionesStock    AccionesStock @relation(fields: [idAccion], references: [idAccion], onUpdate: NoAction, map: "FK__Historial__idAcc__4E88ABD4")
@@ -77,22 +79,23 @@ model Inventario {
 }
 
 model Item {
-  idItem         Int              @id(map: "PK_idItem") @default(autoincrement())
-  nombre         String           @db.VarChar(100)
-  descripcion    String?          @db.VarChar(100)
-  imagen         String?          @db.VarChar(Max)
-  idUnidad       Int
-  idCategoria    Int
-  createAT       DateTime?        @default(now(), map: "DF__Item__createAT__5FB337D6") @db.DateTime
-  updateAT       DateTime?        @db.DateTime
-  isDelete       Boolean?         @default(false, map: "DF__Item__isDelete__60A75C0F")
-  idUsuario      Int
-  Herramientas   Herramientas[]
-  HistorialStock HistorialStock[]
-  Inventario     Inventario[]
-  Categoria      Categoria        @relation(fields: [idCategoria], references: [idCategoria], onUpdate: NoAction, map: "FK__Item__idCategori__49C3F6B7")
-  Unidades       Unidades         @relation(fields: [idUnidad], references: [idUnidad], onUpdate: NoAction, map: "FK__Item__idUnidad__48CFD27E")
-  Usuarios       Usuarios         @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_Item_Usuarios")
+  idItem            Int                 @id(map: "PK_idItem") @default(autoincrement())
+  nombre            String              @db.VarChar(100)
+  descripcion       String?             @db.VarChar(100)
+  imagen            String?             @db.VarChar(Max)
+  idUnidad          Int
+  idCategoria       Int
+  createAT          DateTime?           @default(now(), map: "DF__Item__createAT__5FB337D6") @db.DateTime
+  updateAT          DateTime?           @db.DateTime
+  isDelete          Boolean?            @default(false, map: "DF__Item__isDelete__60A75C0F")
+  idUsuario         Int
+  Herramientas      Herramientas[]
+  HistorialStock    HistorialStock[]
+  Inventario        Inventario[]
+  Categoria         Categoria           @relation(fields: [idCategoria], references: [idCategoria], onUpdate: NoAction, map: "FK__Item__idCategori__49C3F6B7")
+  Unidades          Unidades            @relation(fields: [idUnidad], references: [idUnidad], onUpdate: NoAction, map: "FK__Item__idUnidad__48CFD27E")
+  Usuarios          Usuarios            @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_Item_Usuarios")
+  SalidaEntradaItem SalidaEntradaItem[]
 
   @@index([idCategoria], map: "IX_Item_idCategoria")
   @@index([idUnidad], map: "IX_Item_idUnidad")
@@ -102,12 +105,12 @@ model SalidaEntradaHerramientas {
   idSalidaEntradaHerramientas Int          @id(map: "PK_idSalidaEntradaHerramientas") @default(autoincrement())
   idHerramientas              Int
   idEmpleado                  Int?
-  motivo                      String       @db.VarChar(200)
+  motivo                      String?      @db.VarChar(Max)
   isSalida                    Boolean?
   createAT                    DateTime?    @default(now(), map: "DF__SalidaEnt__creat__03F0984C") @db.DateTime
   idUsuario                   Int
-  Usuarios                    Usuarios     @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__SalidaEnt__idUsu__534D60F1")
   Herramientas                Herramientas @relation(fields: [idHerramientas], references: [idHerramientas], onUpdate: NoAction, map: "FK_SalidaEntradaHerramientas_Herramientas")
+  Usuarios                    Usuarios     @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__SalidaEnt__idUsu__534D60F1")
 
   @@index([idEmpleado], map: "IX_SalidaEntradaHerramientas_idEmpleado")
   @@index([idHerramientas], map: "IX_SalidaEntradaHerramientas_idHerramientas")
@@ -141,6 +144,7 @@ model Usuarios {
   Inventario                Inventario[]
   Item                      Item[]
   SalidaEntradaHerramientas SalidaEntradaHerramientas[]
+  SalidaEntradaItem         SalidaEntradaItem[]
   Unidades                  Unidades[]
   Role                      Role?                       @relation(fields: [idRole], references: [idRole], onDelete: NoAction, onUpdate: NoAction, map: "FK_Usuarios_Role")
 }
@@ -164,9 +168,27 @@ model sysdiagrams {
   @@unique([principal_id, name], map: "UK_principal_name")
 }
 
+model SalidaEntradaItem {
+  idSalidaEntradaItem Int       @id(map: "PK_idSalidaEntradaItem") @default(autoincrement())
+  idItem              Int
+  idEmpleado          Int?
+  cantidad            Int
+  motivo              String?   @db.VarChar(Max)
+  isSalida            Boolean?
+  createAT            DateTime? @default(now(), map: "DF__SalidaEnt__creat__38EE7070") @db.DateTime
+  idUsuario           Int
+  Item                Item      @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK_SalidaEntradaItem_Item")
+  Usuarios            Usuarios  @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_SalidaEntradaItem_Usuarios")
+
+  @@index([idEmpleado], map: "IX_SalidaEntradaItem_idEmpleado")
+  @@index([idItem], map: "IX_SalidaEntradaItem_idItem")
+}
+
 view visInventario {
   idInventario    Int     @unique
   idItem          Int
+  idCategoria     Int
+  idUnidad        Int
   nombreItem      String  @db.VarChar(100)
   descripcion     String? @db.VarChar(100)
   imagen          String? @db.VarChar(Max)
@@ -208,15 +230,24 @@ view visUsuarios {
   nombre         String? @db.VarChar(45)
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view visHistorialStock {
-  idHistorialStock Int
+  idHistorialStock Int      @unique
   idItem           Int?
-  item             String? @db.VarChar(100)
-  stockNuevo       Int
+  idAccion         Int?
+  idEmpleado       Int?
+  idUsuario        Int?
   stockAnterior    Int?
-  accion           String? @db.VarChar(100)
-  usuario          String? @db.VarChar(45)
+  stockNuevo       Int
+  nombreItem       String?  @db.VarChar(100)
+  nombreAccion     String?  @db.VarChar(100)
+  nombreUsuario    String?  @db.VarChar(45)
+  motivo           String?  @db.VarChar(Max)
+  fecha            DateTime @db.DateTime
+}
 
-  @@ignore
+view visSalidaEntradaItem {
+  idSalidaEntradaItem Int    @unique
+  idItem              Int
+  nombreItem          String @db.VarChar(100)
+  idEmpleado          Int?
 }

@@ -1,13 +1,18 @@
 SELECT
   his.idHistorialStock,
   itm.idItem,
-  itm.nombre AS item,
-  his.stockNuevo,
+  acc.idAccion,
+  his.idEmpleado,
+  usu.idUsuario,
   his.stockAnterior,
-  acc.nombre AS accion,
-  usu.usuario
+  his.stockNuevo,
+  itm.nombre AS nombreItem,
+  acc.nombre AS nombreAccion,
+  usu.usuario AS nombreUsuario,
+  his.motivo,
+  his.fecha
 FROM
-  dbo.HistorialStock AS his
-  LEFT JOIN dbo.AccionesStock AS acc ON his.idAccion = acc.idAccion
-  LEFT JOIN dbo.Usuarios AS usu ON his.idUsuario = usu.idUsuario
-  LEFT JOIN dbo.Item AS itm ON his.idItem = itm.idItem;
+  HistorialStock AS his
+  LEFT JOIN AccionesStock AS acc ON his.idAccion = acc.idAccion
+  LEFT JOIN Usuarios AS usu ON his.idUsuario = usu.idUsuario
+  LEFT JOIN Item AS itm ON his.idItem = itm.idItem;
