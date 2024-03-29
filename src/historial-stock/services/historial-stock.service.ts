@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { HistorialStock } from '@prisma/client';
+import { HistorialStock, visHistorialStock } from '@prisma/client';
 import { isEmpty } from 'lodash';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -7,28 +7,17 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class HistorialStockService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findStockHistories(): Promise<HistorialStock[]> {
-    const historiales = await this.prisma.historialStock.findMany({
-      include: {
-        AccionesStock: { select: { nombre: true } },
-        Item: { select: { nombre: true } },
-        Usuarios: { select: { usuario: true } },
-      },
-    });
+  async findStockHistories(): Promise<visHistorialStock[]> {
+    const historiales = await this.prisma.visHistorialStock.findMany();
     if (isEmpty(historiales)) {
       throw new NotFoundException('No se encontraron los historiales de stock');
     }
     return historiales;
   }
 
-  async findStockHistoryById(id: number): Promise<HistorialStock> {
-    const historial = await this.prisma.historialStock.findFirst({
+  async findStockHistoryById(id: number): Promise<visHistorialStock> {
+    const historial = await this.prisma.visHistorialStock.findFirst({
       where: { idHistorialStock: id },
-      include: {
-        AccionesStock: { select: { nombre: true } },
-        Item: { select: { nombre: true } },
-        Usuarios: { select: { usuario: true } },
-      },
     });
     if (!historial) {
       throw new NotFoundException(

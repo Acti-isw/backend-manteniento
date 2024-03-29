@@ -1,5 +1,5 @@
 import { HistorialStock } from '@prisma/client';
-import { IsDate, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class HistorialStockDTO implements HistorialStock {
   @IsOptional()
@@ -21,6 +21,14 @@ export class HistorialStockDTO implements HistorialStock {
   @IsNotEmpty()
   @IsNumber()
   idAccion: number;
+
+  @IsOptional()
+  @IsString()
+  motivo: string;
+
+  @IsOptional()
+  @IsNumber()
+  idEmpleado: number;
 
   @IsNotEmpty()
   @IsNumber()
