@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { HistorialStock, visHistorialStock } from '@prisma/client';
+import { visHistorialStock } from '@prisma/client';
 import { isEmpty } from 'lodash';
 import { PrismaService } from 'src/prisma/prisma.service';
 

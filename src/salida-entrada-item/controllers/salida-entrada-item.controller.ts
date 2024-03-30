@@ -17,8 +17,8 @@ import {
 } from '../dto/dto/salidaEntItem.dto';
 
 @UseGuards(AuthenticationGuard, RolesGuard)
-@Controller('salida-ent-item')
-@ApiTags('salida-ent-item')
+@Controller('salida-ent-inv')
+@ApiTags('salida-ent-inv')
 export class SalidaEntradaItemController {
   constructor(
     private readonly salidaEntItemServices: SalidaEntradaItemService,
@@ -33,8 +33,16 @@ export class SalidaEntradaItemController {
     return this.salidaEntItemServices.updateSalEntItem(registro);
   }
   @Get('all')
-  async findSalEntHer() {
+  async findSalEntInventario() {
     return this.salidaEntItemServices.findSalEntItem();
+  }
+  @Get('entradas')
+  async findEntradasInventario() {
+    return this.salidaEntItemServices.findEntradasInventario();
+  }
+  @Get('salidas')
+  async findSalEntHer() {
+    return this.salidaEntItemServices.findSalidasInventario();
   }
   @Get(':id')
   async findSalEntHerById(@Param('id') id: number) {

@@ -28,7 +28,11 @@ export class SalidaEntradaItemService {
   }
 
   async findSalEntItem(): Promise<visSalidaEntradaItem[]> {
-    const salEntradas = await this.prisma.visSalidaEntradaItem.findMany();
+    const salEntradas = await this.prisma.visSalidaEntradaItem.findMany({
+      orderBy: {
+        createAT: 'desc',
+      },
+    });
 
     if (isEmpty(salEntradas)) {
       throw new NotFoundException(
@@ -36,6 +40,40 @@ export class SalidaEntradaItemService {
       );
     }
     return salEntradas;
+  }
+  async findEntradasInventario(): Promise<visSalidaEntradaItem[]> {
+    const entradas = await this.prisma.visSalidaEntradaItem.findMany({
+      orderBy: {
+        createAT: 'desc',
+      },
+      where: {
+        isSalida: false,
+      },
+    });
+
+    if (isEmpty(entradas)) {
+      throw new NotFoundException(
+        'No se encontraron salidas y entradas de Items',
+      );
+    }
+    return entradas;
+  }
+  async findSalidasInventario(): Promise<visSalidaEntradaItem[]> {
+    const entradas = await this.prisma.visSalidaEntradaItem.findMany({
+      orderBy: {
+        createAT: 'desc',
+      },
+      where: {
+        isSalida: true,
+      },
+    });
+
+    if (isEmpty(entradas)) {
+      throw new NotFoundException(
+        'No se encontraron salidas y entradas de Items',
+      );
+    }
+    return entradas;
   }
 
   async findSalEntItemById(id: number): Promise<visSalidaEntradaItem> {
