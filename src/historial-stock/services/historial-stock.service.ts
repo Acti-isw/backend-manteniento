@@ -2,10 +2,19 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { HistorialStock, visHistorialStock } from '@prisma/client';
 import { isEmpty } from 'lodash';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { HistorialStockDTO } from '../dto/historialStock.dto';
 
 @Injectable()
 export class HistorialStockService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async createStockHistory(
+    history: HistorialStockDTO,
+  ): Promise<HistorialStock> {
+    return this.prisma.historialStock.create({
+      data: history,
+    });
+  }
 
   async findStockHistories(): Promise<visHistorialStock[]> {
     const historiales = await this.prisma.visHistorialStock.findMany();
