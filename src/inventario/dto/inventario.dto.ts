@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsString,
 } from 'class-validator';
 
 export class InventarioDTO implements Inventario {
@@ -81,4 +82,54 @@ export class InventarioUpdateDTO implements Inventario {
   @IsOptional()
   @IsNumber()
   idUsuario: number;
+}
+
+export class InventarioHistoryStockUpdateDTO implements Inventario {
+  @IsNotEmpty()
+  @IsNumber()
+  idInventario: number;
+
+  @IsOptional()
+  @IsNumber()
+  idItem: number;
+
+  @IsOptional()
+  @IsNumber()
+  stockActual: number;
+
+  @IsOptional()
+  @IsNumber()
+  stockMin: number;
+
+  @IsOptional()
+  @IsNumber()
+  stockMax: number;
+
+  @IsOptional()
+  @IsDate()
+  createAT: Date;
+
+  @IsOptional()
+  @IsDate()
+  updateAT: Date;
+
+  @IsOptional()
+  @IsBoolean()
+  isDelete: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  idUsuario: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  idAccion: number;
+
+  @IsOptional()
+  @IsString()
+  motivo: string;
+
+  @IsOptional()
+  @IsNumber()
+  idEmpleado: number;
 }
