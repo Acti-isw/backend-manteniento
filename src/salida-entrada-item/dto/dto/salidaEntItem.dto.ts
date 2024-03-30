@@ -17,7 +17,7 @@ export class SalidaEntItemDTO implements SalidaEntradaItem {
   @IsNumber()
   idItem: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   idEmpleado: number;
 
