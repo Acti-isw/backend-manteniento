@@ -23,6 +23,10 @@ export class HistorialStockDTO implements HistorialStock {
   idAccion: number;
 
   @IsOptional()
+  @IsNumber()
+  idSalidaEntradaItem: number;
+
+  @IsOptional()
   @IsString()
   motivo: string;
 
