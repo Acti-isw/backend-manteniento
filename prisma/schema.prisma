@@ -48,18 +48,20 @@ model Herramientas {
 }
 
 model HistorialStock {
-  idHistorialStock Int           @id(map: "PK_idHistorialStock") @default(autoincrement())
-  stockAnterior    Int?
-  stockNuevo       Int
-  idItem           Int
-  idAccion         Int
-  idUsuario        Int
-  fecha            DateTime      @default(now(), map: "DF__Historial__fecha__71D1E811") @db.DateTime
-  motivo           String?       @db.VarChar(Max)
-  idEmpleado       Int?
-  AccionesStock    AccionesStock @relation(fields: [idAccion], references: [idAccion], onUpdate: NoAction, map: "FK__Historial__idAcc__4E88ABD4")
-  Item             Item          @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK__Historial__idIte__4D94879B")
-  Usuarios         Usuarios      @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__Historial__idUsu__4F7CD00D")
+  idHistorialStock    Int                @id(map: "PK_idHistorialStock") @default(autoincrement())
+  stockAnterior       Int?
+  stockNuevo          Int
+  idItem              Int
+  idAccion            Int
+  idSalidaEntradaItem Int?
+  motivo              String?            @db.VarChar(Max)
+  idEmpleado          Int?
+  idUsuario           Int
+  fecha               DateTime           @default(now(), map: "DF__Historial__fecha__71D1E811") @db.DateTime
+  AccionesStock       AccionesStock      @relation(fields: [idAccion], references: [idAccion], onUpdate: NoAction, map: "FK__Historial__idAcc__4E88ABD4")
+  Item                Item               @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK__Historial__idIte__4D94879B")
+  SalidaEntradaItem   SalidaEntradaItem? @relation(fields: [idSalidaEntradaItem], references: [idSalidaEntradaItem], onDelete: NoAction, onUpdate: NoAction, map: "FK_HistorialStock_SalidaEntradaItem")
+  Usuarios            Usuarios           @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__Historial__idUsu__4F7CD00D")
 }
 
 model Inventario {
@@ -105,12 +107,12 @@ model SalidaEntradaHerramientas {
   idSalidaEntradaHerramientas Int          @id(map: "PK_idSalidaEntradaHerramientas") @default(autoincrement())
   idHerramientas              Int
   idEmpleado                  Int?
-  motivo                      String       @db.VarChar(200)
+  motivo                      String?      @db.VarChar(Max)
   isSalida                    Boolean?
   createAT                    DateTime?    @default(now(), map: "DF__SalidaEnt__creat__03F0984C") @db.DateTime
   idUsuario                   Int
-  Usuarios                    Usuarios     @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__SalidaEnt__idUsu__534D60F1")
   Herramientas                Herramientas @relation(fields: [idHerramientas], references: [idHerramientas], onUpdate: NoAction, map: "FK_SalidaEntradaHerramientas_Herramientas")
+  Usuarios                    Usuarios     @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__SalidaEnt__idUsu__534D60F1")
 
   @@index([idEmpleado], map: "IX_SalidaEntradaHerramientas_idEmpleado")
   @@index([idHerramientas], map: "IX_SalidaEntradaHerramientas_idHerramientas")
@@ -169,18 +171,17 @@ model sysdiagrams {
 }
 
 model SalidaEntradaItem {
-  idSalidaEntradaItem Int       @id(map: "PK_idSalidaEntradaItem") @default(autoincrement())
+  idSalidaEntradaItem Int              @id(map: "PK_idSalidaEntradaItem") @default(autoincrement())
   idItem              Int
   idEmpleado          Int?
   cantidad            Int
-  motivo              String?   @db.VarChar(Max)
+  motivo              String?          @db.VarChar(Max)
   isSalida            Boolean?
-  createAT            DateTime? @default(now(), map: "DF__SalidaEnt__creat__4830B400") @db.DateTime
+  createAT            DateTime?        @default(now(), map: "DF__SalidaEnt__creat__38EE7070") @db.DateTime
   idUsuario           Int
-  stockAnterior       Int?
-  stockActual         Int?
-  Item                Item      @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK_SalidaEntradaItem_Item")
-  Usuarios            Usuarios  @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_SalidaEntradaItem_Usuarios")
+  HistorialStock      HistorialStock[]
+  Item                Item             @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK_SalidaEntradaItem_Item")
+  Usuarios            Usuarios         @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_SalidaEntradaItem_Usuarios")
 
   @@index([idEmpleado], map: "IX_SalidaEntradaItem_idEmpleado")
   @@index([idItem], map: "IX_SalidaEntradaItem_idItem")
@@ -189,6 +190,8 @@ model SalidaEntradaItem {
 view visInventario {
   idInventario    Int     @unique
   idItem          Int
+  idCategoria     Int
+  idUnidad        Int
   nombreItem      String  @db.VarChar(100)
   descripcion     String? @db.VarChar(100)
   imagen          String? @db.VarChar(Max)
@@ -248,12 +251,12 @@ view visHistorialStock {
 view visSalidaEntradaItem {
   idSalidaEntradaItem Int       @unique
   idItem              Int
-  nombreItem          String?   @db.VarChar(100)
+  nombreItem          String    @db.VarChar(100)
   motivo              String?   @db.VarChar(Max)
-  stockAnterior       Int?
-  stockActual         Int?
-  idEmpleado          Int?
-  idUsuario           Int
-  createAT            DateTime? @db.DateTime
+  empleado            Int?
+  nombreUsuario       String    @db.VarChar(60)
+  stockInicial        Int?
+  stockActual         Int
   isSalida            Boolean?
+  createAT            DateTime? @db.DateTime
 }
