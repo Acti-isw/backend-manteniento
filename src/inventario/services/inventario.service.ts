@@ -33,7 +33,10 @@ export class InventarioService {
   }
 
   async updateInventory(inventario: InventarioDTO): Promise<Inventario> {
-    const { idInventario, ...dataUpdate } = inventario;
+    const filteredInvData = pick(inventario, this.propertiesDTO);
+    const inventarioDto = plainToClass(InventarioDTO, filteredInvData);
+
+    const { idInventario, ...dataUpdate } = inventarioDto;
     return await this.prisma.inventario.update({
       where: { idInventario },
       data: {
