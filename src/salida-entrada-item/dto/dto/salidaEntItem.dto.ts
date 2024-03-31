@@ -30,14 +30,6 @@ export class SalidaEntItemDTO implements SalidaEntradaItem {
   motivo: string;
 
   @IsOptional()
-  @IsNumber()
-  stockActual: number;
-
-  @IsOptional()
-  @IsNumber()
-  stockAnterior: number;
-
-  @IsOptional()
   @IsBoolean()
   isSalida: boolean;
 
@@ -70,14 +62,6 @@ export class SalidaEntItemUpdateDTO implements SalidaEntradaItem {
   @IsOptional()
   @IsString()
   motivo: string;
-
-  @IsOptional()
-  @IsNumber()
-  stockActual: number;
-
-  @IsOptional()
-  @IsNumber()
-  stockAnterior: number;
 
   @IsOptional()
   @IsBoolean()
