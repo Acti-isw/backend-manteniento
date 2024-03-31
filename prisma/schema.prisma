@@ -255,7 +255,7 @@ view visSalidaEntradaItem {
   motivo              String?   @db.VarChar(Max)
   empleado            Int?
   nombreUsuario       String    @db.VarChar(60)
-  stockInicial        Int?
+  stockAnterior       Int?
   stockActual         Int
   isSalida            Boolean?
   createAT            DateTime? @db.DateTime

@@ -5,7 +5,7 @@ SELECT
   hs.motivo,
   sei.idEmpleado AS empleado,
   u.nombreCompleto AS nombreUsuario,
-  hs.stockAnterior AS stockInicial,
+  hs.stockAnterior,
   hs.stockNuevo AS stockActual,
   sei.isSalida,
   sei.createAT
