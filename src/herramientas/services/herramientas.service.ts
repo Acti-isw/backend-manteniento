@@ -72,4 +72,10 @@ export class HerramientasService {
       },
     });
   }
+
+  async countTools(): Promise<number> {
+    return await this.prisma.herramientas.count({
+      where: { isDelete: false },
+    });
+  }
 }

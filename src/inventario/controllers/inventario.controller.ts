@@ -74,6 +74,11 @@ export class InventarioController {
     return this.inventarioServices.findInventories();
   }
 
+  @Get('count')
+  async countInventories() {
+    return this.inventarioServices.countInventories();
+  }
+
   @Get(':id')
   async findInventoryById(@Param('id') id: number) {
     return this.inventarioServices.findInventoryById(id);

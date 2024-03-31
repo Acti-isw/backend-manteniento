@@ -28,22 +28,36 @@ export class SalidaEntradaItemController {
   async createSalEntHer(@Body() registro: SalidaEntItemDTO) {
     return this.salidaEntItemServices.createSalEntItem(registro);
   }
+
   @Put('update')
   async updateSalEntHer(@Body() registro: SalidaEntItemUpdateDTO) {
     return this.salidaEntItemServices.updateSalEntItem(registro);
   }
+
   @Get('all')
   async findSalEntInventario() {
     return this.salidaEntItemServices.findSalEntItem();
   }
+
   @Get('entradas')
   async findEntradasInventario() {
     return this.salidaEntItemServices.findEntradasInventario();
   }
+
   @Get('salidas')
-  async findSalEntHer() {
+  async findSalidasInventario() {
     return this.salidaEntItemServices.findSalidasInventario();
   }
+
+  @Get('entradas/count')
+  async countEntradasInventario() {
+    return this.salidaEntItemServices.countEntradasInventario();
+  }
+  @Get('salidas/count')
+  async countSalidasInventario() {
+    return this.salidaEntItemServices.countSalidasInventario();
+  }
+
   @Get(':id')
   async findSalEntHerById(@Param('id') id: number) {
     return this.salidaEntItemServices.findSalEntItemById(id);

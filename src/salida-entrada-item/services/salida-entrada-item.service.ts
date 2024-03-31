@@ -41,40 +41,6 @@ export class SalidaEntradaItemService {
     }
     return salEntradas;
   }
-  async findEntradasInventario(): Promise<visSalidaEntradaItem[]> {
-    const entradas = await this.prisma.visSalidaEntradaItem.findMany({
-      orderBy: {
-        createAT: 'desc',
-      },
-      where: {
-        isSalida: false,
-      },
-    });
-
-    if (isEmpty(entradas)) {
-      throw new NotFoundException(
-        'No se encontraron salidas y entradas de Items',
-      );
-    }
-    return entradas;
-  }
-  async findSalidasInventario(): Promise<visSalidaEntradaItem[]> {
-    const entradas = await this.prisma.visSalidaEntradaItem.findMany({
-      orderBy: {
-        createAT: 'desc',
-      },
-      where: {
-        isSalida: true,
-      },
-    });
-
-    if (isEmpty(entradas)) {
-      throw new NotFoundException(
-        'No se encontraron salidas y entradas de Items',
-      );
-    }
-    return entradas;
-  }
 
   async findSalEntItemById(id: number): Promise<visSalidaEntradaItem> {
     const salEntrada = await this.prisma.visSalidaEntradaItem.findFirst({
@@ -87,5 +53,49 @@ export class SalidaEntradaItemService {
       );
     }
     return salEntrada;
+  }
+
+  async findEntradasInventario(): Promise<visSalidaEntradaItem[]> {
+    const entradas = await this.prisma.visSalidaEntradaItem.findMany({
+      orderBy: {
+        createAT: 'desc',
+      },
+      where: {
+        isSalida: false,
+      },
+    });
+
+    if (isEmpty(entradas)) {
+      throw new NotFoundException('No se encontraron entradas de Items');
+    }
+    return entradas;
+  }
+
+  async findSalidasInventario(): Promise<visSalidaEntradaItem[]> {
+    const entradas = await this.prisma.visSalidaEntradaItem.findMany({
+      orderBy: {
+        createAT: 'desc',
+      },
+      where: {
+        isSalida: true,
+      },
+    });
+
+    if (isEmpty(entradas)) {
+      throw new NotFoundException('No se encontraron salidas de Items');
+    }
+    return entradas;
+  }
+
+  async countEntradasInventario(): Promise<number> {
+    return this.prisma.salidaEntradaItem.count({
+      where: { isSalida: false },
+    });
+  }
+
+  async countSalidasInventario(): Promise<number> {
+    return this.prisma.salidaEntradaItem.count({
+      where: { isSalida: true },
+    });
   }
 }

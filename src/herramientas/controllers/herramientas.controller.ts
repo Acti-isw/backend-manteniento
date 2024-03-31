@@ -38,6 +38,11 @@ export class HerramientasController {
     return this.herramientasService.findTools();
   }
 
+  @Get('count')
+  async countTools() {
+    return this.herramientasService.countTools();
+  }
+
   @Get(':id')
   async findToolById(@Param('id') id: number) {
     return this.herramientasService.findToolById(id);
