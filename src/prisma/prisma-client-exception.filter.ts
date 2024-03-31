@@ -65,13 +65,15 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
       });
     }
 
-    if (exception instanceof PrismaClientUnknownRequestError) {
+    if (exception instanceof Prisma.PrismaClientUnknownRequestError) {
       const status = HttpStatus.INTERNAL_SERVER_ERROR;
+      const errorMessage = exception.message;
 
-      const messageDetails = `at path: ${request.url.split('/')[request.url.split('/').length - 1]} :: ${exception.message.split('message')[1]}`;
+      const errorMessageParts = errorMessage.split('"');
+      const relevantErrorMessage = errorMessageParts[1] || errorMessageParts[0];
 
       response.status(status).json({
-        message: `Unknown Prisma error ${messageDetails}`,
+        message: `Unknown Prisma error at path: ${request.url.split('/')[request.url.split('/').length - 1]} :: ${relevantErrorMessage}`,
         statusCode: status,
       });
     }
