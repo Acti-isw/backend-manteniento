@@ -1,16 +1,14 @@
 SELECT
   sei.idSalidaEntradaItem,
-  hs.idItem,
-  i.nombre AS nombreItem,
-  hs.motivo,
-  sei.idEmpleado AS empleado,
-  u.nombreCompleto AS nombreUsuario,
-  hs.stockAnterior AS stockInicial,
-  hs.stockNuevo AS stockActual,
-  sei.isSalida,
+  sei.idItem,
+  ite.nombre AS nombreItem,
+  sei.stockAnterior,
+  sei.stockActual,
+  sei.idUsuario,
   sei.createAT
 FROM
-  SalidaEntradaItem AS sei
-  JOIN HistorialStock AS hs ON sei.idSalidaEntradaItem = hs.idSalidaEntradaItem
-  JOIN Item AS i ON hs.idItem = i.idItem
-  JOIN Usuarios AS u ON sei.idUsuario = u.idUsuario;
+  [dbo].[SalidaEntradaItem] AS sei
+  LEFT JOIN [dbo].[Item] AS ite ON ite.idItem = sei.idItem
+  LEFT JOIN Usuarios AS usu ON sei.idUsuario = usu.idUsuario
+WHERE
+  ite.isDelete = 0;

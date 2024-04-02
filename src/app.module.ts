@@ -15,6 +15,7 @@ import { HistorialStockModule } from './historial-stock/historial-stock.module';
 import { SeedModule } from './seed/seed.module';
 import { RoleModule } from './roles/roles.module';
 import { SalidaEntradaItemModule } from './salida-entrada-item/salida-entrada-item.module';
+import { SalidaEntradaStockModule } from './salida-entrada-stock/salida-entrada-stock.module';
 
 @Module({
   // providers: [
@@ -41,6 +42,7 @@ import { SalidaEntradaItemModule } from './salida-entrada-item/salida-entrada-it
     SeedModule,
     RoleModule,
     SalidaEntradaItemModule,
+    SalidaEntradaStockModule,
   ],
 })
 export class AppModule {}
