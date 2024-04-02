@@ -109,4 +109,35 @@ export class SalidaEntradaStockService {
     }
     return salEntrada;
   }
+
+  async countEntradasInventario(): Promise<number> {
+    const fechaHoy = new Date();
+    fechaHoy.setHours(0, 0, 0, 0);
+    return this.prisma.salidaEntradaStock.count({
+      where: {
+        isSalida: false,
+        createAT: {
+          gte: fechaHoy, // Mayor o igual que la fecha de hoy
+          lt: new Date(fechaHoy.getTime() + 86400000), // Menor que la fecha de mañana
+        },
+      },
+    });
+  }
+
+  async countSalidasInventario(): Promise<number> {
+    const fechaHoy = new Date();
+    fechaHoy.setHours(0, 0, 0, 0);
+    // console.log(fechaHoy);
+    // console.log(new Date(fechaHoy.getTime() + 86400000));
+
+    return this.prisma.salidaEntradaStock.count({
+      where: {
+        isSalida: true,
+        createAT: {
+          gte: fechaHoy, // Mayor o igual que la fecha de hoy
+          lt: new Date(fechaHoy.getTime() + 86400000), // Menor que la fecha de mañana
+        },
+      },
+    });
+  }
 }

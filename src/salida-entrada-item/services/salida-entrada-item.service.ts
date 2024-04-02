@@ -66,6 +66,19 @@ export class SalidaEntradaItemService {
     }
     return salEntradas;
   }
+  async findSalEntItemById(id: number): Promise<visSalidaEntradaItem> {
+    const salEntradas = await this.prisma.visSalidaEntradaItem.findFirst({
+      where: { idSalidaEntradaItem: id },
+      orderBy: {
+        createAT: 'desc',
+      },
+    });
+
+    if (isEmpty(salEntradas)) {
+      throw new NotFoundException('No se encontro salida o entrada');
+    }
+    return salEntradas;
+  }
   // async findEntradasInventario(): Promise<visSalidaEntradaItem[]> {
   //   const entradas = await this.prisma.visSalidaEntradaItem.findMany({
   //     orderBy: {
@@ -100,35 +113,4 @@ export class SalidaEntradaItemService {
   //   }
   //   return entradas;
   // }
-
-  async countEntradasInventario(): Promise<number> {
-    const fechaHoy = new Date();
-    fechaHoy.setHours(0, 0, 0, 0);
-    return this.prisma.salidaEntradaItem.count({
-      where: {
-        isSalida: false,
-        createAT: {
-          gte: fechaHoy, // Mayor o igual que la fecha de hoy
-          lt: new Date(fechaHoy.getTime() + 86400000), // Menor que la fecha de mañana
-        },
-      },
-    });
-  }
-
-  async countSalidasInventario(): Promise<number> {
-    const fechaHoy = new Date();
-    fechaHoy.setHours(0, 0, 0, 0);
-    // console.log(fechaHoy);
-    // console.log(new Date(fechaHoy.getTime() + 86400000));
-
-    return this.prisma.salidaEntradaItem.count({
-      where: {
-        isSalida: true,
-        createAT: {
-          gte: fechaHoy, // Mayor o igual que la fecha de hoy
-          lt: new Date(fechaHoy.getTime() + 86400000), // Menor que la fecha de mañana
-        },
-      },
-    });
-  }
 }

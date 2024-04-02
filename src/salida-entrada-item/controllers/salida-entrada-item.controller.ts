@@ -39,24 +39,15 @@ export class SalidaEntradaItemController {
     return this.salidaEntItemServices.findSalEntItem();
   }
 
-  @Get('entradas')
-  async findEntradasInventario() {
-    return this.salidaEntItemServices.findEntradasInventario();
-  }
+  // @Get('entradas')
+  // async findEntradasInventario() {
+  //   return this.salidaEntItemServices.findEntradasInventario();
+  // }
 
-  @Get('salidas')
-  async findSalidasInventario() {
-    return this.salidaEntItemServices.findSalidasInventario();
-  }
-
-  @Get('entradas/count')
-  async countEntradasInventario() {
-    return this.salidaEntItemServices.countEntradasInventario();
-  }
-  @Get('salidas/count')
-  async countSalidasInventario() {
-    return this.salidaEntItemServices.countSalidasInventario();
-  }
+  // @Get('salidas')
+  // async findSalidasInventario() {
+  //   return this.salidaEntItemServices.findSalidasInventario();
+  // }
 
   @Get(':id')
   async findSalEntHerById(@Param('id') id: number) {

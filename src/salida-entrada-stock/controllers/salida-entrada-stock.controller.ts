@@ -48,4 +48,12 @@ export class SalidaEntradaStockController {
   async findSalEntHerById(@Param('id') id: number) {
     return this.salidaEntStockServices.findSalEntStockById(id);
   }
+  @Get('entradas/count')
+  async countEntradasInventario() {
+    return this.salidaEntStockServices.countEntradasInventario();
+  }
+  @Get('salidas/count')
+  async countSalidasInventario() {
+    return this.salidaEntStockServices.countSalidasInventario();
+  }
 }
