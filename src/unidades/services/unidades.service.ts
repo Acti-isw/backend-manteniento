@@ -55,4 +55,10 @@ export class UnidadesService {
       },
     });
   }
+
+  async countUnits(): Promise<number> {
+    return await this.prisma.unidades.count({
+      where: { isDelete: false },
+    });
+  }
 }

@@ -21,22 +21,27 @@ export class UnidadesController {
   constructor(private readonly unidadesService: UnidadesService) {}
 
   @Post('create')
-  async createCategory(@Body() unidad: UnidadesDTO) {
+  async createUnit(@Body() unidad: UnidadesDTO) {
     return this.unidadesService.createUnit(unidad);
   }
 
   @Put('update')
-  async updateCategory(@Body() categoria: UnidadesUpdateDTO) {
+  async updateUnit(@Body() categoria: UnidadesUpdateDTO) {
     return this.unidadesService.updateUnit(categoria);
   }
 
   @Get('all')
-  async findCategories() {
+  async findUnits() {
     return this.unidadesService.findUnits();
   }
 
+  @Get('count')
+  async countUnits() {
+    return this.unidadesService.countUnits();
+  }
+
   @Get(':id')
-  async findCategoryById(@Param('id') id: number) {
+  async findUnitById(@Param('id') id: number) {
     return this.unidadesService.findUnitById(id);
   }
 

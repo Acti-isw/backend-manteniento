@@ -35,6 +35,11 @@ export class CategoriaController {
     return this.categoriaService.findCategories();
   }
 
+  @Get('count')
+  async countCategories() {
+    return this.categoriaService.countCategories();
+  }
+
   @Get(':id')
   async findCategoryById(@Param('id') id: number) {
     return this.categoriaService.findCategoryById(id);

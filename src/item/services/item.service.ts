@@ -77,4 +77,10 @@ export class ItemService {
       },
     });
   }
+
+  async countCategories(): Promise<number> {
+    return await this.prisma.item.count({
+      where: { isDelete: false },
+    });
+  }
 }

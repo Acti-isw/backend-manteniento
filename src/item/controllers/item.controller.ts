@@ -35,6 +35,11 @@ export class ItemController {
     return this.itemService.findItems();
   }
 
+  @Get('count')
+  async countCategories() {
+    return this.itemService.countCategories();
+  }
+
   @Get(':id')
   async findCategoryById(@Param('id') id: number) {
     return this.itemService.findItemById(id);

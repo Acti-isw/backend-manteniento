@@ -76,4 +76,10 @@ export class InventarioService {
       },
     });
   }
+
+  async countInventories(): Promise<number> {
+    return await this.prisma.inventario.count({
+      where: { isDelete: false },
+    });
+  }
 }

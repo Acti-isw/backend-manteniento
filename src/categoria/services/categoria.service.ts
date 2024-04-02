@@ -58,4 +58,10 @@ export class CategoriaService {
       },
     });
   }
+
+  async countCategories(): Promise<number> {
+    return await this.prisma.categoria.count({
+      where: { isDelete: false },
+    });
+  }
 }

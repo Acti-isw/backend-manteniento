@@ -101,16 +101,34 @@ export class SalidaEntradaItemService {
   //   return entradas;
   // }
 
-  async findSalEntItemById(id: number): Promise<visSalidaEntradaItem> {
-    const salEntrada = await this.prisma.visSalidaEntradaItem.findFirst({
-      where: { idSalidaEntradaItem: id },
+  async countEntradasInventario(): Promise<number> {
+    const fechaHoy = new Date();
+    fechaHoy.setHours(0, 0, 0, 0);
+    return this.prisma.salidaEntradaItem.count({
+      where: {
+        isSalida: false,
+        createAT: {
+          gte: fechaHoy, // Mayor o igual que la fecha de hoy
+          lt: new Date(fechaHoy.getTime() + 86400000), // Menor que la fecha de mañana
+        },
+      },
     });
+  }
 
-    if (!salEntrada) {
-      throw new NotFoundException(
-        `No se encontro salida entrada para el id:${id}`,
-      );
-    }
-    return salEntrada;
+  async countSalidasInventario(): Promise<number> {
+    const fechaHoy = new Date();
+    fechaHoy.setHours(0, 0, 0, 0);
+    // console.log(fechaHoy);
+    // console.log(new Date(fechaHoy.getTime() + 86400000));
+
+    return this.prisma.salidaEntradaItem.count({
+      where: {
+        isSalida: true,
+        createAT: {
+          gte: fechaHoy, // Mayor o igual que la fecha de hoy
+          lt: new Date(fechaHoy.getTime() + 86400000), // Menor que la fecha de mañana
+        },
+      },
+    });
   }
 }
