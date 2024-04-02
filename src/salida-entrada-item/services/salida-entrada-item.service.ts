@@ -18,6 +18,31 @@ export class SalidaEntradaItemService {
       data: registro,
     });
   }
+  async createSalEntItemMany(
+    registros: SalidaEntItemDTO[],
+  ): Promise<SalidaEntItemDTO[]> {
+    const data = await this.prisma.$transaction(
+      registros.map((data) =>
+        this.prisma.salidaEntradaItem.create({
+          data: data,
+        }),
+      ),
+    );
+    return data;
+  }
+  async updateSalEntItemMany(
+    registros: SalidaEntItemUpdateDTO[],
+  ): Promise<SalidaEntradaItem[]> {
+    const data = await this.prisma.$transaction(
+      registros.map(({ idSalidaEntradaItem, ...data }) =>
+        this.prisma.salidaEntradaItem.update({
+          data: data,
+          where: { idSalidaEntradaItem },
+        }),
+      ),
+    );
+    return data;
+  }
 
   async updateSalEntItem(registro: SalidaEntItemUpdateDTO) {
     const { idSalidaEntradaItem, ...registroUpdate } = registro;
@@ -41,40 +66,40 @@ export class SalidaEntradaItemService {
     }
     return salEntradas;
   }
-  async findEntradasInventario(): Promise<visSalidaEntradaItem[]> {
-    const entradas = await this.prisma.visSalidaEntradaItem.findMany({
-      orderBy: {
-        createAT: 'desc',
-      },
-      where: {
-        isSalida: false,
-      },
-    });
+  // async findEntradasInventario(): Promise<visSalidaEntradaItem[]> {
+  //   const entradas = await this.prisma.visSalidaEntradaItem.findMany({
+  //     orderBy: {
+  //       createAT: 'desc',
+  //     },
+  //     where: {
+  //       isSalida: false,
+  //     },
+  //   });
 
-    if (isEmpty(entradas)) {
-      throw new NotFoundException(
-        'No se encontraron salidas y entradas de Items',
-      );
-    }
-    return entradas;
-  }
-  async findSalidasInventario(): Promise<visSalidaEntradaItem[]> {
-    const entradas = await this.prisma.visSalidaEntradaItem.findMany({
-      orderBy: {
-        createAT: 'desc',
-      },
-      where: {
-        isSalida: true,
-      },
-    });
+  //   if (isEmpty(entradas)) {
+  //     throw new NotFoundException(
+  //       'No se encontraron salidas y entradas de Items',
+  //     );
+  //   }
+  //   return entradas;
+  // }
+  // async findSalidasInventario(): Promise<visSalidaEntradaItem[]> {
+  //   const entradas = await this.prisma.visSalidaEntradaItem.findMany({
+  //     orderBy: {
+  //       createAT: 'desc',
+  //     },
+  //     where: {
+  //       isSalida: true,
+  //     },
+  //   });
 
-    if (isEmpty(entradas)) {
-      throw new NotFoundException(
-        'No se encontraron salidas y entradas de Items',
-      );
-    }
-    return entradas;
-  }
+  //   if (isEmpty(entradas)) {
+  //     throw new NotFoundException(
+  //       'No se encontraron salidas y entradas de Items',
+  //     );
+  //   }
+  //   return entradas;
+  // }
 
   async findSalEntItemById(id: number): Promise<visSalidaEntradaItem> {
     const salEntrada = await this.prisma.visSalidaEntradaItem.findFirst({

@@ -1,37 +1,42 @@
 import { SalidaEntradaItem } from '@prisma/client';
-import {
-  IsBoolean,
-  IsDate,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsDate, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class SalidaEntItemDTO implements SalidaEntradaItem {
   @IsOptional()
   @IsNumber()
   idSalidaEntradaItem: number;
 
+  @IsOptional()
+  @IsNumber()
+  idSalidaEntradaStock: number;
+
   @IsNotEmpty()
   @IsNumber()
   idItem: number;
 
-  @IsOptional()
-  @IsNumber()
-  idEmpleado: number;
+  // @IsOptional()
+  // @IsNumber()
+  // idEmpleado: number;
 
   @IsNotEmpty()
   @IsNumber()
   cantidad: number;
 
-  @IsOptional()
-  @IsString()
-  motivo: string;
+  // @IsOptional()
+  // @IsString()
+  // motivo: string;
 
   @IsOptional()
-  @IsBoolean()
-  isSalida: boolean;
+  @IsNumber()
+  stockAnterior: number;
+
+  @IsOptional()
+  @IsNumber()
+  stockactual: number;
+
+  // @IsOptional()
+  // @IsBoolean()
+  // isSalida: boolean;
 
   @IsOptional()
   @IsDate()
@@ -47,25 +52,37 @@ export class SalidaEntItemUpdateDTO implements SalidaEntradaItem {
   @IsNumber()
   idSalidaEntradaItem: number;
 
+  @IsNotEmpty()
+  @IsNumber()
+  idSalidaEntradaStock: number;
+
   @IsOptional()
   @IsNumber()
   idItem: number;
 
-  @IsOptional()
-  @IsNumber()
-  idEmpleado: number;
+  // @IsOptional()
+  // @IsNumber()
+  // idEmpleado: number;
 
   @IsOptional()
   @IsNumber()
   cantidad: number;
 
-  @IsOptional()
-  @IsString()
-  motivo: string;
+  // @IsOptional()
+  // @IsString()
+  // motivo: string;
 
   @IsOptional()
-  @IsBoolean()
-  isSalida: boolean;
+  @IsNumber()
+  stockAnterior: number;
+
+  @IsOptional()
+  @IsNumber()
+  stockactual: number;
+
+  // @IsOptional()
+  // @IsBoolean()
+  // isSalida: boolean;
 
   @IsOptional()
   @IsDate()
