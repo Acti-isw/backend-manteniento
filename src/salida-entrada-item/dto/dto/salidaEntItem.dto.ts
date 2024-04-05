@@ -1,5 +1,11 @@
 import { SalidaEntradaItem } from '@prisma/client';
-import { IsDate, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+} from 'class-validator';
 
 export class SalidaEntItemDTO implements SalidaEntradaItem {
   @IsOptional()
@@ -34,9 +40,9 @@ export class SalidaEntItemDTO implements SalidaEntradaItem {
   @IsNumber()
   stockactual: number;
 
-  // @IsOptional()
-  // @IsBoolean()
-  // isSalida: boolean;
+  @IsOptional()
+  @IsBoolean()
+  isSalida: boolean;
 
   @IsOptional()
   @IsDate()
@@ -80,9 +86,9 @@ export class SalidaEntItemUpdateDTO implements SalidaEntradaItem {
   @IsNumber()
   stockactual: number;
 
-  // @IsOptional()
-  // @IsBoolean()
-  // isSalida: boolean;
+  @IsOptional()
+  @IsBoolean()
+  isSalida: boolean;
 
   @IsOptional()
   @IsDate()
