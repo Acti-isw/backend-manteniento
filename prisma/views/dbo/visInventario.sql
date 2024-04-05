@@ -10,7 +10,8 @@ SELECT
   cat.nombre AS nombreCategoria,
   inv.stockActual,
   inv.stockMin,
-  inv.stockMax
+  inv.stockMax,
+  inv.createAT AS fecha
 FROM
   [dbo].[Inventario] AS inv
   JOIN [dbo].[Item] AS ite ON ite.idItem = inv.idItem

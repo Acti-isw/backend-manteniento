@@ -178,6 +178,7 @@ model SalidaEntradaItem {
   idUsuario            Int
   stockAnterior        Int?
   stockactual          Int?
+  isSalida             Boolean
   Item                 Item               @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK_SalidaEntradaItem_Item")
   SalidaEntradaStock   SalidaEntradaStock @relation(fields: [idSalidaEntradaStock], references: [idSalidaEntradaStock], onUpdate: NoAction, map: "FK_SalidaEntradaItem_SalidaEntradaStock")
   Usuarios             Usuarios           @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_SalidaEntradaItem_Usuarios")
@@ -265,18 +266,19 @@ view visItems {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view visInventario {
-  idInventario    Int     @id
+  idInventario    Int       @id
   idItem          Int
   idCategoria     Int
   idUnidad        Int
-  nombreItem      String  @db.VarChar(100)
-  descripcion     String? @db.VarChar(100)
-  imagen          String? @db.VarChar(Max)
-  nombreUnidad    String  @db.VarChar(100)
-  nombreCategoria String  @db.VarChar(100)
+  nombreItem      String    @db.VarChar(100)
+  descripcion     String?   @db.VarChar(100)
+  imagen          String?   @db.VarChar(Max)
+  nombreUnidad    String    @db.VarChar(100)
+  nombreCategoria String    @db.VarChar(100)
   stockActual     Int
   stockMin        Int
   stockMax        Int
+  fecha           DateTime? @db.DateTime
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.

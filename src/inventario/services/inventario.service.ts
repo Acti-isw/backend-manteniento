@@ -47,7 +47,11 @@ export class InventarioService {
   }
 
   async findInventories(): Promise<visInventario[]> {
-    const inventories = await this.prisma.visInventario.findMany();
+    const inventories = await this.prisma.visInventario.findMany({
+      orderBy: {
+        fecha: 'desc',
+      },
+    });
     if (isEmpty(inventories)) {
       throw new NotFoundException('No se encontraron inventarios');
     }
