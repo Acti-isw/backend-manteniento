@@ -15,7 +15,15 @@ export class SalidaEntradaStockService {
   async findManySalEntStock(): Promise<SalidaEntStockDTO[]> {
     const salidaEntradaStock = await this.prisma.salidaEntradaStock.findMany({
       include: {
-        SalidaEntradaItem: true,
+        SalidaEntradaItem: {
+          include: {
+            Item: true,
+          },
+        },
+        Usuarios: true,
+      },
+      orderBy: {
+        createAT: 'desc',
       },
     });
     return salidaEntradaStock;
@@ -23,10 +31,23 @@ export class SalidaEntradaStockService {
   async findEntradasStock(): Promise<SalidaEntStockDTO[]> {
     const salidaEntradaStock = await this.prisma.salidaEntradaStock.findMany({
       include: {
-        SalidaEntradaItem: true,
+        SalidaEntradaItem: {
+          include: {
+            Item: true,
+          },
+        },
+        Usuarios: {
+          select: {
+            nombreCompleto: true,
+            usuario: true,
+          },
+        },
       },
       where: {
         isSalida: false,
+      },
+      orderBy: {
+        createAT: 'desc',
       },
     });
     return salidaEntradaStock;
@@ -34,10 +55,18 @@ export class SalidaEntradaStockService {
   async findSalidasStock(): Promise<SalidaEntStockDTO[]> {
     const salidaEntradaStock = await this.prisma.salidaEntradaStock.findMany({
       include: {
-        SalidaEntradaItem: true,
+        SalidaEntradaItem: {
+          include: {
+            Item: true,
+          },
+        },
+        Usuarios: true,
       },
       where: {
         isSalida: true,
+      },
+      orderBy: {
+        createAT: 'desc',
       },
     });
     return salidaEntradaStock;
@@ -47,14 +76,26 @@ export class SalidaEntradaStockService {
     registro: SalidaEntStockDTO,
   ): Promise<SalidaEntStockDTO> {
     const { SalidaEntradaItem, ...data } = registro;
+    const cantidad = SalidaEntradaItem.reduce(
+      (prev, current) => prev + current.cantidad,
+      0,
+    );
+    console.log(data);
+
     const salidaEntradaStock = await this.prisma.salidaEntradaStock.create({
-      data: data,
+      data: {
+        ...data,
+        cantidad: cantidad,
+      },
     });
 
-    const items = SalidaEntradaItem.map((data) => {
+    const items = SalidaEntradaItem.map((salEntItem) => {
       return {
         idSalidaEntradaStock: salidaEntradaStock.idSalidaEntradaStock,
-        ...data,
+        isSalida: data.isSalida,
+        idUsuario: data.idUsuario,
+        idItem: salEntItem.idItem,
+        cantidad: salEntItem.cantidad,
       } as SalidaEntradaItem;
     });
     console.log(items);
@@ -68,6 +109,7 @@ export class SalidaEntradaStockService {
     };
   }
 
+  //
   async UpdateSalEntStock(
     registro: SalidaEntStockDTO,
   ): Promise<SalidaEntStockUpdateDTO> {
