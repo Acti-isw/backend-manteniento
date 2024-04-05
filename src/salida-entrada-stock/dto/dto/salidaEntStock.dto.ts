@@ -20,7 +20,7 @@ export class SalidaEntStockDTO implements SalidaEntradaStock {
   @IsNumber()
   idEmpleado: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   cantidad: number;
 
@@ -28,7 +28,7 @@ export class SalidaEntStockDTO implements SalidaEntradaStock {
   @IsString()
   motivo: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsBoolean()
   isSalida: boolean;
 
