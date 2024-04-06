@@ -38,7 +38,7 @@ export class SalidaEntItemDTO implements SalidaEntradaItem {
 
   @IsOptional()
   @IsNumber()
-  stockactual: number;
+  stockActual: number;
 
   @IsOptional()
   @IsBoolean()
@@ -84,7 +84,7 @@ export class SalidaEntItemUpdateDTO implements SalidaEntradaItem {
 
   @IsOptional()
   @IsNumber()
-  stockactual: number;
+  stockActual: number;
 
   @IsOptional()
   @IsBoolean()
