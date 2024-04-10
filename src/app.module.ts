@@ -16,6 +16,7 @@ import { SeedModule } from './seed/seed.module';
 import { RoleModule } from './roles/roles.module';
 import { SalidaEntradaItemModule } from './salida-entrada-item/salida-entrada-item.module';
 import { SalidaEntradaStockModule } from './salida-entrada-stock/salida-entrada-stock.module';
+import { PermisosModule } from './permisos/permisos.module';
 
 @Module({
   // providers: [
@@ -43,6 +44,7 @@ import { SalidaEntradaStockModule } from './salida-entrada-stock/salida-entrada-
     RoleModule,
     SalidaEntradaItemModule,
     SalidaEntradaStockModule,
+    PermisosModule,
   ],
 })
 export class AppModule {}
