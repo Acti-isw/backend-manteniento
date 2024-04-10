@@ -7,8 +7,8 @@ SELECT
   cat.nombre AS nombreCategoria,
   ite.isDelete
 FROM
-  [dbo].[Item] AS ite
-  JOIN [dbo].[Categoria] AS cat ON cat.idCategoria = ite.idCategoria
-  JOIN [dbo].[Unidades] AS und ON und.idUnidad = ite.idUnidad
+  dbo.Item AS ite
+  JOIN dbo.Categoria AS cat ON cat.idCategoria = ite.idCategoria
+  JOIN dbo.Unidades AS und ON und.idUnidad = ite.idUnidad
 WHERE
-  ite.isDelete = 0;
+  (ite.isDelete = 0);
