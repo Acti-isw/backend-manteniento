@@ -24,7 +24,12 @@ export class UsersService {
 
   async findUserById(id: number) {
     const user = await this.prisma.usuarios.findFirst({
-      include: { Role: { select: { idRole: true, nombre: true } } },
+      include: {
+        Role: {
+          include: { Permisos: { select: { nombre: true, pad: true } } },
+          //select: { idRole: true, nombre: true },
+        },
+      },
       where: {
         idUsuario: id,
       },
