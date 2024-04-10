@@ -4,10 +4,11 @@ import { AuthController } from './controllers/auth.controller';
 import { UsersService } from 'src/users/services/users.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UsersModule } from 'src/users/users.module';
+import { PermisosModule } from 'src/permisos/permisos.module';
 
 @Module({
   providers: [AuthService, UsersService],
   controllers: [AuthController],
-  imports: [PrismaModule, UsersModule],
+  imports: [PrismaModule, UsersModule, PermisosModule],
 })
 export class AuthModule {}

@@ -3,10 +3,14 @@ import * as jwt from 'jsonwebtoken';
 import { UsersService } from 'src/users/services/users.service';
 import { Usuarios } from '@prisma/client';
 import { IPayloadToken } from 'src/interface/auth.interface';
+import { PermisosService } from 'src/permisos/services/permisos.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private readonly permisosService: PermisosService,
+  ) {}
 
   async validateUser(username: string, password: string) {
     const userByUsername = await this.userService.findUserByUsername(username);
@@ -42,7 +46,8 @@ export class AuthService {
       idUsuario: user.idUsuario,
       nombreCompleto: user.nombreCompleto,
       usuario: user.usuario,
-      idRole: user.idRole,
+      role: getUser.Role.nombre,
+      permisos: getUser.Role.Permisos,
       avatar: user.avatar,
       accesToken: await this.signJWT({
         payload,
