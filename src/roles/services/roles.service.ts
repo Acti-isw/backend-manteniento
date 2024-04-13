@@ -8,13 +8,13 @@ import { isEmpty } from 'lodash';
 export class RoleService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createCategory(role: RoleDTO): Promise<Role> {
+  async createRole(role: RoleDTO): Promise<Role> {
     return await this.prisma.role.create({
       data: role,
     });
   }
 
-  async updateCategory(role: RoleUpdateDTO): Promise<Role> {
+  async updateRole(role: RoleUpdateDTO): Promise<Role> {
     const { idRole, ...dataToUpdate } = role; // Extraer idRole y crear un nuevo objeto sin esa propiedad
     return await this.prisma.role.update({
       where: {
@@ -27,27 +27,52 @@ export class RoleService {
     });
   }
 
-  async findCategories(): Promise<Role[]> {
-    const categories = await this.prisma.role.findMany();
+  async findRole(): Promise<Role[]> {
+    const roles = await this.prisma.role.findMany({
+      include: {
+        RolePermisos: {
+          select: {
+            Permisos: {
+              select: {
+                nombre: true,
+                pad: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-    if (isEmpty(categories)) {
+    if (isEmpty(roles)) {
       throw new NotFoundException('No se encontraron roles');
     }
-    return categories;
+    return roles;
   }
 
-  async findCategoryById(id: number): Promise<Role> {
-    const catetegory = await this.prisma.role.findFirst({
+  async findRoleById(id: number): Promise<Role> {
+    const role = await this.prisma.role.findFirst({
+      include: {
+        RolePermisos: {
+          include: {
+            Permisos: {
+              select: {
+                nombre: true,
+                pad: true,
+              },
+            },
+          },
+        },
+      },
       where: { idRole: id },
     });
 
-    if (!catetegory) {
+    if (!role) {
       throw new NotFoundException(`No se encontro la role con id:${id}`);
     }
-    return catetegory;
+    return role;
   }
 
-  async deleteCategory(idRole: number): Promise<Role> {
+  async deleteRole(idRole: number): Promise<Role> {
     return await this.prisma.role.update({
       where: {
         idRole,

@@ -47,7 +47,7 @@ export class AuthService {
       nombreCompleto: user.nombreCompleto,
       usuario: user.usuario,
       role: getUser.Role.nombre,
-      permisos: getUser.Role.Permisos,
+      permisos: getUser.Role.RolePermisos,
       avatar: user.avatar,
       accesToken: await this.signJWT({
         payload,

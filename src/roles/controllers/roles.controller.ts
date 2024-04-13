@@ -22,26 +22,26 @@ export class RoleController {
 
   @Post('create')
   async createCategory(@Body() categoria: RoleDTO) {
-    return this.roleService.createCategory(categoria);
+    return this.roleService.createRole(categoria);
   }
 
   @Put('update')
-  async updateCategory(@Body() categoria: RoleUpdateDTO) {
-    return this.roleService.updateCategory(categoria);
+  async updateRole(@Body() categoria: RoleUpdateDTO) {
+    return this.roleService.updateRole(categoria);
   }
 
   @Get('all')
   async findCategories() {
-    return this.roleService.findCategories();
+    return this.roleService.findRole();
   }
 
   @Get(':id')
-  async findCategoryById(@Param('id') id: number) {
-    return this.roleService.findCategoryById(id);
+  async findRoleById(@Param('id') id: number) {
+    return this.roleService.findRoleById(id);
   }
 
   @Delete(':id')
-  async deleteCategoryById(@Param('id') id: number) {
-    return this.roleService.deleteCategory(id);
+  async deleteRoleById(@Param('id') id: number) {
+    return this.roleService.deleteRole(id);
   }
 }

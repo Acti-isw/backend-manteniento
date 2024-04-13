@@ -14,10 +14,6 @@ export class PermisoDTO implements Permisos {
   idPermisos: number;
 
   @IsNotEmpty()
-  @IsNumber()
-  idRole: number;
-
-  @IsNotEmpty()
   @IsString()
   nombre: string;
 
@@ -42,8 +38,6 @@ export class PermisoUpdateDTO implements Permisos {
   @IsNotEmpty()
   @IsNumber()
   idPermisos: number;
-
-  idRole: number;
 
   @IsOptional()
   @IsString()
