@@ -207,7 +207,7 @@ model SalidaEntradaStock {
 model Permisos {
   idPermisos   Int            @id(map: "PK_idPermisos") @default(autoincrement())
   nombre       String         @db.VarChar(50)
-  pad          String         @db.VarChar(50)
+  path         String         @db.VarChar(50)
   createAT     DateTime?      @default(now(), map: "DF__Permisos__create__76619304") @db.DateTime
   updateAT     DateTime?      @db.DateTime
   isDelete     Boolean?       @default(false, map: "DF__Permisos__isDele__7755B73D")

@@ -35,7 +35,7 @@ export class RoleService {
             Permisos: {
               select: {
                 nombre: true,
-                pad: true,
+                path: true,
               },
             },
           },
@@ -57,7 +57,7 @@ export class RoleService {
             Permisos: {
               select: {
                 nombre: true,
-                pad: true,
+                path: true,
               },
             },
           },

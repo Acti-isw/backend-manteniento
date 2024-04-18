@@ -19,7 +19,7 @@ export class PermisoDTO implements Permisos {
 
   @IsNotEmpty()
   @IsString()
-  pad: string;
+  path: string;
 
   @IsOptional()
   @IsDate()
@@ -45,7 +45,7 @@ export class PermisoUpdateDTO implements Permisos {
 
   @IsOptional()
   @IsString()
-  pad: string;
+  path: string;
 
   @IsOptional()
   @IsDate()

@@ -19,7 +19,12 @@ export class UsersService {
           include: {
             RolePermisos: {
               include: {
-                Permisos: true,
+                Permisos: {
+                  select: {
+                    nombre: true,
+                    path: true,
+                  },
+                },
               },
             },
           },
@@ -42,7 +47,7 @@ export class UsersService {
                 Permisos: {
                   select: {
                     nombre: true,
-                    pad: true,
+                    path: true,
                   },
                 },
               },
