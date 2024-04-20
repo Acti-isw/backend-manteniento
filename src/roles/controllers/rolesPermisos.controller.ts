@@ -9,32 +9,25 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { RoleService } from '../services/roles.service';
+import { RoleDTO, RoleUpdateDTO } from '../dto/roles.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import {
-  rolesPermisosDTO,
-  rolesPermisosUpdateDTO,
-} from '../dto/rolesPermisos.dto';
-import { RolePermisoService } from '../services/rolesPermisos.service';
 
 @UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('roles')
 @ApiTags('roles')
 export class RoleController {
-  constructor(
-    private readonly roleService: RoleService,
-    private readonly rolePermisosService: RolePermisoService,
-  ) {}
+  constructor(private readonly roleService: RoleService) {}
 
   @Post('create')
-  async createRoleWithPermisos(@Body() role: rolesPermisosDTO) {
-    return this.rolePermisosService.createRole(role);
+  async createCategory(@Body() categoria: RoleDTO) {
+    return this.roleService.createRole(categoria);
   }
 
   @Put('update')
-  async updateRoleWithPermisos(@Body() role: rolesPermisosUpdateDTO) {
-    return this.rolePermisosService.updateRole(role);
+  async updateRole(@Body() categoria: RoleUpdateDTO) {
+    return this.roleService.updateRole(categoria);
   }
 
   @Get('all')

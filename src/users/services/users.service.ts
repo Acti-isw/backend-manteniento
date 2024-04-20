@@ -14,17 +14,21 @@ export class UsersService {
 
   async findUsers() {
     const users = await this.prisma.usuarios.findMany({
-      include: {
+      select: {
+        idUsuario: true,
+        idRole: true,
+        usuario: true,
+        avatar: true,
+        // isDelete: true,
+        // createAT: true,
+        // updateAT: true,
+        nombreCompleto: true,
+        password: true, // Incluir el campo password directamente aquí
         Role: {
           include: {
             RolePermisos: {
               include: {
-                Permisos: {
-                  select: {
-                    nombre: true,
-                    path: true,
-                  },
-                },
+                Permisos: true,
               },
             },
           },
@@ -44,12 +48,7 @@ export class UsersService {
           include: {
             RolePermisos: {
               include: {
-                Permisos: {
-                  select: {
-                    nombre: true,
-                    path: true,
-                  },
-                },
+                Permisos: true,
               },
             },
           },

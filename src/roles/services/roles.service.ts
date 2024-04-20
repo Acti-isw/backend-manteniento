@@ -32,14 +32,12 @@ export class RoleService {
       include: {
         RolePermisos: {
           select: {
-            Permisos: {
-              select: {
-                nombre: true,
-                path: true,
-              },
-            },
+            Permisos: true,
           },
         },
+      },
+      where: {
+        isDelete: false,
       },
     });
 
@@ -54,12 +52,7 @@ export class RoleService {
       include: {
         RolePermisos: {
           include: {
-            Permisos: {
-              select: {
-                nombre: true,
-                path: true,
-              },
-            },
+            Permisos: true,
           },
         },
       },
