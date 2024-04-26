@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -42,9 +43,14 @@ export class UsersController {
   async findUserById(@Param('id') id: number) {
     return await this.usersService.findUserById(id);
   }
+  @Put(':id')
+  @UseInterceptors(new TransformDataInterceptor(UserResponseDTO))
+  async updateUserById(@Body() data: UserDTO, @Param('id') id: number) {
+    return await this.usersService.updateUser(data, id);
+  }
 
   @Roles('ADMIN')
-  @Delete('delete:id')
+  @Delete(':id')
   async deleteUser(@Param('id') id: number) {
     return await this.usersService.deleteUser(id);
   }

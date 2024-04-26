@@ -154,9 +154,9 @@ model Usuarios {
 model Role {
   idRole       Int            @id(map: "PK_idRole") @default(autoincrement())
   nombre       String?        @db.VarChar(45)
-  createAT     DateTime?      @default(now(), map: "DF__Role__createAT__49C3F6B7") @db.DateTime
+  createAT     DateTime?      @default(now(), map: "DF__Role__createAT__3DE82FB7") @db.DateTime
   updateAT     DateTime?      @db.DateTime
-  isDelete     Boolean?       @default(false, map: "DF__Role__isDelete__4AB81AF0")
+  isDelete     Boolean?       @default(false, map: "DF__Role__isDelete__3EDC53F0")
   RolePermisos RolePermisos[]
   Usuarios     Usuarios[]
 }
@@ -216,12 +216,12 @@ model Permisos {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model RolePermisos {
-  idRolePermiso Int       @id(map: "PK__RolePerm__8DF1C16D42BE9EF4") @default(autoincrement())
+  idRolePermiso Int       @id(map: "PK__RolePerm__8DF1C16D3FFE0484") @default(autoincrement())
   idRole        Int
   idPermisos    Int
-  createAT      DateTime? @db.DateTime
+  createAT      DateTime? @default(now(), map: "DF__RolePermi__creat__382F5661") @db.DateTime
   updateAT      DateTime? @db.DateTime
-  isDelete      Boolean?
+  isDelete      Boolean?  @default(false, map: "DF__RolePermi__isDel__39237A9A")
   idUsuario     Int?
   Permisos      Permisos  @relation(fields: [idPermisos], references: [idPermisos], onUpdate: NoAction, map: "FK_RolePermisos_Permisos")
   Role          Role      @relation(fields: [idRole], references: [idRole], onUpdate: NoAction, map: "FK_RolePermisos_Role")
@@ -281,30 +281,34 @@ view visSalidaEntradaHerramientas {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view visItems {
-  idItem          Int      @id
-  nombreItem      String   @db.VarChar(100)
-  descripcion     String?  @db.VarChar(100)
-  imagen          String?  @db.VarChar(Max)
-  nombreUnidad    String   @db.VarChar(100)
-  nombreCategoria String   @db.VarChar(100)
+  idItem          Int       @id
+  nombre          String    @db.VarChar(100)
+  descripcion     String?   @db.VarChar(100)
+  imagen          String?   @db.VarChar(Max)
+  idCategoria     Int
+  idUnidad        Int
+  nombreUnidad    String    @db.VarChar(100)
+  nombreCategoria String    @db.VarChar(100)
+  createAT        DateTime? @db.DateTime
+  updateAT        DateTime? @db.DateTime
   isDelete        Boolean?
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view visInventario {
-  idInventario    Int       @id
-  idItem          Int
-  idCategoria     Int
-  idUnidad        Int
-  nombreItem      String    @db.VarChar(100)
+  idInventario    Int?
+  idItem          Int       @id
+  idCategoria     Int?
+  idUnidad        Int?
+  nombre          String    @db.VarChar(100)
   descripcion     String?   @db.VarChar(100)
   imagen          String?   @db.VarChar(Max)
-  nombreUnidad    String    @db.VarChar(100)
-  nombreCategoria String    @db.VarChar(100)
-  stockActual     Int
-  stockMin        Int
-  stockMax        Int
-  fecha           DateTime? @db.DateTime
+  nombreUnidad    String?   @db.VarChar(100)
+  nombreCategoria String?   @db.VarChar(100)
+  stockActual     Int?
+  stockMin        Int?
+  stockMax        Int?
+  createAT        DateTime? @db.DateTime
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.

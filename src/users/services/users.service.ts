@@ -11,19 +11,16 @@ export class UsersService {
   async createUser(data: UserDTO): Promise<Usuarios> {
     return await this.prisma.usuarios.create({ data });
   }
+  async updateUser(data: UserDTO, id: number): Promise<Usuarios> {
+    return await this.prisma.usuarios.update({
+      where: { idUsuario: id },
+      data: data,
+    });
+  }
 
   async findUsers() {
     const users = await this.prisma.usuarios.findMany({
-      select: {
-        idUsuario: true,
-        idRole: true,
-        usuario: true,
-        avatar: true,
-        // isDelete: true,
-        // createAT: true,
-        // updateAT: true,
-        nombreCompleto: true,
-        password: true, // Incluir el campo password directamente aquí
+      include: {
         Role: {
           include: {
             RolePermisos: {
@@ -34,6 +31,8 @@ export class UsersService {
           },
         },
       },
+      where: { isDelete: false },
+      orderBy: { idUsuario: 'desc' },
     });
     if (isEmpty(users)) {
       throw new NotFoundException('No se encontraron usuarios');

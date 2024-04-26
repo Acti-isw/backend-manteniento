@@ -3,7 +3,7 @@ SELECT
   ite.idItem,
   cat.idCategoria,
   und.idUnidad,
-  ite.nombre AS nombreItem,
+  ite.nombre,
   ite.descripcion,
   ite.imagen,
   und.nombre AS nombreUnidad,
@@ -11,12 +11,11 @@ SELECT
   inv.stockActual,
   inv.stockMin,
   inv.stockMax,
-  inv.createAT AS fecha
+  inv.createAT
 FROM
-  [dbo].[Inventario] AS inv
-  JOIN [dbo].[Item] AS ite ON ite.idItem = inv.idItem
-  JOIN [dbo].[Unidades] AS und ON und.idUnidad = ite.idUnidad
-  JOIN [dbo].[Categoria] AS cat ON cat.idCategoria = ite.idCategoria
+  [dbo].[item] AS ite
+  LEFT JOIN [dbo].[Inventario] AS inv ON ite.idItem = inv.idItem
+  LEFT JOIN [dbo].[Unidades] AS und ON und.idUnidad = ite.idUnidad
+  LEFT JOIN [dbo].[Categoria] AS cat ON cat.idCategoria = ite.idCategoria
 WHERE
-  inv.isDelete = 0
-  AND ite.isDelete = 0;
+  ite.isDelete = 0;
