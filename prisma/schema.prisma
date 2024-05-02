@@ -20,31 +20,35 @@ model AccionesStock {
 }
 
 model Categoria {
-  idCategoria Int       @id(map: "PK_idCategoria") @default(autoincrement())
-  nombre      String    @db.VarChar(100)
-  createAT    DateTime? @default(now(), map: "DF__Categoria__creat__534D60F1") @db.DateTime
-  updateAT    DateTime? @db.DateTime
-  isDelete    Boolean?  @default(false, map: "DF__Categoria__isDel__5441852A")
-  idUsuario   Int
-  Usuarios    Usuarios  @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__Categoria__idUsu__46E78A0C")
-  Item        Item[]
+  idCategoria  Int           @id(map: "PK_idCategoria") @default(autoincrement())
+  nombre       String        @db.VarChar(100)
+  createAT     DateTime?     @default(now(), map: "DF__Categoria__creat__534D60F1") @db.DateTime
+  updateAT     DateTime?     @db.DateTime
+  isDelete     Boolean?      @default(false, map: "DF__Categoria__isDel__5441852A")
+  idUsuario    Int
+  Usuarios     Usuarios      @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__Categoria__idUsu__46E78A0C")
+  Herramientas Herramientas?
+  Item         Item[]
 }
 
 model Herramientas {
   idHerramientas            Int                         @id(map: "PK_idHerramientas") @default(autoincrement())
-  idItem                    Int
+  nombre                    String                      @db.NVarChar(50)
   codigoItson               String                      @db.VarChar(50)
   disponible                Boolean                     @default(false, map: "DF__Herramien__dispo__74AE54BC")
   createAT                  DateTime?                   @default(now(), map: "DF__Herramien__creat__75A278F5") @db.DateTime
   updateAT                  DateTime?                   @db.DateTime
   isDelete                  Boolean?                    @default(false, map: "DF__Herramien__isDel__76969D2E")
   idUsuario                 Int
-  Item                      Item                        @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK__Herramien__idIte__5070F446")
+  descripcion               String?                     @db.NVarChar(50)
+  imagen                    String?                     @db.NVarChar(Max)
+  idCategoria               Int
+  Categoria                 Categoria                   @relation(fields: [idHerramientas], references: [idCategoria], onUpdate: NoAction, map: "FK_Herramientas_Categoria")
   Usuarios                  Usuarios                    @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__Herramien__idUsu__5165187F")
   SalidaEntradaHerramientas SalidaEntradaHerramientas[]
 
   @@index([codigoItson], map: "IX_Herramientas_codigoItson")
-  @@index([idItem], map: "IX_Herramientas_idItem")
+  @@index([nombre], map: "IX_Herramientas_idItem")
 }
 
 model HistorialStock {
@@ -89,7 +93,7 @@ model Item {
   updateAT          DateTime?           @db.DateTime
   isDelete          Boolean?            @default(false, map: "DF__Item__isDelete__5FB337D6")
   idUsuario         Int
-  Herramientas      Herramientas[]
+  active            Boolean?            @default(true, map: "DF_Item_active")
   HistorialStock    HistorialStock[]
   Inventario        Inventario[]
   Categoria         Categoria           @relation(fields: [idCategoria], references: [idCategoria], onUpdate: NoAction, map: "FK__Item__idCategori__49C3F6B7")
@@ -287,6 +291,7 @@ view visItems {
   imagen          String?   @db.VarChar(Max)
   idCategoria     Int
   idUnidad        Int
+  active          Boolean?
   nombreUnidad    String    @db.VarChar(100)
   nombreCategoria String    @db.VarChar(100)
   createAT        DateTime? @db.DateTime
@@ -303,6 +308,7 @@ view visInventario {
   nombre          String    @db.VarChar(100)
   descripcion     String?   @db.VarChar(100)
   imagen          String?   @db.VarChar(Max)
+  active          Boolean?
   nombreUnidad    String?   @db.VarChar(100)
   nombreCategoria String?   @db.VarChar(100)
   stockActual     Int?

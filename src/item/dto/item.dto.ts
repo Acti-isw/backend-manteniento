@@ -41,6 +41,10 @@ export class ItemDTO implements Item {
   @IsOptional()
   isDelete: boolean;
 
+  @IsBoolean()
+  @IsOptional()
+  active: boolean;
+
   @IsOptional()
   @IsDate()
   createAT: Date;
@@ -82,6 +86,10 @@ export class ItemUpdateDTO implements Item {
   @IsOptional()
   @IsBoolean()
   isDelete: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  active: boolean;
 
   @IsOptional()
   @IsDate()

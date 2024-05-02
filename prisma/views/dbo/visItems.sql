@@ -5,6 +5,7 @@ SELECT
   ite.imagen,
   ite.idCategoria,
   ite.idUnidad,
+  ite.active,
   und.nombre AS nombreUnidad,
   cat.nombre AS nombreCategoria,
   ite.createAT,

@@ -1,70 +1,105 @@
-import { Herramientas } from "@prisma/client";
-import { IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Herramientas } from '@prisma/client';
+import {
+  IsBoolean,
+  IsDate,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
-export class HerramientasDTO implements Herramientas{
-    @IsOptional()
-    @IsNumber()
-    idHerramientas: number;
+export class HerramientasDTO implements Herramientas {
+  @IsOptional()
+  @IsNumber()
+  idHerramientas: number;
 
-    @IsNotEmpty()
-    @IsNumber()
-    idItem: number;
+  @IsOptional()
+  @IsString()
+  descripcion: string;
 
-    @IsNotEmpty()
-    @IsString()
-    codigoItson: string;
+  @IsNotEmpty()
+  @IsString()
+  nombre: string;
 
-    @IsNotEmpty()
-    @IsBoolean()
-    disponible: boolean;
+  @IsNotEmpty()
+  @IsNumber()
+  idCategoria: number;
 
-    @IsOptional()
-    @IsDate()
-    createAT: Date;
+  @IsOptional()
+  @IsString()
+  imagen: string;
 
-    @IsOptional()
-    @IsDate()
-    updateAT: Date;
+  @IsNotEmpty()
+  @IsString()
+  codigoItson: string;
 
-    @IsOptional()
-    @IsBoolean()
-    isDelete: boolean;
+  @IsNotEmpty()
+  @IsBoolean()
+  disponible: boolean;
 
-    @IsOptional()
-    @IsNumber()
-    idUsuario: number;
+  @IsOptional()
+  @IsDate()
+  createAT: Date;
+
+  @IsOptional()
+  @IsDate()
+  updateAT: Date;
+
+  @IsOptional()
+  @IsBoolean()
+  isDelete: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  idUsuario: number;
 }
 
-export class HerramientasUpdateDTO implements Herramientas{
-    @IsNotEmpty()
-    @IsNumber()
-    idHerramientas: number;
+export class HerramientasUpdateDTO implements Herramientas {
+  @IsNotEmpty()
+  @IsNumber()
+  idHerramientas: number;
 
-    @IsOptional()
-    @IsNumber()
-    idItem: number;
+  @IsOptional()
+  @IsString()
+  descripcion: string;
 
-    @IsOptional()
-    @IsString()
-    codigoItson: string;
+  @IsNotEmpty()
+  @IsString()
+  nombre: string;
 
-    @IsOptional()
-    @IsBoolean()
-    disponible: boolean;
+  @IsNotEmpty()
+  @IsNumber()
+  idCategoria: number;
 
-    @IsOptional()
-    @IsDate()
-    createAT: Date;
+  @IsOptional()
+  @IsString()
+  imagen: string;
 
-    @IsOptional()
-    @IsDate()
-    updateAT: Date;
+  @IsOptional()
+  @IsNumber()
+  idItem: number;
 
-    @IsOptional()
-    @IsBoolean()
-    isDelete: boolean;
+  @IsOptional()
+  @IsString()
+  codigoItson: string;
 
-    @IsOptional()
-    @IsNumber()
-    idUsuario: number;
+  @IsOptional()
+  @IsBoolean()
+  disponible: boolean;
+
+  @IsOptional()
+  @IsDate()
+  createAT: Date;
+
+  @IsOptional()
+  @IsDate()
+  updateAT: Date;
+
+  @IsOptional()
+  @IsBoolean()
+  isDelete: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  idUsuario: number;
 }

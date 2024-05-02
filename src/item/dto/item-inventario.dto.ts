@@ -58,6 +58,10 @@ export class ItemInventarioDTO implements ItemDTO, InventarioDTO {
   @IsOptional()
   isDelete: boolean;
 
+  @IsBoolean()
+  @IsOptional()
+  active: boolean;
+
   @IsOptional()
   @IsDate()
   createAT: Date;

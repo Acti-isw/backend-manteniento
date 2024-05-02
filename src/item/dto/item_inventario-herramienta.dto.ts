@@ -1,8 +1,14 @@
-import { HerramientasDTO } from "src/herramientas/dto/herramientas.dto";
-import { ItemInventarioDTO } from "./item-inventario.dto";
-import { IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { HerramientasDTO } from 'src/herramientas/dto/herramientas.dto';
+import {
+  IsBoolean,
+  IsDate,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
-export class ItemInventarioHerramientaDTO implements ItemInventarioDTO, HerramientasDTO{
+export class ItemInventarioHerramientaDTO implements HerramientasDTO {
   @IsOptional()
   @IsNumber()
   idHerramientas: number;

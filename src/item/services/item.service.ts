@@ -59,7 +59,9 @@ export class ItemService {
     return items;
   }
   async findItems(): Promise<visItems[]> {
-    const item = await this.prisma.visItems.findMany();
+    const item = await this.prisma.visItems.findMany({
+      where: { isDelete: false },
+    });
     if (isEmpty(item)) {
       throw new NotFoundException('No se encontraron items');
     }

@@ -10,29 +10,29 @@ export class ItemInventarioHerramientaService {
     private readonly herramientaService: HerramientasService,
   ) {}
 
-  async createItemInventarioHerramienta(data: ItemInventarioHerramientaDTO) {
-    try {
-      const itemInventario =
-        await this.itemInventarioService.createItemInventario(data);
+  // async createItemInventarioHerramienta(data: ItemInventarioHerramientaDTO) {
+  //   try {
+  //     // const itemInventario =
+  //     //   await this.itemInventarioService.createItemInventario(data);
 
-      const dataHerramienta = {
-        ...data,
-        ...itemInventario,
-      };
+  //     // const dataHerramienta = {
+  //     //   ...data,
+  //     //   ...itemInventario,
+  //     // };
 
-      const addHerramienta =
-        await this.herramientaService.createTool(dataHerramienta);
+  //     // const addHerramienta =
+  //     //   await this.herramientaService.createTool(dataHerramienta);
 
-      // console.log('itemInventario', itemInventario);
-      // console.log('addHerramienta', addHerramienta);
-      // console.log('dataHerramienta', dataHerramienta);
+  //     // console.log('itemInventario', itemInventario);
+  //     // console.log('addHerramienta', addHerramienta);
+  //     // console.log('dataHerramienta', dataHerramienta);
 
-      return {
-        ...itemInventario,
-        ...addHerramienta,
-      };
-    } catch (error) {
-      throw new Error('Erro en createItemInventarioHerramienta' + error);
-    }
-  }
+  //     return {
+  //       ...itemInventario,
+  //       ...addHerramienta,
+  //     };
+  //   } catch (error) {
+  //     throw new Error('Erro en createItemInventarioHerramienta' + error);
+  //   }
+  // }
 }

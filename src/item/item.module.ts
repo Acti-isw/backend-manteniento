@@ -6,7 +6,7 @@ import { ItemInventarioService } from './services/item-inventario.service';
 import { InventarioModule } from 'src/inventario/inventario.module';
 import { ItemInventarioHerramientaService } from './services/item_inventario-herramienta.service';
 import { HerramientasModule } from 'src/herramientas/herramientas.module';
-import { ItemInventarioHerramientaController } from './controllers/item-inventario-herramienta.controller';
+import { ItemInventario } from './controllers/item-inventario-herramienta.controller';
 
 @Module({
   providers: [
@@ -14,7 +14,7 @@ import { ItemInventarioHerramientaController } from './controllers/item-inventar
     ItemInventarioService,
     ItemInventarioHerramientaService,
   ],
-  controllers: [ItemController, ItemInventarioHerramientaController],
+  controllers: [ItemController, ItemInventario],
   imports: [PrismaModule, InventarioModule, HerramientasModule],
 })
 export class ItemModule {}

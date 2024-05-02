@@ -20,6 +20,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { HistorialStockService } from 'src/historial-stock/services/historial-stock.service';
 import { HistorialStockDTO } from 'src/historial-stock/dto/historialStock.dto';
 import { plainToClass } from 'class-transformer';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('inventarios')
@@ -28,6 +29,7 @@ export class InventarioController {
   constructor(
     private readonly inventarioServices: InventarioService,
     private readonly historialStockServices: HistorialStockService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   @Post('create')
@@ -47,12 +49,17 @@ export class InventarioController {
     const inventoryOld = await this.inventarioServices.findInventoryById(
       data.idInventario,
     ); //Para obtener el stockActual Antiguo
+
+    const acciones = await this.prismaService.accionesStock.findMany();
+    console.log(acciones);
+
     const inventory = await this.inventarioServices.updateInventory(data); //Actualizacion
     const dataHistory = {
       stockAnterior: inventoryOld.stockActual,
       stockNuevo: inventory.stockActual,
       idItem: inventory.idItem,
-      idAccion: data.idAccion,
+      idAccion: acciones.find((accion) => accion.nombre == 'STOCK AJUSTE')
+        .idAccion,
       motivo: data.motivo,
       idEmpleado: data.idEmpleado,
       idUsuario: inventory.idUsuario,

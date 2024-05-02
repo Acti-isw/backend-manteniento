@@ -121,7 +121,7 @@ export class InventarioHistoryStockUpdateDTO implements Inventario {
   @IsNumber()
   idUsuario: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   idAccion: number;
 
