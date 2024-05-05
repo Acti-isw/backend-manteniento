@@ -17,7 +17,7 @@ export class SalidaEntHerDTO implements SalidaEntradaHerramientas {
   @IsNumber()
   idHerramientas: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   idEmpleado: number;
 

@@ -1,10 +1,17 @@
 SELECT
   her.idHerramientas,
-  ite.nombre,
+  her.nombre,
+  her.descripcion,
+  her.imagen,
+  her.idCategoria,
   her.codigoItson,
-  her.disponible
+  her.disponible,
+  cat.nombre AS nombreCategoria,
+  her.createAT,
+  her.updateAT,
+  her.isDelete
 FROM
-  [dbo].[Herramientas] AS her
-  JOIN [dbo].[Item] AS ite ON ite.idItem = her.idItem
+  [dbo].Herramientas AS her
+  JOIN [dbo].[Categoria] AS cat ON cat.idCategoria = her.idCategoria
 WHERE
   her.isDelete = 0;

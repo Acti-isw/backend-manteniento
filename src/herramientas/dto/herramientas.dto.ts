@@ -33,7 +33,7 @@ export class HerramientasDTO implements Herramientas {
   @IsString()
   codigoItson: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsBoolean()
   disponible: boolean;
 
@@ -63,11 +63,11 @@ export class HerramientasUpdateDTO implements Herramientas {
   @IsString()
   descripcion: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   nombre: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   idCategoria: number;
 

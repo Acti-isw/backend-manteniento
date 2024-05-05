@@ -19,5 +19,5 @@ FROM
   LEFT JOIN [dbo].[Unidades] AS und ON und.idUnidad = ite.idUnidad
   LEFT JOIN [dbo].[Categoria] AS cat ON cat.idCategoria = ite.idCategoria
 WHERE
-  ite.isDelete = 1
+  ite.isDelete = 0
   AND ite.active = 1;

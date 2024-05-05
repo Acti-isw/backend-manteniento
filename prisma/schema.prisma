@@ -33,9 +33,9 @@ model Categoria {
 
 model Herramientas {
   idHerramientas            Int                         @id(map: "PK_idHerramientas") @default(autoincrement())
-  nombre                    String                      @db.NVarChar(50)
+  nombre                    String                      @db.VarChar(50)
   codigoItson               String                      @db.VarChar(50)
-  disponible                Boolean                     @default(false, map: "DF__Herramien__dispo__74AE54BC")
+  disponible                Boolean                     @default(true, map: "DF__Herramien__dispo__74AE54BC")
   createAT                  DateTime?                   @default(now(), map: "DF__Herramien__creat__75A278F5") @db.DateTime
   updateAT                  DateTime?                   @db.DateTime
   isDelete                  Boolean?                    @default(false, map: "DF__Herramien__isDel__76969D2E")
@@ -234,10 +234,17 @@ model RolePermisos {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view visHerramientas {
-  idHerramientas Int     @id
-  nombre         String  @db.VarChar(100)
-  codigoItson    String  @db.VarChar(50)
-  disponible     Boolean
+  idHerramientas  Int       @id
+  nombre          String    @db.VarChar(50)
+  descripcion     String?   @db.NVarChar(50)
+  imagen          String?   @db.NVarChar(Max)
+  idCategoria     Int
+  codigoItson     String    @db.VarChar(50)
+  disponible      Boolean
+  nombreCategoria String    @db.VarChar(100)
+  createAT        DateTime? @db.DateTime
+  updateAT        DateTime? @db.DateTime
+  isDelete        Boolean?
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -278,9 +285,22 @@ view visSalidaEntradaItem {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view visSalidaEntradaHerramientas {
-  idSalidaEntradaHerramientas Int    @id
-  nombre                      String @db.VarChar(100)
+  idSalidaEntradaHerramientas Int      @id
+  createAT                    DateTime? @db.DateTime
+  motivo                      String?   @db.VarChar(Max)
+  idHerramientas              Int
+  nombre                      String    @db.VarChar(50)
+  codigoItson                 String    @db.VarChar(50)
+  imagen                      String?   @db.NVarChar(Max)
+  descripcion                 String?   @db.NVarChar(50)
+  disponible                  Boolean
+  isDelete                    Boolean?
+  nombreCategoria             String?   @db.VarChar(100)
+  idCategoria                 Int?
   idEmpleado                  Int?
+  isSalida                    Boolean?
+  idUsuario                   Int?
+  usuario                     String?   @db.VarChar(45)
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.

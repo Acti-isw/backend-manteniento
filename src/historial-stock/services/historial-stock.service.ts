@@ -17,7 +17,9 @@ export class HistorialStockService {
   }
 
   async findStockHistories(): Promise<visHistorialStock[]> {
-    const historiales = await this.prisma.visHistorialStock.findMany();
+    const historiales = await this.prisma.visHistorialStock.findMany({
+      orderBy: { idHistorialStock: 'desc' },
+    });
     if (isEmpty(historiales)) {
       throw new NotFoundException('No se encontraron los historiales de stock');
     }

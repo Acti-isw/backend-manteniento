@@ -4,9 +4,9 @@ import {
   HerramientasDTO,
   HerramientasUpdateDTO,
 } from '../dto/herramientas.dto';
-import { Herramientas } from '@prisma/client';
-import { isEmpty, pick } from 'lodash';
-import { plainToClass } from 'class-transformer';
+import { Herramientas, visHerramientas } from '@prisma/client';
+import { isEmpty } from 'lodash';
+// import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class HerramientasService {
@@ -23,11 +23,11 @@ export class HerramientasService {
     'idUsuario',
   ];
   async createTool(herramienta: HerramientasDTO): Promise<Herramientas> {
-    const filteredHerData = pick(herramienta, this.propertiesDTO);
-    const herramientasDto = plainToClass(HerramientasDTO, filteredHerData);
+    // const filteredHerData = pick(herramienta, this.propertiesDTO);
+    // const herramientasDto = plainToClass(HerramientasDTO, filteredHerData);
 
     return await this.prisma.herramientas.create({
-      data: herramientasDto,
+      data: herramienta,
     });
   }
 
@@ -42,8 +42,8 @@ export class HerramientasService {
     });
   }
 
-  async findTools(): Promise<Herramientas[]> {
-    const tools = await this.prisma.herramientas.findMany();
+  async findTools(): Promise<visHerramientas[]> {
+    const tools = await this.prisma.visHerramientas.findMany();
     if (isEmpty(tools)) {
       throw new NotFoundException('No se encontraton herramientas');
     }
