@@ -1,4 +1,4 @@
-import { IAuthBody } from 'src/interface/auth.interface';
+import { IAuthBody } from 'src/auth/interface/auth.interface';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class AuthDTO implements IAuthBody {

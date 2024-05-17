@@ -1,0 +1,14 @@
+SELECT
+  idHorario,
+  NombreHorario,
+  Descripcion,
+  ELIMINADO,
+  CASE
+    ELIMINADO
+    WHEN 0 THEN 'No'
+    WHEN 1 THEN 'Si'
+  END AS DESELIMINADO,
+  IDUSUARIO,
+  FECHAHORACAMBIO
+FROM
+  RECURSOSHUMANOS.RHHorarios;

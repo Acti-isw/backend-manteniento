@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import * as jwt from 'jsonwebtoken';
 import { PUBLIC_KEY } from 'src/constants/key-decorators';
-import { IUseToken } from 'src/interface/auth.interface';
+import { IUseToken } from 'src/auth/interface/auth.interface';
 import { UsersService } from 'src/users/services/users.service';
 import { useToken } from 'src/utils/use.toke';
 

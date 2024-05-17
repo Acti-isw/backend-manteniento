@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { UsersService } from 'src/users/services/users.service';
-import { Usuarios } from '@prisma/client';
-import { IPayloadToken } from 'src/interface/auth.interface';
-import { PermisosService } from 'src/permisos/services/permisos.service';
+import { INVUsuarios } from '@prisma/client';
+import { IPayloadToken } from 'src/auth/interface/auth.interface';
+import { PermisosService } from 'src/INVENTARIOMTTO/permisos/services/permisos.service';
+
 
 @Injectable()
 export class AuthService {
@@ -34,11 +35,11 @@ export class AuthService {
     return jwt.sign(payload, secret, { expiresIn: expires });
   }
 
-  async generateJWT(user: Usuarios) {
+  async generateJWT(user: INVUsuarios) {
     const getUser = await this.userService.findUserById(user.idUsuario);
 
     const payload: IPayloadToken = {
-      role: getUser.Role.nombre,
+      role: getUser.INVRole.nombre,
       username: getUser.usuario,
     };
 
@@ -46,8 +47,8 @@ export class AuthService {
       idUsuario: user.idUsuario,
       nombreCompleto: user.nombreCompleto,
       usuario: user.usuario,
-      role: getUser.Role.nombre,
-      permisos: getUser.Role.RolePermisos,
+      role: getUser.INVRole.nombre,
+      permisos: getUser.INVRole.INVRolePermisos,
       avatar: user.avatar,
       accesToken: await this.signJWT({
         payload,

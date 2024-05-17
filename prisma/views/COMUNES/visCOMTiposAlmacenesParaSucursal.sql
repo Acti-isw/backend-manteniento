@@ -1,0 +1,17 @@
+SELECT
+  idTipoAlmacenParaSucursal,
+  NombreTipoAlmacen,
+  CASE
+    DESISTEMA
+    WHEN 0 THEN 'No'
+    WHEN 1 THEN 'Si'
+  END AS DESDESISTEMA,
+  CASE
+    ELIMINADO
+    WHEN 0 THEN 'No'
+    WHEN 1 THEN 'Si'
+  END AS DESELIMINADO,
+  IDUSUARIO,
+  FECHAHORACAMBIO
+FROM
+  COMUNES.COMTipoAlmacenesParaSucursal;

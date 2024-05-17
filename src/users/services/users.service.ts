@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Usuarios } from '@prisma/client';
+import { INVUsuarios } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserDTO } from '../dto/user.dto';
 import { isEmpty } from 'lodash';
@@ -8,23 +8,32 @@ import { isEmpty } from 'lodash';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createUser(data: UserDTO): Promise<Usuarios> {
-    return await this.prisma.usuarios.create({ data });
+  async createUser(data: UserDTO): Promise<INVUsuarios> {
+    return await this.prisma.iNVUsuarios.create({ data });
+  }
+
+  async updateUser(data: UserDTO, id: number): Promise<INVUsuarios> {
+    return await this.prisma.iNVUsuarios.update({
+      where: { idUsuario: id },
+      data: data,
+    });
   }
 
   async findUsers() {
-    const users = await this.prisma.usuarios.findMany({
+    const users = await this.prisma.iNVUsuarios.findMany({
       include: {
-        Role: {
+        INVRole: {
           include: {
-            RolePermisos: {
+            INVRolePermisos: {
               include: {
-                Permisos: true,
+                INVPermisos: true,
               },
             },
           },
         },
       },
+      where: { isDelete: false },
+      orderBy: { idUsuario: 'desc' },
     });
     if (isEmpty(users)) {
       throw new NotFoundException('No se encontraron usuarios');
@@ -33,18 +42,13 @@ export class UsersService {
   }
 
   async findUserById(id: number) {
-    const user = await this.prisma.usuarios.findFirst({
+    const user = await this.prisma.iNVUsuarios.findFirst({
       include: {
-        Role: {
+        INVRole: {
           include: {
-            RolePermisos: {
+            INVRolePermisos: {
               include: {
-                Permisos: {
-                  select: {
-                    nombre: true,
-                    pad: true,
-                  },
-                },
+                INVPermisos: true,
               },
             },
           },
@@ -62,8 +66,8 @@ export class UsersService {
     return user;
   }
 
-  async findUserByUsername(username: string): Promise<Usuarios> {
-    const user = await this.prisma.usuarios.findFirst({
+  async findUserByUsername(username: string): Promise<INVUsuarios> {
+    const user = await this.prisma.iNVUsuarios.findFirst({
       where: {
         usuario: username,
       },
@@ -77,8 +81,8 @@ export class UsersService {
     return user;
   }
 
-  async deleteUser(idUsuario: number): Promise<Usuarios> {
-    return await this.prisma.usuarios.update({
+  async deleteUser(idUsuario: number): Promise<INVUsuarios> {
+    return await this.prisma.iNVUsuarios.update({
       where: {
         idUsuario,
       },

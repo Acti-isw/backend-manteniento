@@ -1,0 +1,27 @@
+SELECT
+  A.idMoneda,
+  A.NombreMoneda,
+  A.Simbolo,
+  A.XDEFAULT,
+  (
+    CASE
+      A.XDEFAULT
+      WHEN 0 THEN 'No'
+      WHEN 1 THEN 'Si'
+    END
+  ) AS DESXDEFAULT,
+  A.ELIMINADO,
+  (
+    CASE
+      A.ELIMINADO
+      WHEN 0 THEN 'No'
+      WHEN 1 THEN 'Si'
+    END
+  ) AS DESELIMINADO,
+  A.IDUSUARIO,
+  A.FECHAHORACAMBIO,
+  A.DESISTEMA
+FROM
+  SISTEMA.COMUNES.COMMonedas AS A
+WHERE
+  A.ELIMINADO = 0;

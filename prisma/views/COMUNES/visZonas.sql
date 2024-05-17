@@ -1,0 +1,17 @@
+SELECT
+  a.idZona,
+  a.NombreZona,
+  a.XDEFAULT,
+  CASE
+    WHEN a.XDEFAULT = 1 THEN 'Si'
+    ELSE 'No'
+  END AS DesXDEFAULT,
+  a.IDUSUARIO,
+  a.ELIMINADO,
+  CASE
+    WHEN a.ELIMINADO = 1 THEN 'Si'
+    ELSE 'No'
+  END AS DesELIMINADO,
+  a.FECHAHORACAMBIO
+FROM
+  COMUNES.COMZonas AS A;

@@ -6,239 +6,2022 @@ generator client {
 datasource db {
   provider = "sqlserver"
   url      = env("DATABASE_URL")
+  schemas  = ["COMUNES", "INVENTARIOMTTO", "RECURSOSHUMANOS", "VEHICULOS"]
 }
 
-model AccionesStock {
-  idAccion       Int              @id(map: "PK_idAccion") @default(autoincrement())
-  nombre         String           @db.VarChar(100)
-  createAT       DateTime?        @default(now(), map: "DF__AccionesS__creat__693CA210") @db.DateTime
-  updateAT       DateTime?        @db.DateTime
-  isDelete       Boolean?         @default(false, map: "DF__AccionesS__isDel__6A30C649")
-  idUsuario      Int?
-  Usuarios       Usuarios?        @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK__AccionesS__idUsu__4CA06362")
-  HistorialStock HistorialStock[]
+model COMAlmacenes {
+  idAlmacen           Int                 @id(map: "PK_Almacenes") @default(autoincrement())
+  idTipoAlmacen       Int
+  idProceso           Int
+  idSucursal          Int                 @default(0, map: "DF_COMAlmacenes_idSucursal")
+  NombreAlmacen       String              @db.VarChar(50)
+  Descripcion         String              @db.Text
+  ELIMINADO           Boolean             @default(false, map: "DF_COMAlmacenes_ELIMINADO")
+  XDEFAULT            Boolean             @default(false, map: "DF_COMAlmacenes_XDEFAULT")
+  DESISTEMA           Boolean             @default(false, map: "DF_COMAlmacenes_DESISTEMA")
+  IDUSUARIO           String              @db.VarChar(10)
+  FECHAHORACAMBIO     DateTime            @default(now(), map: "DF_COMAlmacenes_FECHAHORACAMBIO") @db.DateTime
+  COMTiposDeAlmacenes COMTiposDeAlmacenes @relation(fields: [idTipoAlmacen], references: [idTipoAlmacen], onUpdate: NoAction, map: "FK_COMAlmacenes_COMTiposDeAlmacenes")
+
+  @@schema("COMUNES")
 }
 
-model Categoria {
-  idCategoria Int       @id(map: "PK_idCategoria") @default(autoincrement())
-  nombre      String    @db.VarChar(100)
-  createAT    DateTime? @default(now(), map: "DF__Categoria__creat__534D60F1") @db.DateTime
-  updateAT    DateTime? @db.DateTime
-  isDelete    Boolean?  @default(false, map: "DF__Categoria__isDel__5441852A")
+model COMAlmacenesImagen {
+  idAlmacen Int    @id(map: "PK_COMAlmacenesImagen")
+  Imagen    String @db.Text
+  ext       String @db.VarChar(10)
+  ruta      String @db.VarChar(150)
+
+  @@schema("COMUNES")
+}
+
+model COMAnoMes {
+  idANO     Int
+  idMes     Int     @db.TinyInt
+  NombreMes String? @db.VarChar(10)
+
+  @@id([idANO, idMes], map: "PK_COMAnoMes")
+  @@schema("COMUNES")
+}
+
+model COMCiudades {
+  idCiudad              Int                     @id(map: "PK_COMCiudades") @default(autoincrement())
+  idMunicipio           String                  @db.VarChar(5)
+  NombreCiudad          String                  @db.VarChar(100)
+  idZona                Int
+  ELIMINADO             Boolean                 @default(false, map: "DF_COMCiudades_ELIMINADO")
+  XDEFAULT              Boolean                 @default(false, map: "DF_COMCiudades_XDEFAULT")
+  IDUSUARIO             String                  @db.VarChar(10)
+  FECHAHORACAMBIO       DateTime                @default(now(), map: "DF_COMCiudades_FECHAHORACAMBIO") @db.DateTime
+  RHInstitucionesEgreso RHInstitucionesEgreso[]
+
+  @@schema("COMUNES")
+}
+
+model COMComunidades {
+  idComunidad     Int      @id(map: "PK_COMComunidades")
+  NombreComunidad String   @db.VarChar(150)
+  Descripcion     String   @db.Text
+  FECHAHORACAMBIO DateTime @db.DateTime
+  IDUSUARIO       String   @db.VarChar(10)
+  IDEQUIPO        String   @db.VarChar(255)
+  XDEFAULT        Boolean
+
+  @@schema("COMUNES")
+}
+
+model COMConstrucciones {
+  IdSucursal             String                   @db.VarChar(50)
+  idConstruccion         Int                      @id(map: "PK_COMEdificios") @default(autoincrement())
+  NombreConstruccion     String                   @db.VarChar(100)
+  Descripcion            String                   @db.Text
+  ELIMINADO              Boolean                  @default(false, map: "DF_COMConstrucciones_ELIMINADO")
+  IDUSUARIO              String                   @db.VarChar(10)
+  FECHAHORACAMBIO        DateTime                 @default(now(), map: "DF_COMConstrucciones_FECHAHORACAMBIO") @db.DateTime
+  COMConstruccionesAreas COMConstruccionesAreas[]
+
+  @@schema("COMUNES")
+}
+
+model COMConstruccionesAreas {
+  IdArea            Int               @id(map: "PK_COMConstrucionesAreas") @default(autoincrement())
+  IdConstruccion    Int
+  NombreArea        String            @db.VarChar(100)
+  Descripcion       String            @db.Text
+  ELIMINADO         Boolean           @default(false, map: "DF_COMConstruccionesAreas_ELIMINADO")
+  IDUSUARIO         String            @db.VarChar(10)
+  FECHAHORACAMBIO   DateTime          @default(now(), map: "DF_COMConstruccionesAreas_FECHAHORACAMBIO") @db.DateTime
+  COMConstrucciones COMConstrucciones @relation(fields: [IdConstruccion], references: [idConstruccion], onUpdate: NoAction, map: "FK_COMConstruccionesAreas_COMConstrucciones")
+
+  @@schema("COMUNES")
+}
+
+model COMDiasSemana {
+  idDiaSemana Int    @id(map: "PK_COMDiasSemana")
+  NombreDia   String @db.VarChar(10)
+
+  @@schema("COMUNES")
+}
+
+model COMEmpresas {
+  idEmpresa             Int      @id(map: "PK_COMEmpresas")
+  idTipoEmpresa         Int
+  NombreEmpresa         String   @db.VarChar(150)
+  NombreCorto           String   @db.VarChar(50)
+  Actividad             String   @db.Text
+  RFCEmpresa            String   @db.VarChar(15)
+  TelefonoEmpresa       String   @db.VarChar(20)
+  FaxEmpresa            String   @db.VarChar(20)
+  EmailEmpresa          String   @db.VarChar(50)
+  NombreRepresentante   String   @db.VarChar(150)
+  RFCRepresentante      String   @db.VarChar(15)
+  TelefonoRepresentante String   @db.VarChar(20)
+  FaxRepresentante      String   @db.VarChar(20)
+  Calle1                String   @db.VarChar(150)
+  NumeroInterior1       String   @db.VarChar(15)
+  NumeroExterior1       String   @db.VarChar(15)
+  Colonia1              String   @db.VarChar(50)
+  Referencia1           String   @db.VarChar(50)
+  CodigoPostal1         String   @db.VarChar(7)
+  idCiudad1             Int
+  idMunicipio1          String   @db.VarChar(5)
+  idEstado1             String   @db.VarChar(3)
+  idPais1               String   @db.VarChar(5)
+  Direccion2            String   @db.VarChar(150)
+  idCiudad2             Int
+  idEstado2             String   @db.VarChar(3)
+  idPais2               String   @db.VarChar(5)
+  CodigoPostal2         String   @db.VarChar(7)
+  Telefono2             String   @db.VarChar(20)
+  Division2             String   @db.VarChar(100)
+  idPermiso             Int
+  Permiso               String   @db.VarChar(50)
+  Prog                  String   @db.VarChar(50)
+  Expediente            String   @db.VarChar(50)
+  IRSNumber             String   @db.VarChar(50)
+  TaxID                 String   @db.VarChar(50)
+  Certificado           String   @db.VarChar(50)
+  ShipManfID            String   @db.VarChar(50)
+  CodFab                String   @db.VarChar(50)
+  CodigoProv            String   @db.VarChar(50)
+  UsaIV02               Boolean
+  Clave2                String   @db.VarChar(50)
+  Nombre2               String   @db.VarChar(150)
+  ConsigneeKey          String   @db.VarChar(50)
+  IDUSUARIO             String   @db.VarChar(10)
+  IDEQUIPO              String   @db.VarChar(255)
+  FECHAHORACAMBIO       DateTime @db.DateTime
+  ELIMINADO             Boolean
+
+  @@schema("COMUNES")
+}
+
+model COMEstados {
+  idEstado        String   @db.VarChar(3)
+  idPais          String   @db.VarChar(5)
+  NombreEstado    String   @db.Char(20)
+  ELIMINADO       Boolean  @default(false, map: "DF_COMEstados_ELIMINADO")
+  XDEFAULT        Boolean  @default(false, map: "DF_COMEstados_XDEFAULT")
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_COMEstados_FECHAHORACAMBIO") @db.DateTime
+
+  @@id([idEstado, idPais], map: "PK_COMEstados")
+  @@schema("COMUNES")
+}
+
+model COMEstantes {
+  idEstante       Int      @id(map: "PK_COMEstantes")
+  idAlmacen       Int
+  CodigoEstante   String   @db.VarChar(15)
+  NombreEstante   String   @db.VarChar(250)
+  Descripcion     String   @db.Text
+  ELIMINADO       Boolean
+  FECHAHORACAMBIO DateTime @db.DateTime
+  IDEQUIPO        String   @db.VarChar(250)
+  IDUSUARIO       String   @db.VarChar(15)
+
+  @@schema("COMUNES")
+}
+
+model COMLocalidades {
+  idLocalidad     Int      @id(map: "PK_COMLocalidades") @default(autoincrement())
+  idCiudad        Int
+  NombreLocalidad String   @db.VarChar(150)
+  NombreCorto     String   @db.Char(50)
+  Descripcion     String   @db.Text
+  CodigoPostal    String   @db.VarChar(10)
+  Referencia      String   @db.VarChar(150)
+  ELIMINADO       Boolean  @default(false, map: "DF_COMLocalidades_ELIMINADO")
+  XDEFAULT        Boolean  @default(false, map: "DF_COMLocalidades_XDEFAULT")
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_COMLocalidades_FECHAHORACAMBIO") @db.DateTime
+
+  @@schema("COMUNES")
+}
+
+model COMLugarProcesoAlmacen {
+  idProceso       Int      @id(map: "PK_LugarProcesoAlmacen") @default(autoincrement())
+  NombreProceso   String   @db.VarChar(50)
+  posicionProceso Int
+  ELIMINADO       Boolean  @default(false, map: "DF_COMLugarProcesoAlmacen_ELIMINADO")
+  DESISTEMA       Boolean  @default(false, map: "DF_COMLugarProcesoAlmacen_DESISTEMA")
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_COMLugarProcesoAlmacen_FECHAHORACAMBIO") @db.DateTime
+
+  @@schema("COMUNES")
+}
+
+model COMMesesAno {
+  idMes     Int    @id(map: "PK_COMMesesAno")
+  NombreMes String @db.VarChar(150)
+
+  @@schema("COMUNES")
+}
+
+model COMMonedas {
+  IdMoneda        String   @id(map: "PK_COMMoneda") @db.VarChar(10)
+  NombreMoneda    String   @db.VarChar(50)
+  Simbolo         String   @db.VarChar(5)
+  XDEFAULT        Boolean  @default(false, map: "DF_COMMonedas_XDEFAULT")
+  ELIMINADO       Boolean  @default(false, map: "DF_COMMonedas_ELIMINADO")
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_COMMonedas_FECHAHORACAMBIO") @db.DateTime
+  DESISTEMA       Boolean  @default(false, map: "DF_COMMonedas_DESISTEMA")
+
+  @@schema("COMUNES")
+}
+
+model COMMunicipios {
+  idMunicipio     String   @db.VarChar(5)
+  idEstado        String   @db.VarChar(3)
+  NombreMunicipio String   @db.VarChar(150)
+  FECHAHORACAMBIO DateTime @db.DateTime
+  IDUSUARIO       String   @db.VarChar(10)
+  XDEFAULT        Boolean
+
+  @@id([idMunicipio, idEstado], map: "PK_COMMunicipios")
+  @@schema("COMUNES")
+}
+
+model COMPaises {
+  IdPais          String   @id(map: "PK_COMPaises_1") @db.VarChar(5)
+  NombrePais      String   @db.VarChar(50)
+  ELIMINADO       Boolean  @default(false, map: "DF_COMPaises_ELIMINADO")
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+  XDEFAULT        Boolean  @default(false, map: "DF_COMPaises_XDEFAULT")
+
+  @@schema("COMUNES")
+}
+
+model COMPermisos {
+  idPermiso       Int      @id(map: "PK_COMPermisos") @default(autoincrement())
+  NombrePermiso   String   @db.VarChar(150)
+  Descripcion     String   @db.Text
+  FECHAHORACAMBIO DateTime @db.DateTime
+  IDUSUARIO       String   @db.VarChar(10)
+  IDEQUIPO        String   @db.VarChar(255)
+  ELIMINADO       Boolean
+
+  @@schema("COMUNES")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model COMSeguridad {
+  idEquipo    String?   @db.VarChar(50)
+  FechaCambio DateTime? @db.DateTime
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+model COMSemanasAno {
+  idSemana    Int      @db.TinyInt
+  idAno       Int
+  FechaInicio DateTime @db.DateTime
+  FechaFin    DateTime @db.DateTime
+
+  @@id([idSemana, idAno], map: "PK_COMSemanasAno")
+  @@schema("COMUNES")
+}
+
+model COMSexo {
+  idSexo          Int      @id(map: "PK_COMSexo") @default(autoincrement())
+  NombreSexo      String   @db.VarChar(50)
+  XDEFAULT        Boolean  @default(false, map: "DF_COMSexo_XDEFAULT")
+  DESISTEMA       Boolean  @default(false, map: "DF_COMSexo_DESISTEMA")
+  IDUSUARIO       String   @db.VarChar(10)
+  ELIMINADO       Boolean  @default(false, map: "DF_COMSexo_ELIMINADO")
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_COMSexo_FECHAHORACAMBIO") @db.DateTime
+
+  @@schema("COMUNES")
+}
+
+model COMSucursalAlmacenes {
+  idSucursal             Int
+  idAlmacen              Int
+  idTipoAlmacenSurcursal Int?
+  IDUSUARIO              String?   @db.VarChar(10)
+  FECHAHORACAMBIO        DateTime? @db.DateTime
+
+  @@id([idSucursal, idAlmacen], map: "PK_COMAlmacenesPorSucursal")
+  @@schema("COMUNES")
+}
+
+model COMSucursales {
+  idSucursal      Int      @id(map: "PK_COMSucursales") @default(autoincrement())
+  idCiudad        Int
+  NombreSucursal  String   @db.VarChar(50)
+  Direccion       String   @db.VarChar(150)
+  Telefono1       String   @db.VarChar(50)
+  Telefono2       String   @db.VarChar(50)
+  Fax1            String   @db.VarChar(50)
+  Fax2            String   @db.VarChar(50)
+  Descripcion     String   @db.Text
+  XDEFAULT        Boolean  @default(false, map: "DF_COMSucursales_XDEFAULT")
+  ELIMINADO       Boolean  @default(false, map: "DF_COMSucursales_ELIMINADO")
+  DESISTEMA       Boolean  @default(false, map: "DF_COMSucursales_DESISTEMA")
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_COMSucursales_FECHAHORACAMBIO") @db.DateTime
+
+  @@schema("COMUNES")
+}
+
+model COMTipoAlmacenesParaSucursal {
+  idTipoAlmacenParaSucursal Int       @id(map: "PK_COMTipoAlmacenesParaSucursal") @default(autoincrement())
+  NombreTipoAlmacen         String    @db.VarChar(50)
+  DESISTEMA                 Boolean   @default(false, map: "DF_COMTipoAlmacenesParaSucursal_DESISTEMA")
+  ELIMINADO                 Boolean?  @default(false, map: "DF_COMTipoAlmacenesParaSucursal_ELIMINADO")
+  IDUSUARIO                 String?   @db.VarChar(10)
+  FECHAHORACAMBIO           DateTime? @default(now(), map: "DF_COMTipoAlmacenesParaSucursal_FECHAHORACAMBIO") @db.DateTime
+
+  @@schema("COMUNES")
+}
+
+model COMTiposCambios {
+  idTipoCambio     Int      @id(map: "PK_COMTiposCambios") @default(autoincrement())
+  NombreTipoCambio String   @db.VarChar(100)
+  Descripcion      String   @db.Text
+  ELIMINADO        Boolean  @default(false, map: "DF_COMTiposCambios_ELIMINADO")
+  FECHAHORACAMBIO  DateTime @default(now(), map: "DF_COMTiposCambios_FECHAHORACAMBIO") @db.DateTime
+  IDUSUARIO        String   @db.VarChar(10)
+
+  @@schema("COMUNES")
+}
+
+model COMTiposContactos {
+  idTipoContacto     Int      @id(map: "PK_COMTiposContactos_1") @default(autoincrement())
+  NombreTipoContacto String   @db.VarChar(50)
+  Descripcion        String   @db.Text
+  DESISTEMA          Boolean  @default(false, map: "DF_COMTiposContactos_DESISTEMA")
+  ELIMINADO          Boolean  @default(false, map: "DF_COMTiposContactos_ELIMINADO")
+  IDUSUARIO          String   @db.VarChar(10)
+  FECHAHORACAMBIO    DateTime @default(now(), map: "DF_COMTiposContactos_FECHAHORACAMBIO") @db.DateTime
+
+  @@schema("COMUNES")
+}
+
+model COMTiposDeAlmacenes {
+  idTipoAlmacen     Int            @id(map: "PK_TiposDeAlmacenes") @default(autoincrement())
+  NombreTipoAlmacen String         @db.VarChar(100)
+  ELIMINADO         Boolean        @default(false, map: "DF_COMTiposDeAlmacenes_ELIMINADO")
+  XDEFAULT          Boolean        @default(false, map: "DF_COMTiposDeAlmacenes_XDEFAULT")
+  DESISTEMA         Boolean        @default(false, map: "DF_COMTiposDeAlmacenes_DESISTEMA")
+  IDUSUARIO         String         @db.VarChar(10)
+  FECHAHORACAMBIO   DateTime       @default(now(), map: "DF_COMTiposDeAlmacenes_FECHAHORACAMBIO") @db.DateTime
+  COMAlmacenes      COMAlmacenes[]
+
+  @@schema("COMUNES")
+}
+
+model COMTiposEmpresa {
+  idTipoEmpresa     Int      @id(map: "PK_COMTipoEmpresa") @default(autoincrement())
+  NombreTipoEmpresa String   @db.VarChar(150)
+  Descripcion       String   @db.Text
+  IDUSUARIO         String   @db.VarChar(10)
+  IDEQUIPO          String   @db.VarChar(255)
+  FECHAHORACAMBIO   DateTime @default(now(), map: "DF_COMTiposEmpresa_FECHAHORACAMBIO") @db.DateTime
+  ELIMINADO         Boolean  @default(false, map: "DF_COMTiposEmpresa_ELIMINADO")
+
+  @@schema("COMUNES")
+}
+
+model COMTiposOrdenes {
+  idTipoOrden     Int      @id(map: "PK_COMTiposOrden") @default(autoincrement())
+  NombreTipoOrden String   @db.Char(30)
+  Descripcion     String   @db.Text
+  Eliminado       Boolean
+  XDEFAULT        Boolean
+  IDUSUARIO       String   @db.VarChar(10)
+  IDEQUIPO        String   @db.VarChar(255)
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@schema("COMUNES")
+}
+
+model COMTiposPrecio {
+  idTipoPrecio     Int      @id(map: "PK_COMTiposPrecio") @default(autoincrement())
+  NombreTipoPrecio String   @db.VarChar(150)
+  Descripcion      String   @db.Text
+  ELIMINADO        Boolean
+  DESISTEMA        Boolean
+  XDEFAULT         Boolean
+  IDUSUARIO        String   @db.VarChar(10)
+  IDEQUIPO         String   @db.VarChar(20)
+  FECHAHORACAMBIO  DateTime @db.DateTime
+
+  @@schema("COMUNES")
+}
+
+model COMTiposTarjeta {
+  idTipoTarjeta     Int      @id(map: "PK_COMTiposTargeta") @default(autoincrement())
+  NombreTipoTarjeta String   @db.VarChar(150)
+  Descripcion       String   @db.Text
+  DESISTEMA         Boolean  @default(false, map: "DF_COMTiposTargeta_DESISTEMA")
+  ELIMINADO         Boolean  @default(false, map: "DF_COMTiposTargeta_ELIMINADO")
+  XDEFAULT          Boolean  @default(false, map: "DF_COMTiposTargeta_XDEFAULT")
+  FECHAHORACAMBIO   DateTime @db.DateTime
+  IDUSUARIO         String   @default("SYSTEM", map: "DF_COMTiposTargeta_IDUSUARIO") @db.VarChar(10)
+  IDEQUIPO          String   @db.VarChar(250)
+
+  @@schema("COMUNES")
+}
+
+model COMUnidadesDeMedida {
+  idUnidadMedida   String    @id(map: "PK_COMUnidadesDeMedida") @db.VarChar(5)
+  Nombre           String    @db.VarChar(50)
+  Fraccional       Boolean
+  MaximoFracciones Int       @db.TinyInt
+  ELIMINADO        Boolean   @default(false, map: "DF_COMUnidadesDeMedida_ELIMINADO")
+  XDEFAULT         Boolean   @default(false, map: "DF_COMUnidadesDeMedida_XDEFAULT")
+  IDUSUARIO        String?   @db.VarChar(10)
+  FECHAHORACAMBIO  DateTime? @default(now(), map: "DF_COMUnidadesDeMedida_FECHAHORACAMBIO") @db.DateTime
+
+  @@schema("COMUNES")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model COMViajes {
+  idModulo    Int?
+  idCandidata Int?
+  FechaHora   DateTime? @db.DateTime
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+model COMZonas {
+  idZona          Int      @id(map: "PK_Zonas") @default(autoincrement())
+  NombreZona      String   @db.VarChar(50)
+  ELIMINADO       Boolean  @default(false, map: "DF_COMZonas_ELIMINADO")
+  XDEFAULT        Boolean  @default(false, map: "DF_COMZonas_xDefault")
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_COMZonas_FECHAHORACAMBIO") @db.DateTime
+
+  @@schema("COMUNES")
+}
+
+model INVAccionesStock {
+  idAccion          Int                 @id(map: "PK_INVAccion") @default(autoincrement())
+  nombre            String              @db.VarChar(100)
+  createAT          DateTime?           @default(now(), map: "DF__INVAccion__creat__3C623BFD") @db.DateTime
+  updateAT          DateTime?           @db.DateTime
+  isDelete          Boolean?            @default(false, map: "DF__INVAccion__isDel__3D566036")
+  idUsuario         Int?
+  INVUsuarios       INVUsuarios?        @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK_INVAccionesStock_INVUsuarios")
+  INVHistorialStock INVHistorialStock[]
+
+  @@schema("INVENTARIOMTTO")
+}
+
+model INVCategoria {
+  idCategoria Int         @id(map: "PK_INVCategoria") @default(autoincrement())
+  nombre      String      @db.VarChar(100)
+  createAT    DateTime?   @default(now(), map: "DF__INVCatego__creat__2672FADE") @db.DateTime
+  updateAT    DateTime?   @db.DateTime
+  isDelete    Boolean?    @default(false, map: "DF__INVCatego__isDel__27671F17")
   idUsuario   Int
-  Usuarios    Usuarios  @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__Categoria__idUsu__46E78A0C")
-  Item        Item[]
+  INVUsuarios INVUsuarios @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_INVCategoria_INVUsuarios")
+  INVItem     INVItem[]
+
+  @@schema("INVENTARIOMTTO")
 }
 
-model Herramientas {
-  idHerramientas            Int                         @id(map: "PK_idHerramientas") @default(autoincrement())
-  idItem                    Int
-  codigoItson               String                      @db.VarChar(50)
-  disponible                Boolean                     @default(false, map: "DF__Herramien__dispo__74AE54BC")
-  createAT                  DateTime?                   @default(now(), map: "DF__Herramien__creat__75A278F5") @db.DateTime
-  updateAT                  DateTime?                   @db.DateTime
-  isDelete                  Boolean?                    @default(false, map: "DF__Herramien__isDel__76969D2E")
-  idUsuario                 Int
-  Item                      Item                        @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK__Herramien__idIte__5070F446")
-  Usuarios                  Usuarios                    @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__Herramien__idUsu__5165187F")
-  SalidaEntradaHerramientas SalidaEntradaHerramientas[]
+model INVHerramientas {
+  idHerramientas               Int                            @id(map: "PK_INVHerramientas") @default(autoincrement())
+  nombre                       String                         @db.VarChar(50)
+  codigoItson                  String                         @db.VarChar(50)
+  disponible                   Boolean                        @default(false, map: "DF__INVHerram__dispo__47D3EEA9")
+  descripcion                  String?                        @db.VarChar(100)
+  imagen                       String?                        @db.VarChar(Max)
+  idCategoria                  Int
+  createAT                     DateTime?                      @default(now(), map: "DF__INVHerram__creat__48C812E2") @db.DateTime
+  updateAT                     DateTime?                      @db.DateTime
+  isDelete                     Boolean?                       @default(false, map: "DF__INVHerram__isDel__49BC371B")
+  idUsuario                    Int
+  INVUsuarios                  INVUsuarios                    @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_INVHerramientas_INVUsuarios")
+  INVSalidaEntradaHerramientas INVSalidaEntradaHerramientas[]
 
   @@index([codigoItson], map: "IX_Herramientas_codigoItson")
-  @@index([idItem], map: "IX_Herramientas_idItem")
+  @@schema("INVENTARIOMTTO")
 }
 
-model HistorialStock {
-  idHistorialStock Int           @id(map: "PK_idHistorialStock") @default(autoincrement())
+model INVHistorialStock {
+  idHistorialStock Int              @id(map: "PK_INVHistorialStock") @default(autoincrement())
   stockAnterior    Int?
   stockNuevo       Int
   idItem           Int
   idAccion         Int
   idUsuario        Int
-  fecha            DateTime      @default(now(), map: "DF__Historial__fecha__70DDC3D8") @db.DateTime
-  motivo           String?       @db.VarChar(Max)
+  fecha            DateTime         @default(now(), map: "DF__INVHistor__fecha__44035DC5") @db.DateTime
+  motivo           String?          @db.VarChar(Max)
   idEmpleado       Int?
-  AccionesStock    AccionesStock @relation(fields: [idAccion], references: [idAccion], onUpdate: NoAction, map: "FK__Historial__idAcc__4E88ABD4")
-  Item             Item          @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK__Historial__idIte__4D94879B")
-  Usuarios         Usuarios      @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__Historial__idUsu__4F7CD00D")
+  INVAccionesStock INVAccionesStock @relation(fields: [idAccion], references: [idAccion], onUpdate: NoAction, map: "FK_INVHistorialStock_INVAccionesStock")
+  INVItem          INVItem          @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK_INVHistorialStock_INVItem")
+  INVUsuarios      INVUsuarios      @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_INVHistorialStock_INVUsuarios")
+
+  @@schema("INVENTARIOMTTO")
 }
 
-model Inventario {
-  idInventario Int       @id(map: "PK_idInventario") @default(autoincrement())
+model INVInventario {
+  idInventario Int         @id(map: "PK_INVInventario") @default(autoincrement())
   idItem       Int
   stockActual  Int
   stockMin     Int
   stockMax     Int
-  createAT     DateTime? @default(now(), map: "DF__Inventari__creat__6477ECF3") @db.DateTime
-  updateAT     DateTime? @db.DateTime
-  isDelete     Boolean?  @default(false, map: "DF__Inventari__isDel__656C112C")
+  createAT     DateTime?   @default(now(), map: "DF__INVInvent__creat__379D86E0") @db.DateTime
+  updateAT     DateTime?   @db.DateTime
+  isDelete     Boolean?    @default(false, map: "DF__INVInvent__isDel__3891AB19")
   idUsuario    Int
-  Item         Item      @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK__Inventari__idIte__4AB81AF0")
-  Usuarios     Usuarios  @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__Inventari__idUsu__4BAC3F29")
+  INVItem      INVItem     @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK_INVInventario_INVItem")
+  INVUsuarios  INVUsuarios @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_INVInventario_INVUsuarios")
 
   @@index([idItem], map: "IX_Inventario_idItem")
+  @@schema("INVENTARIOMTTO")
 }
 
-model Item {
-  idItem            Int                 @id(map: "PK_idItem") @default(autoincrement())
-  nombre            String              @db.VarChar(100)
-  descripcion       String?             @db.VarChar(100)
-  imagen            String?             @db.VarChar(Max)
-  idUnidad          Int
-  idCategoria       Int
-  createAT          DateTime?           @default(now(), map: "DF__Item__createAT__5EBF139D") @db.DateTime
-  updateAT          DateTime?           @db.DateTime
-  isDelete          Boolean?            @default(false, map: "DF__Item__isDelete__5FB337D6")
-  idUsuario         Int
-  Herramientas      Herramientas[]
-  HistorialStock    HistorialStock[]
-  Inventario        Inventario[]
-  Categoria         Categoria           @relation(fields: [idCategoria], references: [idCategoria], onUpdate: NoAction, map: "FK__Item__idCategori__49C3F6B7")
-  Unidades          Unidades            @relation(fields: [idUnidad], references: [idUnidad], onUpdate: NoAction, map: "FK__Item__idUnidad__48CFD27E")
-  Usuarios          Usuarios            @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_Item_Usuarios")
-  SalidaEntradaItem SalidaEntradaItem[]
+model INVItem {
+  idItem               Int                    @id(map: "PK_INVItem") @default(autoincrement())
+  nombre               String                 @db.VarChar(100)
+  descripcion          String?                @db.VarChar(100)
+  imagen               String?                @db.VarChar(Max)
+  idUnidad             Int
+  idCategoria          Int
+  active               Boolean?
+  createAT             DateTime?              @default(now(), map: "DF__INVItem__createA__31E4AD8A") @db.DateTime
+  updateAT             DateTime?              @db.DateTime
+  isDelete             Boolean?               @default(false, map: "DF__INVItem__isDelet__32D8D1C3")
+  idUsuario            Int
+  INVHistorialStock    INVHistorialStock[]
+  INVInventario        INVInventario[]
+  INVCategoria         INVCategoria           @relation(fields: [idCategoria], references: [idCategoria], onUpdate: NoAction, map: "FK_INVItem_INVCategoria")
+  INVUnidades          INVUnidades            @relation(fields: [idUnidad], references: [idUnidad], onUpdate: NoAction, map: "FK_INVItem_INVUnidades")
+  INVUsuarios          INVUsuarios            @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_INVItem_INVUsuarios")
+  INVSalidaEntradaItem INVSalidaEntradaItem[]
 
   @@index([idCategoria], map: "IX_Item_idCategoria")
   @@index([idUnidad], map: "IX_Item_idUnidad")
+  @@schema("INVENTARIOMTTO")
 }
 
-model SalidaEntradaHerramientas {
-  idSalidaEntradaHerramientas Int          @id(map: "PK_idSalidaEntradaHerramientas") @default(autoincrement())
+model INVPermisos {
+  idPermisos      Int               @id(map: "PK_INVPermisos") @default(autoincrement())
+  nombre          String            @db.VarChar(50)
+  pad             String            @db.VarChar(50)
+  createAT        DateTime?         @default(now(), map: "DF__INVPermis__creat__1918FFC0") @db.DateTime
+  updateAT        DateTime?         @db.DateTime
+  isDelete        Boolean?          @default(false, map: "DF__INVPermis__isDel__1A0D23F9")
+  INVRolePermisos INVRolePermisos[]
+
+  @@schema("INVENTARIOMTTO")
+}
+
+model INVRole {
+  idRole          Int               @id(map: "PK_INVRole") @default(autoincrement())
+  nombre          String?           @db.VarChar(45)
+  createAT        DateTime?         @default(now(), map: "DF__INVRole__createA__15486EDC") @db.DateTime
+  updateAT        DateTime?         @db.DateTime
+  isDelete        Boolean?          @default(false, map: "DF__INVRole__isDelet__163C9315")
+  INVRolePermisos INVRolePermisos[]
+  INVUsuarios     INVUsuarios[]
+
+  @@schema("INVENTARIOMTTO")
+}
+
+model INVRolePermisos {
+  idRolePermiso Int          @id(map: "PK_INVRolePermiso") @default(autoincrement())
+  idRole        Int
+  idPermisos    Int
+  nombre        String       @db.VarChar(50)
+  pad           String       @db.VarChar(50)
+  createAT      DateTime?    @db.DateTime
+  updateAT      DateTime?    @db.DateTime
+  isDelete      Boolean?
+  idUsuario     Int?
+  INVPermisos   INVPermisos  @relation(fields: [idPermisos], references: [idPermisos], onUpdate: NoAction, map: "FK_INVRolePermisos_INVPermisos")
+  INVRole       INVRole      @relation(fields: [idRole], references: [idRole], onUpdate: NoAction, map: "FK_INVRolePermisos_INVRole")
+  INVUsuarios   INVUsuarios? @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK_INVRolePermisos_INVUsuarios")
+
+  @@schema("INVENTARIOMTTO")
+}
+
+model INVSalidaEntradaHerramientas {
+  idSalidaEntradaHerramientas Int             @id(map: "PK_INVSalidaEntradaHerramientas") @default(autoincrement())
   idHerramientas              Int
   idEmpleado                  Int?
-  motivo                      String?      @db.VarChar(Max)
+  motivo                      String?         @db.VarChar(Max)
   isSalida                    Boolean?
-  createAT                    DateTime?    @default(now(), map: "DF__SalidaEnt__creat__7B5B524B") @db.DateTime
+  createAT                    DateTime?       @default(now(), map: "DF__INVSalida__creat__4E80EC38") @db.DateTime
   idUsuario                   Int
-  Herramientas                Herramientas @relation(fields: [idHerramientas], references: [idHerramientas], onUpdate: NoAction, map: "FK_SalidaEntradaHerramientas_Herramientas")
-  Usuarios                    Usuarios     @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__SalidaEnt__idUsu__534D60F1")
+  INVHerramientas             INVHerramientas @relation(fields: [idHerramientas], references: [idHerramientas], onUpdate: NoAction, map: "FK_INVSalidaEntradaHerramientas_INVHerramientas")
+  INVUsuarios                 INVUsuarios     @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_INVSalidaEntradaHerramientas_INVUsuarios")
 
   @@index([idEmpleado], map: "IX_SalidaEntradaHerramientas_idEmpleado")
   @@index([idHerramientas], map: "IX_SalidaEntradaHerramientas_idHerramientas")
+  @@schema("INVENTARIOMTTO")
 }
 
-model Unidades {
-  idUnidad  Int       @id(map: "PK_idUnidad") @default(autoincrement())
-  nombre    String    @db.VarChar(100)
-  createAT  DateTime? @default(now(), map: "DF__Unidades__create__5812160E") @db.DateTime
-  updateAT  DateTime? @db.DateTime
-  isDelete  Boolean?  @default(false, map: "DF__Unidades__isDele__59063A47")
-  idUsuario Int
-  Item      Item[]
-  Usuarios  Usuarios  @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__Unidades__idUsua__47DBAE45")
-}
-
-model Usuarios {
-  idUsuario                 Int                         @id(map: "PK_idUsuarios") @default(autoincrement())
-  nombreCompleto            String                      @db.VarChar(60)
-  usuario                   String                      @db.VarChar(45)
-  password                  String                      @db.VarChar(100)
-  avatar                    String?                     @db.VarChar(Max)
-  idRole                    Int
-  createAT                  DateTime?                   @default(now(), map: "DF__Usuarios__create__4E88ABD4") @db.DateTime
-  updateAT                  DateTime?                   @default(now(), map: "DF__Usuarios__update__4F7CD00D") @db.DateTime
-  isDelete                  Boolean?                    @default(false, map: "DF__Usuarios__isDele__5070F446")
-  AccionesStock             AccionesStock[]
-  Categoria                 Categoria[]
-  Herramientas              Herramientas[]
-  HistorialStock            HistorialStock[]
-  Inventario                Inventario[]
-  Item                      Item[]
-  RolePermisos              RolePermisos[]
-  SalidaEntradaHerramientas SalidaEntradaHerramientas[]
-  SalidaEntradaItem         SalidaEntradaItem[]
-  SalidaEntradaStock        SalidaEntradaStock[]
-  Unidades                  Unidades[]
-  Role                      Role                        @relation(fields: [idRole], references: [idRole], onUpdate: NoAction, map: "FK_Usuarios_Role")
-}
-
-model Role {
-  idRole       Int            @id(map: "PK_idRole") @default(autoincrement())
-  nombre       String?        @db.VarChar(45)
-  createAT     DateTime?      @default(now(), map: "DF__Role__createAT__49C3F6B7") @db.DateTime
-  updateAT     DateTime?      @db.DateTime
-  isDelete     Boolean?       @default(false, map: "DF__Role__isDelete__4AB81AF0")
-  RolePermisos RolePermisos[]
-  Usuarios     Usuarios[]
-}
-
-model sysdiagrams {
-  name         String @db.NVarChar(128)
-  principal_id Int
-  diagram_id   Int    @id(map: "PK__sysdiagr__C2B05B611FB94BF5") @default(autoincrement())
-  version      Int?
-  definition   Bytes?
-
-  @@unique([principal_id, name], map: "UK_principal_name")
-}
-
-model SalidaEntradaItem {
-  idSalidaEntradaItem  Int                @id(map: "PK_idSalidaEntradaItem") @default(autoincrement())
-  idSalidaEntradaStock Int
-  idItem               Int
-  cantidad             Int
-  createAT             DateTime?          @default(now(), map: "DF__SalidaEnt__creat__0D7A0286") @db.DateTime
-  idUsuario            Int
-  stockAnterior        Int?
-  stockActual          Int?
-  isSalida             Boolean
-  Item                 Item               @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK_SalidaEntradaItem_Item")
-  SalidaEntradaStock   SalidaEntradaStock @relation(fields: [idSalidaEntradaStock], references: [idSalidaEntradaStock], onUpdate: NoAction, map: "FK_SalidaEntradaItem_SalidaEntradaStock")
-  Usuarios             Usuarios           @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_SalidaEntradaItem_Usuarios")
+model INVSalidaEntradaItem {
+  idSalidaEntradaItem   Int                   @id(map: "PK_INVSalidaEntradaItem") @default(autoincrement())
+  idSalidaEntradaStock  Int
+  idItem                Int
+  cantidad              Int
+  createAT              DateTime?             @default(now(), map: "DF__INVSalida__creat__580A5672") @db.DateTime
+  idUsuario             Int
+  stockAnterior         Int?
+  stockActual           Int?
+  isSalida              Boolean
+  INVItem               INVItem               @relation(fields: [idItem], references: [idItem], onUpdate: NoAction, map: "FK_INVSalidaEntradaItem_INVItem")
+  INVSalidaEntradaStock INVSalidaEntradaStock @relation(fields: [idSalidaEntradaStock], references: [idSalidaEntradaStock], onUpdate: NoAction, map: "FK_INVSalidaEntradaItem_INVSalidaEntradaStock")
+  INVUsuarios           INVUsuarios           @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_INVSalidaEntradaItem_INVUsuarios")
 
   @@index([idItem], map: "IX_SalidaEntradaItem_idItem")
   @@index([idSalidaEntradaStock], map: "IX_SalidaEntradaItem_idSalidaEntradaStock")
+  @@schema("INVENTARIOMTTO")
 }
 
-model SalidaEntradaStock {
-  idSalidaEntradaStock Int                 @id(map: "PK_idSalidaEntradaStock") @default(autoincrement())
+model INVSalidaEntradaStock {
+  idSalidaEntradaStock Int                    @id(map: "PK_INVSalidaEntradaStock") @default(autoincrement())
   idEmpleado           Int?
   cantidad             Int
-  motivo               String?             @db.VarChar(Max)
-  isSalida             Boolean?
-  createAT             DateTime?           @default(now(), map: "DF__SalidaEnt__creat__07C12930") @db.DateTime
+  motivo               String?                @db.VarChar(Max)
+  isSalida             Boolean
+  createAT             DateTime?              @default(now(), map: "DF__INVSalida__creat__52517D1C") @db.DateTime
   idUsuario            Int
-  SalidaEntradaItem    SalidaEntradaItem[]
-  Usuarios             Usuarios            @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_SalidaEntradaStock_Usuarios")
+  INVSalidaEntradaItem INVSalidaEntradaItem[]
+  INVUsuarios          INVUsuarios            @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_INVSalidaEntradaStock_INVUsuarios")
 
   @@index([idEmpleado], map: "IX_SalidaEntradaIStock_idEmpleado")
   @@index([idSalidaEntradaStock], map: "IX_SalidaEntradaStock_idStock")
+  @@schema("INVENTARIOMTTO")
 }
 
-model Permisos {
-  idPermisos   Int            @id(map: "PK_idPermisos") @default(autoincrement())
-  nombre       String         @db.VarChar(50)
-  pad          String         @db.VarChar(50)
-  createAT     DateTime?      @default(now(), map: "DF__Permisos__create__76619304") @db.DateTime
-  updateAT     DateTime?      @db.DateTime
-  isDelete     Boolean?       @default(false, map: "DF__Permisos__isDele__7755B73D")
-  RolePermisos RolePermisos[]
+model INVUnidades {
+  idUnidad    Int         @id(map: "PK_INVUnidad") @default(autoincrement())
+  nombre      String      @db.VarChar(100)
+  createAT    DateTime?   @default(now(), map: "DF__INVUnidad__creat__2B37AFFB") @db.DateTime
+  updateAT    DateTime?   @db.DateTime
+  isDelete    Boolean?    @default(false, map: "DF__INVUnidad__isDel__2C2BD434")
+  idUsuario   Int
+  INVItem     INVItem[]
+  INVUsuarios INVUsuarios @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_INVUnidades_INVUsuarios")
+
+  @@schema("INVENTARIOMTTO")
+}
+
+model INVUsuarios {
+  idUsuario                    Int                            @id(map: "PK_INVUsuarios") @default(autoincrement())
+  nombreCompleto               String                         @db.VarChar(60)
+  usuario                      String                         @db.VarChar(45)
+  password                     String                         @db.VarChar(100)
+  avatar                       String?                        @db.VarChar(Max)
+  idRole                       Int
+  createAT                     DateTime?                      @default(now(), map: "DF__INVUsuari__creat__1DDDB4DD") @db.DateTime
+  updateAT                     DateTime?                      @db.DateTime
+  isDelete                     Boolean?                       @default(false, map: "DF__INVUsuari__isDel__1ED1D916")
+  INVAccionesStock             INVAccionesStock[]
+  INVCategoria                 INVCategoria[]
+  INVHerramientas              INVHerramientas[]
+  INVHistorialStock            INVHistorialStock[]
+  INVInventario                INVInventario[]
+  INVItem                      INVItem[]
+  INVRolePermisos              INVRolePermisos[]
+  INVSalidaEntradaHerramientas INVSalidaEntradaHerramientas[]
+  INVSalidaEntradaItem         INVSalidaEntradaItem[]
+  INVSalidaEntradaStock        INVSalidaEntradaStock[]
+  INVUnidades                  INVUnidades[]
+  INVRole                      INVRole                        @relation(fields: [idRole], references: [idRole], onUpdate: NoAction, map: "FK_INVUsuarios_INVRole")
+
+  @@schema("INVENTARIOMTTO")
+}
+
+model RHAreasDeptos {
+  IdArea          Int               @id(map: "PK_COMAreasDepto") @default(autoincrement())
+  NombreArea      String            @db.VarChar(150)
+  Descripcion     String            @db.Text
+  ELIMINADO       Boolean           @default(false, map: "DF_RHAreasDeptos_ELIMINADO")
+  IDUSUARIO       String            @db.VarChar(10)
+  FECHAHORACAMBIO DateTime          @default(now(), map: "DF_RHAreasDeptos_FECHAHORACAMBIO") @db.DateTime
+  RHDepartamentos RHDepartamentos[]
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHAsistencia {
+  idEmpleado     Int
+  fecha          DateTime  @db.Date
+  he1            DateTime  @db.Time
+  hs1            DateTime  @db.Time
+  he2            DateTime? @db.Time
+  hs2            DateTime? @db.Time
+  retardoentrada Boolean
+  antessalida    Boolean
+  falta          Boolean
+  corrido        Boolean
+
+  @@id([idEmpleado, fecha], map: "PK_RHAsistencia")
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHAsistenciaRegistros {
+  idRegistro BigInt   @default(autoincrement())
+  idEmpleado Int
+  fecha      DateTime @db.Date
+  hora       DateTime @db.Time
+
+  @@id([idEmpleado, fecha, hora], map: "PK_RHRegistrosChecador")
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHCaracteristicas {
+  idCaracteristica       Int      @id(map: "PK_RHCaracteristicas")
+  idGrupoCaracteristicas Int
+  NombreCaracteristica   String   @db.VarChar(150)
+  Descripcion            String   @default(" ", map: "DF_RHCaracteristicas_Descripcion") @db.Text
+  IDUSUARIO              String   @db.VarChar(10)
+  IDEQUIPO               String   @db.VarChar(255)
+  FECHAHORACAMBIO        DateTime @default(now(), map: "DF_RHCaracteristicas_FECHAHORACAMBIO") @db.DateTime
+  ELIMINADO              Boolean  @default(false, map: "DF_RHCaracteristicas_ELIMINADO")
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHCarreras {
+  idCarrera       Int             @id(map: "PK_RHCarreras") @default(autoincrement())
+  NombreCarrera   String          @db.VarChar(255)
+  Descripcion     String          @default(" ", map: "DF_RHCarreras_Descripcion") @db.Text
+  idGrupoCarrera  Int
+  ELIMINADO       Boolean         @default(false, map: "DF_RHCarreras_ELIMINADO")
+  XDEFAULT        Boolean
+  FECHAHORACAMBIO DateTime        @default(now(), map: "DF_RHCarreras_FECHAHORACAMBIO") @db.DateTime
+  IDUSUARIO       String          @db.VarChar(10)
+  DESISTEMA       Boolean         @default(false, map: "DF_RHCarreras_DESISTEMA")
+  RHGruposCarrera RHGruposCarrera @relation(fields: [idGrupoCarrera], references: [idGrupoCarrera], onUpdate: NoAction, map: "FK_RHCarreras_RHGruposCarreras")
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHDatosEmpleado {
+  idEmpleado      Int        @id(map: "PK_RHDatosEmpleado")
+  idPuesto        Int?
+  HDefault        Boolean
+  idHorario       Int?
+  idDepartamento  Int?
+  fotografia      Bytes?     @db.Image
+  foto            Boolean
+  ELIMINADO       Boolean?   @default(false, map: "DF_RHDatosEmpleado_ELIMINADO")
+  IDUSUARIO       String?    @db.VarChar(10)
+  FECHAHORACAMBIO DateTime?  @default(now(), map: "DF_RHDatosEmpleado_FECHAHORACAMBIO") @db.DateTime
+  RHPuestos       RHPuestos? @relation(fields: [idPuesto], references: [idPUESTO], onDelete: NoAction, onUpdate: NoAction, map: "FK_RHDatosEmpleado_RHPuestos")
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHDatosEmpleadoHist {
+  FaseCambio Int  @id(map: "PK_RHDatosEmpleadoHist")
+  idEmpleado Int?
+  IdPuesto   Int?
+  idHorario  Int?
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHDepartamentos {
+  idDepartamento     Int           @id(map: "PK_COMDepartamentos") @default(autoincrement())
+  idArea             Int
+  NombreDepartamento String        @db.VarChar(150)
+  Descripcion        String        @db.Text
+  Referencia         String        @db.VarChar(30)
+  ELIMINADO          Boolean       @default(false, map: "DF_RHDepartamentos_ELIMINADO")
+  IDUSUARIO          String        @db.VarChar(10)
+  FECHAHORACAMBIO    DateTime      @default(now(), map: "DF_RHDepartamentos_FECHAHORACAMBIO") @db.DateTime
+  RHAreasDeptos      RHAreasDeptos @relation(fields: [idArea], references: [IdArea], onUpdate: NoAction, map: "FK_RHDepartamentos_RHAreasDeptos")
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHDiasChecador {
+  DIA             DateTime  @id(map: "PK_RHDiasChecador") @db.Date
+  ACTIVO          Boolean?
+  IDUSUARIO       String?   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime? @db.DateTime
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHEmpleados {
+  idEmpleado            Int                     @id(map: "PK_COMEmpledos2") @default(autoincrement())
+  IdCiudad              Int?
+  idEstadoCivil         String                  @db.Char(1)
+  idPuesto              Int?
+  HDefault              Boolean
+  idHorario             Int?
+  idDepartamento        Int?
+  CURP                  String                  @db.VarChar(25)
+  Nombres               String                  @db.VarChar(50)
+  Apellidos             String                  @db.VarChar(50)
+  IMSS                  String                  @db.VarChar(20)
+  Domicilio             String                  @db.VarChar(50)
+  Colonia               String                  @db.VarChar(25)
+  Localidad             String                  @db.VarChar(25)
+  FechaNacimiento       DateTime                @db.DateTime
+  RFC                   String                  @db.VarChar(20)
+  Alergias              String                  @db.VarChar(100)
+  TipoSangineo          String                  @db.VarChar(10)
+  InformarA             String                  @db.VarChar(100)
+  Email                 String                  @db.VarChar(250)
+  Telefono1             String                  @db.VarChar(25)
+  Telefono2             String                  @db.VarChar(25)
+  Extension             String?                 @db.Char(4)
+  UMF                   String                  @db.VarChar(30)
+  ELIMINADO             Boolean                 @default(false, map: "DF_RHEmpleados2_ELIMINADO")
+  XDEFAULT              Boolean                 @default(false, map: "DF_RHEmpleados2_XDEFAULT")
+  IDUSUARIO             String                  @db.VarChar(10)
+  FECHAHORACAMBIO       DateTime                @default(now(), map: "DF_RHEmpleados2_FECHAHORACAMBIO") @db.DateTime
+  VEHChoferes           VEHChoferes?
+  VEHSolicitudApartados VEHSolicitudApartados[]
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHEmpleadosImagen {
+  idEmpleado Int    @id(map: "PK_RHEmpleadosImagen")
+  Imagen     String @db.Text
+  ext        String @db.VarChar(10)
+  ruta       String @db.VarChar(150)
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHEmpleadosTEMP {
+  idEmpleado      Int      @id(map: "PK_COMEmpledos") @default(autoincrement())
+  IdCiudad        Int?
+  idEstadoCivil   String   @db.Char(1)
+  CURP            String   @db.VarChar(25)
+  Nombres         String   @db.VarChar(50)
+  Apellidos       String   @db.VarChar(50)
+  IMSS            String   @db.VarChar(20)
+  Domicilio       String   @db.VarChar(50)
+  Colonia         String   @db.VarChar(25)
+  Localidad       String   @db.VarChar(25)
+  FechaNacimiento DateTime @db.DateTime
+  RFC             String   @db.VarChar(20)
+  Alergias        String   @db.VarChar(100)
+  TipoSangineo    String   @db.VarChar(10)
+  InformarA       String   @db.VarChar(100)
+  Telefono1       String   @db.VarChar(25)
+  Telefono2       String   @db.VarChar(25)
+  UMF             String   @db.VarChar(30)
+  ELIMINADO       Boolean  @default(false, map: "DF_RHEmpleados_ELIMINADO")
+  XDEFAULT        Boolean  @default(false, map: "DF_RHEmpleados_XDEFAULT")
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_RHEmpleados_FECHAHORACAMBIO") @db.DateTime
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHEstadosCiviles {
+  idEstadoCivil   String   @id(map: "PK_RHEstadosCiviles") @db.Char(1)
+  NombreEstadoC   String   @db.VarChar(50)
+  DESCRIPCION     String   @db.Text
+  XDEFAULT        Boolean
+  DESISTEMA       Boolean
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHExpedientesCandidatos {
+  idExpediente    Int      @id(map: "PK_RHExpedientesCandidatos")
+  Nombres         String   @db.VarChar(150)
+  Apellidos       String   @db.VarChar(150)
+  CURP            String   @db.VarChar(20)
+  RFC             String   @db.VarChar(20)
+  TelefonoFijo1   String   @db.VarChar(15)
+  TelefonoFijo2   String   @db.VarChar(15)
+  Celular1        String   @db.VarChar(15)
+  Celular2        String   @db.VarChar(15)
+  WhatsApp        String   @db.VarChar(15)
+  Facebook        String   @db.VarChar(50)
+  PaginaOficial   String   @db.VarChar(50)
+  FechaNacimiento DateTime @db.Date
+  IdCiudad        Int
+  IdLocalidad     Int
+  Domicilio       String   @db.VarChar(250)
+  idSexo          Int
+  idEstadoCivil   Int
+  idGradoEstudio  Int
+  AnodeEgreso     Int
+  FechaRegistro   DateTime @db.Date
+  TrabajoActual   String   @db.NChar(10)
+  RutaFotografia  String   @db.VarChar(150)
+  tieneFotografia Boolean
+  RutaCurriculum  String   @db.VarChar(255)
+  tieneCurriculum Boolean
+  idProfesion     Int
+  ELIMINADO       Boolean
+  IDUSUARIO       String   @db.VarChar(10)
+  IDEQUIPO        String   @db.VarChar(255)
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHFasesAlta {
+  idFase          Int      @id(map: "PK_RHFasesAlta")
+  idEmpleado      Int
+  idTipoFalseAlta Int?
+  ncambio         Int
+  idHorario       Int
+  idPuesto        Int
+  sueldobase      Float    @db.Money
+  fecha           DateTime @db.DateTime
+  ELIMINADO       Boolean  @default(false, map: "DF_RHFasesAlta_ELIMINADO")
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_RHFasesAlta_FECHAHORACAMBIO") @db.DateTime
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHGradoEstudios {
+  idGradoEstudios Int      @id(map: "PK_RHGradoEstudios") @default(autoincrement())
+  GradoEstudios   String   @db.VarChar(50)
+  esPosgrado      Boolean
+  ELIMINADO       Boolean  @default(false, map: "DF_RHGradoEstudios_ELIMINADO")
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_RHGradoEstudios_FECHAHORACAMBIO") @db.DateTime
+  IDUSUARIO       String   @db.VarChar(10)
+  DESISTEMA       Boolean  @default(false, map: "DF_RHGradoEstudios_DESISTEMA")
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHGrupoDepto {
+  idGrupoDepto     Int      @id(map: "PK_RHGrupoDepto") @default(autoincrement())
+  NombreGrupoDepto String   @db.VarChar(150)
+  Descripcion      String   @db.Text
+  ELIMINADO        Boolean
+  DESISTEMA        Boolean
+  XDEFAULT         Boolean
+  IDEQUIPO         String   @db.VarChar(20)
+  IDUSUARIO        String   @db.VarChar(10)
+  FECHAHORACAMBIO  DateTime @db.DateTime
+
+  @@schema("RECURSOSHUMANOS")
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model RolePermisos {
-  idRolePermiso Int       @id(map: "PK__RolePerm__8DF1C16D42BE9EF4") @default(autoincrement())
-  idRole        Int
-  idPermisos    Int
-  createAT      DateTime? @db.DateTime
-  updateAT      DateTime? @db.DateTime
-  isDelete      Boolean?
-  idUsuario     Int?
-  Permisos      Permisos  @relation(fields: [idPermisos], references: [idPermisos], onUpdate: NoAction, map: "FK_RolePermisos_Permisos")
-  Role          Role      @relation(fields: [idRole], references: [idRole], onUpdate: NoAction, map: "FK_RolePermisos_Role")
-  Usuarios      Usuarios? @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK_RolePermisos_Usuarios")
+model RHGrupoSanguineo {
+  idGrupoSanguineo String   @db.VarChar(3)
+  DESISTEMA        Boolean
+  ELIMINADO        Boolean
+  XDEFAULT         Boolean
+  IDUSUARIO        String   @db.VarChar(10)
+  IDEQUIPO         String   @db.VarChar(20)
+  FECHAHORACAMBIO  DateTime @db.DateTime
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHGruposCaracteristicas {
+  idGrupoCaracteristicas     Int      @id(map: "PK_RHGruposCaracteristicas")
+  NombreGrupoCaracteristicas String   @db.VarChar(250)
+  Descripcion                String   @default(" ", map: "DF_RHGruposCaracteristicas_Descripcion") @db.Text
+  ELIMINADO                  Boolean  @default(false, map: "DF_RHGruposCaracteristicas_ELIMINADO")
+  FECHAHORACAMBIO            DateTime @default(now(), map: "DF_RHGruposCaracteristicas_FECHAHORACAMBIO") @db.DateTime
+  IDEQUIPO                   String   @db.VarChar(255)
+  IDUSUARIO                  String   @db.VarChar(10)
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHGruposCarrera {
+  idGrupoCarrera     Int          @id(map: "PK_RHGruposCarrera") @default(autoincrement())
+  NombreGrupoCarrera String       @db.VarChar(150)
+  ELIMINADO          Boolean      @default(false, map: "DF_RHGruposCarrera_ELIMINADO")
+  FECHAHORACAMBIO    DateTime     @db.DateTime
+  IDUSUARIO          String       @db.VarChar(10)
+  XDEFAULT           Boolean
+  DESISTEMA          Boolean
+  RHCarreras         RHCarreras[]
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHHorarios {
+  idHorario         Int      @id(map: "PK_RHHorarios") @default(autoincrement())
+  NombreHorario     String   @db.VarChar(100)
+  Descripcion       String   @db.Text
+  MinRetardoEntrada Int
+  MinParaFalta      Int
+  MinAntesSalida    Int
+  ELIMINADO         Boolean
+  IDUSUARIO         String   @db.VarChar(10)
+  FECHAHORACAMBIO   DateTime @db.DateTime
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHHorariosDias {
+  idHorario Int
+  DiaSemana Int
+  Activo    Boolean
+  Entrada1  DateTime @db.DateTime
+  Salida1   DateTime @db.DateTime
+  Entrada2  DateTime @db.DateTime
+  Salida2   DateTime @db.DateTime
+  Corrido   Boolean
+
+  @@id([idHorario, DiaSemana], map: "PK_RHHorariosDias")
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHInstitucionesEgreso {
+  idInstitucion     String      @id(map: "PK_RHInstitucionesEgreso") @db.VarChar(50)
+  NombreInstitucion String      @db.VarChar(150)
+  idCiudad          Int
+  Descripcion       String      @default(" ", map: "DF_RHInstitucionesEgreso_Descripcion") @db.Text
+  IDUSUARIO         String      @db.VarChar(10)
+  FECHAHORACAMBIO   DateTime    @default(now(), map: "DF_RHInstitucionesEgreso_FECHAHORACAMBIO") @db.DateTime
+  XDEFAULT          Boolean
+  ELIMINADO         Boolean     @default(false, map: "DF_RHInstitucionesEgreso_ELIMINADO")
+  COMCiudades       COMCiudades @relation(fields: [idCiudad], references: [idCiudad], onUpdate: NoAction, map: "FK_RHInstitucionesEgreso_COMCiudades")
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHNiveles {
+  idNivel         String   @id(map: "PK_RHNiveles") @db.VarChar(5)
+  NombreNivel     String   @db.Char(50)
+  Descripcion     String   @db.Text
+  XDEFAULT        Boolean  @default(false, map: "DF_RHNiveles_XDEFAULT")
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_RHNiveles_FECHAHORACAMBIO") @db.DateTime
+  IDUSUARIO       String   @db.VarChar(10)
+  IDEQUIPO        String   @db.VarChar(200)
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHPaquetesCapacitacion {
+  idPaqueteCapacitacion Int       @id(map: "PK_RHPaquetesCapacitacion") @default(autoincrement())
+  idTipoCapacitacion    Int?
+  NombrePaqueteCap      String?   @db.VarChar(50)
+  Descripcion           String?   @db.Text
+  ELIMINADO             Boolean?  @default(false, map: "DF_RHPaquetesCapacitacion_ELIMINADO")
+  IDUSUARIO             String    @db.VarChar(10)
+  FECHAHORACAMBIO       DateTime? @default(now(), map: "DF_RHPaquetesCapacitacion_FECHAHORACAMBIO") @db.DateTime
+  IDEQUIPO              String    @db.VarChar(20)
+  XDEFAULT              Boolean
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model RHPeriodosPago {
+  FechaInicio DateTime @db.Date
+  FechaFin    DateTime @db.Date
+  Activo      Boolean
+  Cerrado     Boolean
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHPuestos {
+  idPUESTO        Int               @id(map: "PK_RHPuestos") @default(autoincrement())
+  NombrePuesto    String            @db.VarChar(50)
+  NombreLargo     String            @db.VarChar(150)
+  Descripcion     String            @db.Text
+  ELIMINADO       Boolean           @default(false, map: "DF_RHPuestos_ELIMINADO")
+  DESISTEMA       Boolean           @default(false, map: "DF_RHPuestos_DESISTEMA")
+  IDUSUARIO       String            @db.VarChar(10)
+  FECHAHORACAMBIO DateTime          @default(now(), map: "DF_RHPuestos_FECHAHORACAMBIO") @db.DateTime
+  RHDatosEmpleado RHDatosEmpleado[]
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHTipoContrato {
+  idTipoContrato     Int      @id(map: "PK_RHTipoContrato") @default(autoincrement())
+  idTipoPago         Int
+  NombreTipoContrato String   @db.VarChar(150)
+  Descripcion        String   @db.Text
+  ELIMINADO          Boolean
+  IDUSUARIO          String   @db.VarChar(10)
+  FECHAHORACAMBIO    DateTime @db.DateTime
+  IDEQUIPO           String   @db.VarChar(20)
+  DESISTEMA          Boolean
+  XDEFAULT           Boolean
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHTiposCapacitacion {
+  idTipoCapacitacion     Int      @id(map: "PK_RHTiposCapacitacion") @default(autoincrement())
+  NombreTipoCapacitacion String   @db.VarChar(150)
+  Descripcion            String   @db.Text
+  ELIMINADO              Boolean  @default(false, map: "DF_RHTiposCapacitacion_ELIMINADO")
+  IDUSUARIO              String   @db.VarChar(10)
+  FECHAHORACAMBIO        DateTime @default(now(), map: "DF_RHTiposCapacitacion_FECHAHORACAMBIO") @db.DateTime
+  DESISTEMA              Boolean  @default(false, map: "DF_RHTiposCapacitacion_DESISTEMA")
+  DEFAULT                Boolean  @default(false, map: "DF_RHTiposCapacitacion_DEFAULT")
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHTiposContactos {
+  idTipoContacto     Int       @id(map: "PK_COMTiposContactos") @default(autoincrement())
+  NombreTipoContacto String?   @db.VarChar(150)
+  DESISTEMA          Boolean?
+  ELIMINADO          Boolean?
+  IDUSUARIO          String?   @db.VarChar(10)
+  FECHAHORACAMBIO    DateTime? @db.DateTime
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHTiposFasesAlta {
+  idTiposFasesAlta    Int      @id(map: "PK_RHTiposFasesAlta") @default(autoincrement())
+  NombreTipoFasesAlta String   @db.VarChar(150)
+  Descripcion         String   @db.Text
+  ELIMINADO           Boolean
+  DESISTEMA           Boolean
+  XDEFAULT            Boolean
+  IDEQUIPO            String   @db.VarChar(20)
+  IDUSUARIO           String   @db.VarChar(10)
+  FECHAHORACAMBIO     DateTime @db.DateTime
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHTiposHorarios {
+  idTipoHorario     Int      @id(map: "PK_RHTiposHorarios") @default(autoincrement())
+  NombreTipoHorario String   @db.VarChar(150)
+  Descripcion       String   @db.Text
+  IDUSUARIO         String   @db.VarChar(10)
+  XDEFAULT          Boolean  @default(false, map: "DF_RHTiposHorarios_XDEFAULT")
+  ELIMINADO         Boolean  @default(false, map: "DF_RHTiposHorarios_ELIMINADO")
+  FECHAHORACAMBIO   DateTime @db.DateTime
+  IDEQUIPO          String   @db.VarChar(20)
+  DESISTEMA         Boolean  @default(false, map: "DF_RHTiposHorarios_DESISTEMA")
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model RHTiposPago {
+  idTipoPago      Int      @id(map: "PK_RHTiposPago") @default(autoincrement())
+  NombreTipoPago  String   @db.VarChar(150)
+  Descripcion     String   @db.VarChar(50)
+  ELIMINADO       Boolean  @default(false, map: "DF_RHTiposPago_ELIMINADO")
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_RHTiposPago_FECHAHORACAMBIO") @db.DateTime
+
+  @@schema("RECURSOSHUMANOS")
+}
+
+model VEHAccesorios {
+  idAccesorio                Int                          @id(map: "PK_VEHAccesorios") @default(autoincrement())
+  nombre                     String                       @db.VarChar(50)
+  VEHAccesoriosSalidaLlegada VEHAccesoriosSalidaLlegada[]
+
+  @@schema("VEHICULOS")
+}
+
+model VEHAccesoriosSalidaLlegada {
+  idAccesSalLleg        Int                   @id(map: "PK_VEHAccesoriosSalidaLlegada") @default(autoincrement())
+  idSolicitud           Int
+  idAccesorio           Int
+  seEncuentra           Boolean
+  isSalida              Boolean
+  VEHAccesorios         VEHAccesorios         @relation(fields: [idAccesorio], references: [idAccesorio], onUpdate: NoAction, map: "VEHAccesoriosSalidaLlegada_VEHAccesorios")
+  VEHSolicitudApartados VEHSolicitudApartados @relation(fields: [idSolicitud], references: [idSolicitud], onUpdate: NoAction, map: "VEHAccesoriosSalidaLlegada_VEHSolicitudes")
+
+  @@schema("VEHICULOS")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model VEHApartadosEnEspera {
+  idSolicitud Int
+  idEmpleado  Int
+
+  @@ignore
+  @@schema("VEHICULOS")
+}
+
+model VEHAsignarVehiculos {
+  idVehiculo    Int
+  idTipoUsuario Int @db.TinyInt
+
+  @@id([idVehiculo, idTipoUsuario], map: "PK_VEHAsignarVehiculos")
+  @@schema("VEHICULOS")
+}
+
+model VEHCarroceria {
+  idCarroceria          Int                   @default(autoincrement())
+  idSolicitud           Int
+  isSalida              Boolean
+  VEHSolicitudApartados VEHSolicitudApartados @relation(fields: [idSolicitud], references: [idSolicitud], onUpdate: NoAction, map: "VEHCarroceria_VEHSolicitud")
+  VEHUbicacionGolpe     VEHUbicacionGolpe[]
+
+  @@id([idCarroceria, idSolicitud], map: "PK_VEHCarroceria")
+  @@schema("VEHICULOS")
+}
+
+model VEHChoferes {
+  idEmpleado            Int                     @id(map: "PK_VEHChoferes")
+  ACTIVO                Boolean
+  RHEmpleados           RHEmpleados             @relation(fields: [idEmpleado], references: [idEmpleado], onUpdate: NoAction, map: "FK_VEHChoferes_RHEmpleados")
+  VEHSolicitudApartados VEHSolicitudApartados[]
+
+  @@schema("VEHICULOS")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model VEHConfiguracion {
+  idEstadoInicial   Int
+  idEstadoCancelado Int
+  idEstadoFinal     Int
+  DiasAnterioridad  Int    @db.TinyInt
+  HorasAnterioridad Int    @db.TinyInt
+  DiasFiltrado      Int    @db.TinyInt
+  DiasAdelanto      Int    @db.SmallInt
+  HorasAdelanto     Int    @db.TinyInt
+  MaximoApartados   Int    @db.TinyInt
+  idEstadoAceptada  Int
+  Email             String @db.VarChar(80)
+  Password          String @db.VarChar(20)
+  ServidorEntrante  String @db.VarChar(100)
+  ServidorSaliente  String @db.VarChar(100)
+  idEstadoRechazado Int?
+
+  @@ignore
+  @@schema("VEHICULOS")
+}
+
+model VEHCostos {
+  idCosto         Int      @id(map: "PK_VEHCostos") @default(autoincrement())
+  NombreCosto     String   @db.VarChar(50)
+  ELIMINADO       Boolean  @default(false, map: "DF_VEHCostos_ELIMINADO")
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_VEHCostos_FECHAHORACAMBIO") @db.DateTime
+  IDEQUIPO        String   @db.VarChar(250)
+
+  @@schema("VEHICULOS")
+}
+
+model VEHCostosDestinos {
+  idVehiculo      Int
+  idDestino       Int
+  idCosto         Int
+  Costo           Float    @db.Money
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_VEHCostosDestinos_FECHAHORACAMBIO") @db.DateTime
+  IDUSUARIO       String   @db.VarChar(10)
+  IDEQUIPO        String   @db.VarChar(255)
+
+  @@id([idVehiculo, idDestino, idCosto], map: "PK_VEHCostosDestinos")
+  @@schema("VEHICULOS")
+}
+
+model VEHDestinos {
+  idDestino        Int      @id(map: "PK_VEHDestinos") @default(autoincrement())
+  NombreDestino    String   @db.VarChar(250)
+  Descripcion      String   @db.Text
+  DistanciaKM      Float    @default(0, map: "DF_VEHDestino_DistanciaKM")
+  TiempoMN         Int      @default(0, map: "DF_VEHDestino_TiempoMN")
+  FECHAHORA_CAMBIO DateTime @default(now(), map: "DF_VEHDestino_FECHAHORA_CAMBIO") @db.DateTime
+  IDUSUARIO        String   @default("SYSTEM", map: "DF_VEHDestino_IDUSUARIO") @db.VarChar(10)
+  XDEFAULT         Boolean  @default(false, map: "DF_VEHDestino_XDEFAULT")
+  IDEQUIPO         String   @default("local", map: "DF_VEHDestino_IDEQUIPO") @db.VarChar(255)
+  ELIMINADO        Boolean
+
+  @@schema("VEHICULOS")
+}
+
+model VEHEstadosSolicitud {
+  idEstadoSolicitud     Int      @id(map: "PK_VEHEstadosSolicitud")
+  NombreEstadoSolicitud String   @db.VarChar(50)
+  Descripcion           String   @db.Text
+  Cancelable            Boolean
+  Editable              Boolean
+  FECHAHORACAMBIO       DateTime @db.DateTime
+  IDUSUARIO             String   @db.VarChar(10)
+
+  @@schema("VEHICULOS")
+}
+
+model VEHEstadosVehiculos {
+  idEstadoVehiculo Int       @id(map: "PK_VEHEstadosVehiculos") @default(autoincrement())
+  NombreEstado     String?   @db.VarChar(150)
+  Funcional        Boolean?
+  ELIMINADO        Boolean?
+  FECHAHORACAMBIO  DateTime? @default(now(), map: "DF_VEHEstadosVehiculos_FECHAHORACAMBIO") @db.DateTime
+  IDUSUARIO        String?   @db.VarChar(10)
+
+  @@schema("VEHICULOS")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model VEHImagenEstadosSolicitud {
+  Ext1              String @db.VarChar(10)
+  Ruta1             String @db.VarChar(150)
+  Imagen            String @db.Text
+  idEstadoSolicitud Int
+
+  @@ignore
+  @@schema("VEHICULOS")
+}
+
+model VEHMatrizEstados {
+  idEstadoOrigen  Int
+  idEstadoDestino Int
+  Valor           Boolean
+
+  @@id([idEstadoOrigen, idEstadoDestino], map: "PK_VEHMatrizEstados")
+  @@schema("VEHICULOS")
+}
+
+model VEHMedidasGasolina {
+  idMedida        Int      @id(map: "PK_VEHMedidasGasolina") @default(autoincrement())
+  Texto           String   @db.VarChar(50)
+  ELIMINADO       Boolean  @default(false, map: "DF_VEHMedidasGasolina_ELIMINADO")
+  XDEFAULT        Boolean  @default(false, map: "DF_VEHMedidasGasolina_XDEFAULT")
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @default(now(), map: "DF_VEHMedidasGasolina_FECHAHORACAMBIO") @db.DateTime
+
+  @@schema("VEHICULOS")
+}
+
+model VEHRegistroSalidaLlegada {
+  idRegistroSalidaLlegada Int                   @id(map: "PK_VEHRegistroSalidaLlegada") @default(autoincrement())
+  idSolicitud             Int
+  fecha                   DateTime              @db.DateTime
+  nombreSolicitante       String?               @db.VarChar(50)
+  nombreVigilante         String                @db.VarChar(50)
+  chofer                  String?               @db.VarChar(50)
+  placa                   String?               @db.VarChar(50)
+  licencia                String?               @db.VarChar(50)
+  isLocal                 Boolean?
+  destino                 String?               @db.VarChar(50)
+  kilometraje             String                @db.VarChar(50)
+  tanque                  String                @db.VarChar(50)
+  firmaVigilante          String                @db.VarChar(Max)
+  firmaSolicitante        String                @db.VarChar(Max)
+  departamento            String?               @db.VarChar(50)
+  observaciones           String?               @db.Text
+  estado                  String                @db.VarChar(50)
+  isSalida                Boolean
+  VEHSolicitudApartados   VEHSolicitudApartados @relation(fields: [idSolicitud], references: [idSolicitud], onUpdate: NoAction, map: "VEHRegistroSalidaLlegada_VEHSolicitudes")
+
+  @@unique([idSolicitud, isSalida], map: "idx_vehregistro_idsolicitud_issalida")
+  @@schema("VEHICULOS")
+}
+
+model VEHReporteSalidaLlegada {
+  idSolicitud        Int      @id(map: "PK_VEHReporteSalidaLlegada")
+  KilometrajeSalida  String   @db.VarChar(15)
+  KilometrajeLlegada String   @db.VarChar(15)
+  HoraSalida         DateTime @db.DateTime
+  HoraLlegada        DateTime @db.DateTime
+
+  @@schema("VEHICULOS")
+}
+
+model VEHServicios {
+  idServicio           Int      @id(map: "PK_VEHServicios_1") @default(autoincrement())
+  idTipoServicio       Int
+  NombreServicio       String   @db.VarChar(150)
+  Descripcion          String   @db.Text
+  CostoEstandar        Float    @db.Money
+  VehiculoNoDisponible Boolean
+  XDEFAULT             Boolean
+  ELIMINADO            Boolean
+  IDUSUARIO            String   @db.VarChar(10)
+  FECHAHORACAMBIO      DateTime @db.DateTime
+  DESISTEMA            Boolean
+
+  @@schema("VEHICULOS")
+}
+
+model VEHServiciosVehiculos {
+  idServicio      Int          @id(map: "PK_VEHServicios") @default(autoincrement())
+  idVehiculo      Int
+  idTipoServicio  Int
+  idEstadoTanque  Int
+  idEmpleado      Int?
+  Descripcion     String       @db.Text
+  KmActual        BigInt
+  Costo           Float        @db.Money
+  Nota            String       @db.Text
+  ELIMINADO       Boolean      @default(false, map: "DF_VEHServicios_ELIMINADO")
+  FECHAHORACAMBIO DateTime     @default(now(), map: "DF_VEHServicios_FECHAHORACAMBIO") @db.DateTime
+  IDUSUARIO       String       @db.VarChar(10)
+  VEHVehiculos    VEHVehiculos @relation(fields: [idVehiculo], references: [idVehiculo], onUpdate: NoAction, map: "FK_VEHServicios_VEHVehiculos")
+
+  @@schema("VEHICULOS")
+}
+
+model VEHSolicitudApartados {
+  idSolicitud                Int                          @id(map: "PK_VEHSolicitudApartados") @default(autoincrement())
+  idVehiculo                 Int
+  idEstadoSolicitud          Int                          @default(0, map: "DF_VEHSolicitudApartados_idEstadoSolicitud")
+  NumeroPasajeros            Int
+  idEmpleado                 Int
+  idChofer                   Int?
+  SolicitarChofer            Boolean                      @default(false, map: "DF_VEHSolicitudApartados_SolicitarChofer")
+  Responsable                String                       @db.VarChar(10)
+  idDestino                  Int
+  OtroDestino                String                       @db.VarChar(80)
+  Justificacion              String                       @db.Text
+  Observaciones              String                       @db.Text
+  Fecha                      DateTime                     @db.DateTime
+  FechaSalida                DateTime                     @db.DateTime
+  FechaRegreso               DateTime                     @db.DateTime
+  EnEspera                   Boolean
+  idUsuarioApartado          String                       @db.VarChar(10)
+  IDUSUARIO                  String                       @db.VarChar(10)
+  FECHAHORACAMBIO            DateTime                     @default(now(), map: "DF_VEHSolicitudApartados_FECHAHORACAMBIO") @db.DateTime
+  CalificacionApartado       Int?
+  TextoCalificacionApartado  String?                      @db.VarChar(255)
+  VEHAccesoriosSalidaLlegada VEHAccesoriosSalidaLlegada[]
+  VEHCarroceria              VEHCarroceria[]
+  VEHRegistroSalidaLlegada   VEHRegistroSalidaLlegada[]
+  RHEmpleados                RHEmpleados                  @relation(fields: [idEmpleado], references: [idEmpleado], onUpdate: NoAction, map: "FK_VEHSolicitudApartados_RHEmpleados")
+  VEHChoferes                VEHChoferes?                 @relation(fields: [idChofer], references: [idEmpleado], onDelete: NoAction, onUpdate: NoAction, map: "FK_VEHSolicitudApartados_VEHChoferes")
+  VEHVehiculos               VEHVehiculos                 @relation(fields: [idVehiculo], references: [idVehiculo], onUpdate: NoAction, map: "FK_VEHSolicitudApartados_VEHVehiculos")
+
+  @@schema("VEHICULOS")
+}
+
+model VEHTiposServicios {
+  idTipoServicio     Int      @id(map: "PK_VEHTiposServicios") @default(autoincrement())
+  NombreTipoServicio String   @db.VarChar(150)
+  Descripcion        String   @db.Text
+  DEFAULT            Boolean  @default(false, map: "DF_VEHTiposServicios_DEFAULT")
+  ELIMINADO          Boolean  @default(false, map: "DF_VEHTiposServicios_ELIMINADO")
+  IDUSUARIO          String   @db.VarChar(10)
+  FECHAHORACAMBIO    DateTime @default(now(), map: "DF_VEHTiposServicios_FECHAHORACAMBIO") @db.DateTime
+  DESISTEMA          Boolean  @default(false, map: "DF_VEHTiposServicios_DESISTEMA")
+
+  @@schema("VEHICULOS")
+}
+
+model VEHTiposVehiculos {
+  idTipoVehiculo     Int      @id(map: "PK_VEHTiposVehiculos") @default(autoincrement())
+  NombreTipoVehiculo String   @db.VarChar(100)
+  Descripcion        String   @db.Text
+  NecesitaChofer     Boolean
+  ELIMINADO          Boolean  @default(false, map: "DF_VEHTiposVehiculos_ELIMINADO")
+  IDUSUARIO          String   @db.VarChar(10)
+  XDEFAULT           Boolean  @default(false, map: "DF_VEHTiposVehiculos_XDEFAULT")
+  FECHAHORACAMBIO    DateTime @default(now(), map: "DF_VEHTiposVehiculos_FECHAHORACAMBIO") @db.DateTime
+
+  @@schema("VEHICULOS")
+}
+
+model VEHUbicacionGolpe {
+  idUbicacionGolpe Int           @id(map: "PK_VEHUbicacionGolpe") @default(autoincrement())
+  idCarroceria     Int
+  idSolicitud      Int
+  x                Int
+  y                Int
+  width            Int
+  height           Int
+  VEHCarroceria    VEHCarroceria @relation(fields: [idCarroceria, idSolicitud], references: [idCarroceria, idSolicitud], onUpdate: NoAction, map: "VEHUbicacionGolpe_VEHCarroceria")
+
+  @@schema("VEHICULOS")
+}
+
+model VEHUsuarios {
+  idUsuario       Int      @id(map: "PK_VEHUsuarios") @default(autoincrement())
+  nombreCompleto  String   @db.VarChar(60)
+  usuario         String   @unique(map: "IDX_VEHUsuarios") @db.VarChar(45)
+  password        String   @db.VarChar(100)
+  rol             String   @db.VarChar(45)
+  eliminado       Boolean
+  fechaHoraCambio DateTime @db.DateTime
+
+  @@schema("VEHICULOS")
+}
+
+model VEHVehiculos {
+  idVehiculo            Int                     @id(map: "PK_VEHVehiculos") @default(autoincrement())
+  idTipoVehiculo        Int
+  Nombre                String                  @db.Char(100)
+  Descripcion           String                  @db.VarChar(50)
+  Placas                String                  @db.Char(10)
+  Modelo                String                  @db.Char(10)
+  Marca                 String                  @db.Char(10)
+  Kilometraje           Int                     @default(0, map: "DF_VEHVehiculos_Kilometraje")
+  IdEstadoVehiculo      Int                     @default(0, map: "DF_VEHVehiculos_IdEstadoVehiculo")
+  MaximoPasajeros       Int                     @db.TinyInt
+  ELIMINADO             Boolean                 @default(false, map: "DF_VEHVehiculos_ELIMINADO")
+  FECHAHORACAMBIO       DateTime                @default(now(), map: "DF_VEHVehiculos_FECHAHORACAMBIO") @db.DateTime
+  IDUSUARIO             String                  @db.VarChar(10)
+  VEHServiciosVehiculos VEHServiciosVehiculos[]
+  VEHSolicitudApartados VEHSolicitudApartados[]
+
+  @@schema("VEHICULOS")
+}
+
+model VHEVehiculosImagen {
+  idVehiculo Int    @id(map: "PK_VHEVehiculosImagen")
+  Imagen     String @db.Text
+  ext        String @db.VarChar(10)
+  ruta       String @db.VarChar(150)
+
+  @@schema("VEHICULOS")
+}
+
+view visVEHUbicacionGolpe {
+  idSolicitud Int     @unique
+  isSalida    Boolean
+  x           Int
+  y           Int
+  width       Int
+  height      Int
+
+  @@schema("VEHICULOS")
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-view visHerramientas {
-  idHerramientas Int     @id
-  nombre         String  @db.VarChar(100)
-  codigoItson    String  @db.VarChar(50)
-  disponible     Boolean
+view visRHAreasDeptos {
+  IdArea          Int      @default(autoincrement())
+  NombreArea      String   @db.VarChar(150)
+  Descripcion     String   @db.Text
+  ELIMINADO       Boolean
+  DESELIMINADO    String?  @db.VarChar(2)
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-view visHistorialStock {
-  idHistorialStock Int      @id
+view visRHDepartamentos {
+  idDepartamento     Int
+  idArea             Int
+  NombreArea         String   @db.VarChar(150)
+  NombreDepartamento String   @db.VarChar(150)
+  Referencia         String   @db.VarChar(30)
+  Descripcion        String   @db.Text
+  ELIMINADO          Boolean
+  DESELIMINADO       String?  @db.VarChar(2)
+  IDUSUARIO          String   @db.VarChar(10)
+  FECHAHORACAMBIO    DateTime @db.DateTime
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visRHEmpleados {
+  idEmpleado         Int
+  IdCiudad           Int?
+  idEstadoCivil      String   @db.Char(1)
+  Nombres            String   @db.VarChar(50)
+  Apellidos          String   @db.VarChar(50)
+  NombreEmpleado     String   @db.VarChar(101)
+  NombreCiudad       String   @db.VarChar(100)
+  CURP               String   @db.VarChar(25)
+  IMSS               String   @db.VarChar(20)
+  Domicilio          String   @db.VarChar(50)
+  Localidad          String   @db.VarChar(25)
+  Colonia            String   @db.VarChar(25)
+  FechaNacimiento    DateTime @db.DateTime
+  mes                Int?
+  NombreMes          String   @db.VarChar(150)
+  InformarA          String   @db.VarChar(100)
+  Telefono1          String   @db.VarChar(25)
+  Telefono2          String   @db.VarChar(25)
+  TipoSangineo       String   @db.VarChar(10)
+  UMF                String   @db.VarChar(30)
+  Alergias           String   @db.VarChar(100)
+  RFC                String   @db.VarChar(20)
+  idPuesto           Int?
+  NombrePuesto       String   @db.VarChar(50)
+  idHorario          Int?
+  HDefault           Boolean
+  NombreHorario      String   @db.VarChar(100)
+  idDepartamento     Int?
+  NombreDepartamento String   @db.VarChar(150)
+  XDEFAULT           Boolean
+  DESXDefault        String?  @db.VarChar(2)
+  ELIMINADO          Boolean
+  DESELIMINADO       String?  @db.VarChar(2)
+  IDUSUARIO          String   @db.VarChar(10)
+  FECHAHORACAMBIO    DateTime @db.DateTime
+  Email              String   @db.VarChar(250)
+  Extension          String?  @db.Char(4)
+  NombreEstadoC      String   @db.VarChar(50)
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMEstantes {
+  CodigoEstante   String   @db.VarChar(15)
+  Descripcion     String   @db.Text
+  ELIMINADO       Boolean
+  FECHAHORACAMBIO DateTime @db.DateTime
+  idAlmacen       Int
+  IDEQUIPO        String   @db.VarChar(250)
+  idEstante       Int
+  IDUSUARIO       String   @db.VarChar(15)
+  NombreEstante   String   @db.VarChar(250)
+  NombreAlmacen   String   @db.VarChar(50)
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visRHEstadosCiviles {
+  idEstadoCivil   String   @db.Char(1)
+  NombreEstadoC   String   @db.VarChar(50)
+  DESCRIPCION     String   @db.Text
+  DEFAULT         Boolean
+  DESISTEMA       Boolean
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
+}
+
+view visVEHAccesoriosSalidaLlegada {
+  idSolicitud Int     @unique
+  isSalida    Boolean
+  accesorio   String  @db.VarChar(50)
+  seEncuentra Boolean
+
+  @@schema("VEHICULOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visRHGradoEstudios {
+  idGradoEstudios Int      @default(autoincrement())
+  GradoEstudios   String   @db.VarChar(50)
+  ELIMINADO       Boolean
+  DESELIMINADO    String?  @db.VarChar(2)
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visRHHorarios {
+  idHorario       Int      @default(autoincrement())
+  NombreHorario   String   @db.VarChar(100)
+  Descripcion     String   @db.Text
+  ELIMINADO       Boolean
+  DESELIMINADO    String?  @db.VarChar(2)
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMMesesAno {
+  idano     Int
+  idmes     Int    @db.TinyInt
+  NombreMes String @db.VarChar(150)
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visRHPuestos {
+  idPUESTO        Int      @default(autoincrement())
+  NombrePuesto    String   @db.VarChar(50)
+  NombreLargo     String   @db.VarChar(150)
+  Descripcion     String   @db.Text
+  ELIMINADO       Boolean
+  DESELIMINADO    String?  @db.VarChar(2)
+  DESDESISTEMA    String?  @db.VarChar(2)
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visRHTipoContrato {
+  idTipoContrato     Int      @default(autoincrement())
+  idTipoPago         Int
+  NombreTipoContrato String   @db.VarChar(150)
+  ELIMINADO          Boolean
+  DESELIMINADO       String?  @db.VarChar(2)
+  IDUSUARIO          String   @db.VarChar(10)
+  FECHAHORACAMBIO    DateTime @db.DateTime
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visRHTiposCapacitacion {
+  idTipoCapacitacion     Int      @default(autoincrement())
+  NombreTipoCapacitacion String   @db.VarChar(150)
+  Descripcion            String   @db.Text
+  ELIMINADO              Boolean
+  DESELIMINADO           String?  @db.VarChar(2)
+  IDUSUARIO              String   @db.VarChar(10)
+  FECHAHORACAMBIO        DateTime @db.DateTime
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMEstados {
+  idEstado        String   @db.VarChar(3)
+  NombreEstado    String   @db.Char(20)
+  ELIMINADO       Boolean
+  XDEFAULT        Boolean
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+  IdPais          String   @db.VarChar(5)
+  NombrePais      String   @db.VarChar(50)
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visVEHChoferes {
+  idEmpleado     Int
+  ACTIVO         Boolean
+  Nombres        String  @db.VarChar(50)
+  Apellidos      String  @db.VarChar(50)
+  NombreCompleto String  @db.VarChar(101)
+
+  @@ignore
+  @@schema("VEHICULOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visVEHDestinos {
+  idDestino        Int      @default(autoincrement())
+  NombreDestino    String   @db.VarChar(250)
+  Descripcion      String   @db.Text
+  DistanciaKM      Float
+  TiempoMN         Int
+  FECHAHORA_CAMBIO DateTime @db.DateTime
+  IDUSUARIO        String   @db.VarChar(10)
+  XDEFAULT         Boolean
+  IDEQUIPO         String   @db.VarChar(255)
+  ELIMINADO        Boolean
+
+  @@ignore
+  @@schema("VEHICULOS")
+}
+
+view visVEHEstadosSolicitud {
+  idEstadoSolicitud     Int      @unique
+  NombreEstadoSolicitud String   @db.VarChar(50)
+  Descripcion           String   @db.Text
+  Cancelable            Boolean
+  Editable              Boolean
+  FECHAHORACAMBIO       DateTime @db.DateTime
+  IDUSUARIO             String   @db.VarChar(10)
+
+  @@schema("VEHICULOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visVEHEstadosVehiculos {
+  idEstadoVehiculo Int       @default(autoincrement())
+  NombreEstado     String?   @db.VarChar(150)
+  Funcional        Boolean?
+  ELIMINADO        Boolean?
+  FECHAHORACAMBIO  DateTime? @db.DateTime
+  IDUSUARIO        String?   @db.VarChar(10)
+
+  @@ignore
+  @@schema("VEHICULOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visVEHMedidasGasolina {
+  idMedida        Int      @default(autoincrement())
+  Texto           String   @db.VarChar(50)
+  ELIMINADO       Boolean
+  IDUSUARIO       String   @db.VarChar(10)
+  XDEFAULT        Boolean
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@ignore
+  @@schema("VEHICULOS")
+}
+
+view visVEHServicios {
+  idServicio           Int      @unique
+  idTipoServicio       Int
+  NombreServicio       String   @db.VarChar(150)
+  Descripcion          String   @db.Text
+  CostoEstandar        Float    @db.Money
+  VehiculoNoDisponible Boolean
+  XDEFAULT             Boolean
+  ELIMINADO            Boolean
+  IDUSUARIO            String   @db.VarChar(10)
+  FECHAHORACAMBIO      DateTime @db.DateTime
+  DESISTEMA            Boolean
+  NombreTipoServicio   String   @db.VarChar(150)
+
+  @@schema("VEHICULOS")
+}
+
+view visVEHSolicitudApartados {
+  idSolicitud           Int      @unique
+  idVehiculo            Int
+  idEstadoSolicitud     Int
+  NumeroPasajeros       Int
+  idEmpleado            Int
+  idChofer              Int?
+  SolicitarChofer       Boolean
+  Responsable           String   @db.VarChar(10)
+  NombreResponsable     String?  @db.VarChar(120)
+  idDestino             Int
+  Justificacion         String   @db.Text
+  Observaciones         String   @db.Text
+  Fecha                 DateTime @db.DateTime
+  FechaSalida           DateTime @db.DateTime
+  FechaRegreso          DateTime @db.DateTime
+  idUsuarioApartado     String   @db.VarChar(10)
+  IDUSUARIO             String   @db.VarChar(10)
+  FECHAHORACAMBIO       DateTime @db.DateTime
+  NombreVehiculo        String   @db.Char(100)
+  NombreEstadoSolicitud String   @db.VarChar(50)
+  NombreTipoVehiculo    String   @db.VarChar(100)
+  idTipoVehiculo        Int
+  NombresChofer         String?  @db.VarChar(50)
+  ApellidosChofer       String?  @db.VarChar(50)
+  NombresEmpleado       String?  @db.VarChar(50)
+  ApellidosEmpleado     String?  @db.VarChar(50)
+  NombreEmpleado        String?  @db.VarChar(101)
+  NombreChofer          String?  @db.VarChar(101)
+  CostoTotal            Float?
+  NombreDestino         String   @db.VarChar(250)
+  CalificacionApartado  Int?
+
+  @@schema("VEHICULOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visVEHTiposServicios {
+  idTipoServicio     Int      @default(autoincrement())
+  NombreTipoServicio String   @db.VarChar(150)
+  Descripcion        String   @db.Text
+  DEFAULT            Boolean
+  ELIMINADO          Boolean
+  IDUSUARIO          String   @db.VarChar(10)
+  FECHAHORACAMBIO    DateTime @db.DateTime
+  DESISTEMA          Boolean
+
+  @@ignore
+  @@schema("VEHICULOS")
+}
+
+view visVEHVehiculos {
+  idVehiculo       Int      @unique
+  Nombre           String   @db.Char(100)
+  Descripcion      String   @db.VarChar(50)
+  Placas           String   @db.Char(10)
+  Modelo           String   @db.Char(10)
+  Marca            String   @db.Char(10)
+  Kilometraje      Int
+  IdEstadoVehiculo Int
+  NombreEstado     String?  @db.VarChar(150)
+  IDUSUARIO        String   @db.VarChar(10)
+  ELIMINADO        Boolean
+  DesELIMINADO     String   @db.VarChar(2)
+  FECHAHORACAMBIO  DateTime @db.DateTime
+  MaximoPasajeros  Int      @db.TinyInt
+  idTipoVehiculo   Int
+  NecesitaChofer   Boolean
+
+  @@schema("VEHICULOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visRHInstitucionesEgreso {
+  idInstitucion     String   @db.VarChar(50)
+  NombreInstitucion String   @db.VarChar(150)
+  idCiudad          Int
+  Descripcion       String   @db.Text
+  IDUSUARIO         String   @db.VarChar(10)
+  FECHAHORACAMBIO   DateTime @db.DateTime
+  XDEFAULT          Boolean
+  ELIMINADO         Boolean
+  NombreCiudad      String   @db.VarChar(100)
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visVEHCostosDestinos {
+  Costo              Float  @db.Money
+  idCosto            Int
+  NombreCosto        String @db.VarChar(50)
+  idDestino          Int
+  NombreDestino      String @db.VarChar(250)
+  idVehiculo         Int
+  NombreVehiculo     String @db.Char(100)
+  idTipoVehiculo     Int
+  NombreTipoVehiculo String @db.VarChar(100)
+
+  @@ignore
+  @@schema("VEHICULOS")
+}
+
+view visVEHDetalleApartados {
+  idSolicitud Int    @unique
+  IdCosto     Int
+  Costo       Float  @db.Money
+  NombreCosto String @db.VarChar(50)
+
+  @@schema("VEHICULOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMAlmacenes {
+  idAlmacen         Int
+  NombreAlmacen     String   @db.VarChar(50)
+  XDEFAULT          Boolean
+  Descripcion       String   @db.Text
+  idProceso         Int
+  NombreProceso     String   @db.VarChar(50)
+  idTipoAlmacen     Int
+  NombreTipoAlmacen String   @db.VarChar(100)
+  IDUSUARIO         String   @db.VarChar(10)
+  DESISTEMA         Boolean
+  ELIMINADO         Boolean
+  FECHAHORACAMBIO   DateTime @db.DateTime
+  idSucursal        Int
+  NombreSucursal    String   @db.VarChar(50)
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMMunicipios {
+  idMunicipio     String   @db.VarChar(5)
+  idEstado        String   @db.VarChar(3)
+  NombreMunicipio String   @db.VarChar(150)
+  FECHAHORACAMBIO DateTime @db.DateTime
+  IDUSUARIO       String   @db.VarChar(10)
+  XDEFAULT        Boolean
+  NombreEstado    String   @db.Char(20)
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visRHCaracteristicas {
+  idCaracteristica           Int
+  idGrupoCaracteristicas     Int
+  NombreCaracteristica       String   @db.VarChar(150)
+  Descripcion                String   @db.Text
+  IDUSUARIO                  String   @db.VarChar(10)
+  IDEQUIPO                   String   @db.VarChar(255)
+  FECHAHORACAMBIO            DateTime @db.DateTime
+  ELIMINADO                  Boolean
+  NombreGrupoCaracteristicas String   @db.VarChar(250)
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
+}
+
+view visINVHerramientas {
+  idHerramientas  Int       @unique
+  nombre          String    @db.VarChar(50)
+  codigoItson     String    @db.VarChar(50)
+  disponible      Boolean
+  descripcion     String?   @db.VarChar(100)
+  imagen          String?   @db.VarChar(Max)
+  nombreCategoria String    @db.VarChar(100)
+  createAT        DateTime? @db.DateTime
+  updateAT        DateTime? @db.DateTime
+  isDelete        Boolean?
+  idUsuario       Int
+
+  @@schema("INVENTARIOMTTO")
+}
+
+view visINVHistorialStock {
+  idHistorialStock Int      @unique
   idItem           Int?
   idAccion         Int?
   idEmpleado       Int?
@@ -250,53 +2033,33 @@ view visHistorialStock {
   nombreUsuario    String?  @db.VarChar(45)
   motivo           String?  @db.VarChar(Max)
   fecha            DateTime @db.DateTime
+
+  @@schema("INVENTARIOMTTO")
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-view visUsuarios {
-  idUsuario      Int     @id
-  nombreCompleto String  @db.VarChar(60)
-  usuario        String  @db.VarChar(45)
-  password       String  @db.VarChar(100)
-  nombre         String? @db.VarChar(45)
+view visRHPaquetesCapacitacion {
+  idPaqueteCapacitacion  Int
+  idTipoCapacitacion     Int?
+  NombrePaqueteCap       String?   @db.VarChar(50)
+  Descripcion            String?   @db.Text
+  ELIMINADO              Boolean?
+  IDUSUARIO              String    @db.VarChar(10)
+  FECHAHORACAMBIO        DateTime? @db.DateTime
+  IDEQUIPO               String    @db.VarChar(20)
+  XDEFAULT               Boolean
+  NombreTipoCapacitacion String    @db.VarChar(150)
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-view visSalidaEntradaItem {
-  idSalidaEntradaItem Int       @id
-  idItem              Int
-  nombreItem          String?   @db.VarChar(100)
-  stockAnterior       Int?
-  stockActual         Int?
-  idUsuario           Int
-  createAT            DateTime? @db.DateTime
-}
-
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-view visSalidaEntradaHerramientas {
-  idSalidaEntradaHerramientas Int    @id
-  nombre                      String @db.VarChar(100)
-  idEmpleado                  Int?
-}
-
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-view visItems {
-  idItem          Int      @id
-  nombreItem      String   @db.VarChar(100)
-  descripcion     String?  @db.VarChar(100)
-  imagen          String?  @db.VarChar(Max)
-  nombreUnidad    String   @db.VarChar(100)
-  nombreCategoria String   @db.VarChar(100)
-  isDelete        Boolean?
-}
-
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-view visInventario {
-  idInventario    Int       @id
+view visINVInventario {
+  idInventario    Int       @unique
   idItem          Int
   idCategoria     Int
   idUnidad        Int
-  nombreItem      String    @db.VarChar(100)
+  nombre          String    @db.VarChar(100)
   descripcion     String?   @db.VarChar(100)
   imagen          String?   @db.VarChar(Max)
   nombreUnidad    String    @db.VarChar(100)
@@ -305,16 +2068,411 @@ view visInventario {
   stockMin        Int
   stockMax        Int
   fecha           DateTime? @db.DateTime
+
+  @@schema("INVENTARIOMTTO")
+}
+
+view visINVItems {
+  idItem          Int       @unique
+  nombre          String    @db.VarChar(100)
+  descripcion     String?   @db.VarChar(100)
+  imagen          String?   @db.VarChar(Max)
+  idCategoria     Int
+  idUnidad        Int
+  active          Boolean?
+  nombreUnidad    String    @db.VarChar(100)
+  nombreCategoria String    @db.VarChar(100)
+  createAT        DateTime? @db.DateTime
+  updateAT        DateTime? @db.DateTime
+  isDelete        Boolean?
+
+  @@schema("INVENTARIOMTTO")
+}
+
+view visINVSalidaEntradaHerramientas {
+  idSalidaEntradaHerramientas Int       @unique
+  nombre                      String    @db.VarChar(50)
+  idEmpleado                  Int?
+  motivo                      String?   @db.VarChar(Max)
+  isSalida                    Boolean?
+  createAT                    DateTime? @db.DateTime
+  idUsuario                   Int
+
+  @@schema("INVENTARIOMTTO")
+}
+
+view visINVSalidaEntradaItem {
+  idSalidaEntradaItem Int       @unique
+  idItem              Int
+  nombreItem          String?   @db.VarChar(100)
+  stockAnterior       Int?
+  stockActual         Int?
+  idUsuario           Int
+  createAT            DateTime? @db.DateTime
+
+  @@schema("INVENTARIOMTTO")
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-view visSalidaEntradaStock {
-  idSalidaEntradaStock Int       @id
+view visCOMSucursalAlmacenes {
+  idAlmacen         Int
+  idSucursal        Int
+  NombreAlmacen     String @db.VarChar(50)
+  NombreTipoAlmacen String @db.VarChar(50)
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+view visINVSalidaEntradaStock {
+  idSalidaEntradaStock Int       @unique
   idEmpleado           Int?
   cantidad             Int
   motivo               String?   @db.VarChar(Max)
-  isSalida             Boolean?
+  isSalida             Boolean
   createAT             DateTime? @db.DateTime
   idUsuario            Int
   usuario              String?   @db.VarChar(45)
+
+  @@schema("INVENTARIOMTTO")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visRHCarreras {
+  idCarrera          Int
+  NombreCarrera      String   @db.VarChar(255)
+  Descripcion        String?  @db.Text
+  idGrupoCarrera     Int
+  ELIMINADO          Boolean
+  XDEFAULT           Boolean
+  FECHAHORACAMBIO    DateTime @db.DateTime
+  IDUSUARIO          String   @db.VarChar(50)
+  DESISTEMA          Boolean
+  NombreGrupoCarrera String   @db.VarChar(150)
+
+  @@ignore
+  @@schema("RECURSOSHUMANOS")
+}
+
+view visINVUsuarios {
+  idUsuario      Int     @unique
+  nombreCompleto String  @db.VarChar(60)
+  usuario        String  @db.VarChar(45)
+  password       String  @db.VarChar(100)
+  nombre         String? @db.VarChar(45)
+
+  @@schema("INVENTARIOMTTO")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMCiudades {
+  idCiudad        Int
+  NombreCiudad    String   @db.VarChar(100)
+  idZona          Int
+  NombreZona      String   @db.VarChar(50)
+  XDEFAULT        Boolean
+  DesDEFAULT      String   @db.VarChar(2)
+  IDUSUARIO       String   @db.VarChar(10)
+  ELIMINADO       Boolean
+  DesELIMINADO    String   @db.VarChar(2)
+  FECHAHORACAMBIO DateTime @db.DateTime
+  idMunicipio     String   @db.VarChar(5)
+  NombreMunicipio String   @db.VarChar(150)
+  idEstado        String   @db.VarChar(3)
+  NombreEstado    String   @db.Char(20)
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMConstrucciones {
+  IdSucursal         String   @db.VarChar(50)
+  idConstruccion     Int
+  NombreConstruccion String   @db.VarChar(100)
+  Descripcion        String   @db.Text
+  ELIMINADO          Boolean
+  DESEliminado       String?  @db.VarChar(2)
+  IDUSUARIO          String   @db.VarChar(10)
+  FECHAHORACAMBIO    DateTime @db.DateTime
+  NombreSucursal     String   @db.VarChar(50)
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMConstruccionesAreas {
+  IdArea             Int
+  IdConstruccion     Int
+  NombreArea         String   @db.VarChar(100)
+  Descripcion        String   @db.Text
+  ELIMINADO          Boolean
+  IDUSUARIO          String   @db.VarChar(10)
+  FECHAHORACAMBIO    DateTime @db.DateTime
+  NombreConstruccion String   @db.VarChar(100)
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMLocalidades {
+  idLocalidad     Int
+  idCiudad        Int
+  NombreCiudad    String   @db.VarChar(100)
+  NombreLocalidad String   @db.VarChar(150)
+  NombreCorto     String   @db.Char(50)
+  Descripcion     String   @db.Text
+  ELIMINADO       Boolean
+  DESELIMINADO    String   @db.VarChar(2)
+  XDEFAULT        Boolean
+  DESXDEFAULT     String   @db.VarChar(2)
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+  CodigoPostal    String   @db.VarChar(10)
+  Referencia      String   @db.VarChar(150)
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMLugarProcesoAlmacen {
+  idproceso       Int      @default(autoincrement())
+  nombreproceso   String   @db.VarChar(50)
+  posicionproceso Int
+  DESEliminado    String?  @db.VarChar(2)
+  DESSistema      String?  @db.VarChar(2)
+  eliminado       Boolean
+  desistema       Boolean
+  idusuario       String   @db.VarChar(10)
+  fechahoracambio DateTime @db.DateTime
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMMonedas {
+  idMoneda        String   @db.VarChar(10)
+  NombreMoneda    String   @db.VarChar(50)
+  Simbolo         String   @db.VarChar(5)
+  XDEFAULT        Boolean
+  DESXDEFAULT     String?  @db.VarChar(2)
+  ELIMINADO       Boolean
+  DESELIMINADO    String?  @db.VarChar(2)
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+  DESISTEMA       Boolean
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMSucursales {
+  idSucursal      Int
+  idCiudad        Int
+  NombreCiudad    String   @db.VarChar(100)
+  NombreSucursal  String   @db.VarChar(50)
+  Direccion       String   @db.VarChar(150)
+  Telefono1       String   @db.VarChar(50)
+  Telefono2       String   @db.VarChar(50)
+  Fax1            String   @db.VarChar(50)
+  Fax2            String   @db.VarChar(50)
+  Descripcion     String   @db.Text
+  XDEFAULT        Boolean
+  ELIMINADO       Boolean
+  DESCXDEFAULT    String   @db.VarChar(2)
+  DESISTEMA       Boolean
+  DESCDESISTEMA   String   @db.VarChar(2)
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+view visVEHReporteGeneral {
+  idSolicitud       Int      @unique
+  nombreSolicitante String?  @db.VarChar(101)
+  destino           String?  @db.VarChar(50)
+  chofer            String?  @db.VarChar(50)
+  placa             String?  @db.VarChar(50)
+  vehiculo          String?  @db.Char(100)
+  fechaRegistro     DateTime @db.DateTime
+  fechaSalida       DateTime @db.DateTime
+  fechaLlegada      DateTime @db.DateTime
+  estadoSolicitud   String   @db.VarChar(50)
+  estado            String?  @db.VarChar(50)
+
+  @@schema("VEHICULOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view VisCOMTipoAlmacenesParaSucursal {
+  idTipoAlmacenParaSucursal Int       @default(autoincrement())
+  NombreTipoAlmacen         String    @db.VarChar(50)
+  DESDESISTEMA              String?   @db.VarChar(2)
+  DESELIMINADO              String?   @db.VarChar(2)
+  IDUSUARIO                 String?   @db.VarChar(10)
+  FECHAHORACAMBIO           DateTime? @db.DateTime
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+view visVEHSalidaLlegada {
+  idSolicitud             Int      @unique
+  fechaSalida             String?  @db.NVarChar(4000)
+  fechaLlegada            String?  @db.NVarChar(4000)
+  horaSalida              String?  @db.VarChar(5)
+  horaLlegada             String?  @db.VarChar(5)
+  nombreSolicitante       String?  @db.VarChar(50)
+  departamento            String?  @db.VarChar(50)
+  isLocal                 Boolean?
+  destino                 String?  @db.VarChar(50)
+  chofer                  String?  @db.VarChar(50)
+  vehiculo                String?  @db.Char(100)
+  placa                   String?  @db.VarChar(50)
+  licencia                String?  @db.VarChar(50)
+  kilometrajeSalida       String   @db.VarChar(50)
+  kilometrajeLlegada      String   @db.VarChar(50)
+  tanqueSalida            String   @db.VarChar(50)
+  tanqueLlegada           String   @db.VarChar(50)
+  nombreVigilanteSalida   String   @db.VarChar(50)
+  nombreVigilanteLlegada  String   @db.VarChar(50)
+  firmaVigilanteSalida    String   @db.VarChar(Max)
+  firmaSolicitanteSalida  String   @db.VarChar(Max)
+  firmaVigilanteLlegada   String   @db.VarChar(Max)
+  firmaSolicitanteLlegada String   @db.VarChar(Max)
+  observacionesSalida     String?  @db.Text
+  observacionesLlegada    String?  @db.Text
+
+  @@schema("VEHICULOS")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMTiposAlmacenesParaSucursal {
+  idTipoAlmacenParaSucursal Int       @default(autoincrement())
+  NombreTipoAlmacen         String    @db.VarChar(50)
+  DESDESISTEMA              String?   @db.VarChar(2)
+  DESELIMINADO              String?   @db.VarChar(2)
+  IDUSUARIO                 String?   @db.VarChar(10)
+  FECHAHORACAMBIO           DateTime? @db.DateTime
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMTiposDeAlmacenes {
+  idTipoAlmacen     Int      @default(autoincrement())
+  NombreTipoAlmacen String   @db.VarChar(100)
+  ELIMINADO         Boolean
+  DESELIMINADO      String?  @db.VarChar(2)
+  XDEFAULT          Boolean
+  DESXDEFAULT       String?  @db.VarChar(2)
+  DESISTEMA         Boolean
+  DESDESISTEMA      String?  @db.VarChar(2)
+  IDUSUARIO         String   @db.VarChar(10)
+  FECHAHORACAMBIO   DateTime @db.DateTime
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMUnidadesDeMedida {
+  idUnidadMedida   String    @db.VarChar(5)
+  Nombre           String    @db.VarChar(50)
+  Fraccional       Boolean
+  DESFRACCIONAL    String?   @db.VarChar(2)
+  maximofracciones Int       @db.TinyInt
+  Eliminado        Boolean
+  DESELIMINADO     String?   @db.VarChar(2)
+  XDefault         Boolean
+  DESXDEFAULT      String?   @db.VarChar(2)
+  IDUSUARIO        String?   @db.VarChar(10)
+  FECHAHORACAMBIO  DateTime? @db.DateTime
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visCOMZonas {
+  idZona          Int      @default(autoincrement())
+  NombreZona      String   @db.VarChar(50)
+  ELIMINADO       Boolean
+  DESELIMINADO    String?  @db.VarChar(2)
+  XDEFAULT        Boolean
+  DESXDEFAULT     String?  @db.VarChar(2)
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view VisSucursales {
+  idsucursal      Int
+  idCiudad        Int
+  NombreCiudad    String   @db.VarChar(100)
+  NombreSucursal  String   @db.VarChar(50)
+  Direccion       String   @db.VarChar(150)
+  Telefono1       String   @db.VarChar(50)
+  Telefono2       String   @db.VarChar(50)
+  Fax1            String   @db.VarChar(50)
+  Fax2            String   @db.VarChar(50)
+  Descripcion     String   @db.Text
+  XDEFAULT        Boolean
+  DESCXDEFAULT    String   @db.VarChar(2)
+  DESISTEMA       Boolean
+  DESCDESISTEMA   String   @db.VarChar(2)
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view VisVENSucursales {
+  idsucursal      Int
+  idCiudad        Int
+  NombreCiudad    String   @db.VarChar(100)
+  NombreSucursal  String   @db.VarChar(50)
+  Direccion       String   @db.VarChar(150)
+  Telefono1       String   @db.VarChar(50)
+  Telefono2       String   @db.VarChar(50)
+  Fax1            String   @db.VarChar(50)
+  Fax2            String   @db.VarChar(50)
+  Descripcion     String   @db.Text
+  XDEFAULT        Boolean
+  DESCXDEFAULT    String   @db.VarChar(2)
+  DESISTEMA       Boolean
+  DESCDESISTEMA   String   @db.VarChar(2)
+  IDUSUARIO       String   @db.VarChar(10)
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@ignore
+  @@schema("COMUNES")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view visZonas {
+  idZona          Int      @default(autoincrement())
+  NombreZona      String   @db.VarChar(50)
+  XDEFAULT        Boolean
+  DesXDEFAULT     String   @db.VarChar(2)
+  IDUSUARIO       String   @db.VarChar(10)
+  ELIMINADO       Boolean
+  DesELIMINADO    String   @db.VarChar(2)
+  FECHAHORACAMBIO DateTime @db.DateTime
+
+  @@ignore
+  @@schema("COMUNES")
 }

@@ -1,0 +1,4 @@
+SELECT
+  VEHICULOS.VEHDestinos.*
+FROM
+  VEHICULOS.VEHDestinos;

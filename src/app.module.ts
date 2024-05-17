@@ -3,48 +3,20 @@ import { UsersModule } from './users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { CategoriaModule } from './categoria/categoria.module';
-import { UnidadesModule } from './unidades/unidades.module';
-import { HerramientasModule } from './herramientas/herramientas.module';
-import { InventarioModule } from './inventario/inventario.module';
-import { ItemModule } from './item/item.module';
-import { SalidaEntradaHerramientasModule } from './salida-entrada-herramientas/salida-entrada-herramientas.module';
-//import { APP_FILTER } from '@nestjs/core';
-//import { PrismaClientExceptionFilter } from './prisma/prisma-client-exception.filter';
-import { HistorialStockModule } from './historial-stock/historial-stock.module';
-import { SeedModule } from './seed/seed.module';
-import { RoleModule } from './roles/roles.module';
-import { SalidaEntradaItemModule } from './salida-entrada-item/salida-entrada-item.module';
-import { SalidaEntradaStockModule } from './salida-entrada-stock/salida-entrada-stock.module';
-import { PermisosModule } from './permisos/permisos.module';
+import { InvetariomttoModule } from './INVENTARIOMTTO/invetariomtto.module';
+import { VehiculosModule } from './vehiculos/vehiculos.module';
 
 @Module({
-  // providers: [
-  //   {
-  //     provide: APP_FILTER,
-  //     useClass: PrismaClientExceptionFilter,
-  //   },
-  // ],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
     }),
-    UsersModule,
     PrismaModule,
+    UsersModule,
     AuthModule,
-    CategoriaModule,
-    UnidadesModule,
-    HerramientasModule,
-    ItemModule,
-    InventarioModule,
-    SalidaEntradaHerramientasModule,
-    HistorialStockModule,
-    SeedModule,
-    RoleModule,
-    SalidaEntradaItemModule,
-    SalidaEntradaStockModule,
-    PermisosModule,
+    InvetariomttoModule,
+    VehiculosModule
   ],
 })
 export class AppModule {}

@@ -4,7 +4,8 @@ import { AuthController } from './controllers/auth.controller';
 import { UsersService } from 'src/users/services/users.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UsersModule } from 'src/users/users.module';
-import { PermisosModule } from 'src/permisos/permisos.module';
+import { PermisosModule } from 'src/INVENTARIOMTTO/permisos/permisos.module';
+
 
 @Module({
   providers: [AuthService, UsersService],

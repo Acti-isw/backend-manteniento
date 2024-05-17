@@ -1,0 +1,9 @@
+SELECT
+  A.idMedida,
+  A.Texto,
+  A.ELIMINADO,
+  A.IDUSUARIO,
+  A.XDEFAULT,
+  A.FECHAHORACAMBIO
+FROM
+  VEHICULOS.VEHMedidasGasolina AS A;

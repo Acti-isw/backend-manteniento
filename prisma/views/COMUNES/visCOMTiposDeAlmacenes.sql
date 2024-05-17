@@ -1,0 +1,33 @@
+SELECT
+  A.idTipoAlmacen,
+  A.NombreTipoAlmacen,
+  A.ELIMINADO,
+  (
+    CASE
+      A.ELIMINADO
+      WHEN 0 THEN 'No'
+      WHEN 1 THEN 'Si'
+    END
+  ) AS DESELIMINADO,
+  A.XDEFAULT,
+  (
+    CASE
+      A.XDEFAULT
+      WHEN 0 THEN 'No'
+      WHEN 1 THEN 'Si'
+    END
+  ) AS DESXDEFAULT,
+  A.DESISTEMA,
+  (
+    CASE
+      A.DESISTEMA
+      WHEN 0 THEN 'No'
+      WHEN 1 THEN 'Si'
+    END
+  ) AS DESDESISTEMA,
+  A.IDUSUARIO,
+  A.FECHAHORACAMBIO
+FROM
+  COMUNES.COMTiposDeAlmacenes AS A
+WHERE
+  A.ELIMINADO = 0;

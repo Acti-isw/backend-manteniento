@@ -1,7 +1,7 @@
-import { Usuarios } from "@prisma/client";
-import { Exclude } from "class-transformer";
+import { INVUsuarios } from "@prisma/client";
+//import { Exclude } from "class-transformer";
 
-export class UserResponseDTO implements Usuarios{
+export class UserResponseDTO implements INVUsuarios{
     idUsuario: number;
     nombreCompleto: string;
     usuario: string;
@@ -11,6 +11,6 @@ export class UserResponseDTO implements Usuarios{
     updateAT: Date;
     isDelete: boolean;
 
-    @Exclude()
+    //@Exclude()
     password: string;
 }

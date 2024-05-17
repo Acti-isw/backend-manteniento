@@ -1,6 +1,14 @@
-import { IsNotEmpty, IsString, IsNumber, IsOptional } from 'class-validator';
+import { INVUsuarios } from '@prisma/client';
+import {
+  IsNotEmpty,
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsBoolean,
+  IsDate,
+} from 'class-validator';
 
-export class UserDTO {
+export class UserDTO implements INVUsuarios {
   @IsOptional()
   @IsNumber()
   idUsuario: number;
@@ -24,4 +32,16 @@ export class UserDTO {
   @IsOptional()
   @IsNumber()
   idRole: number;
+
+  @IsOptional()
+  @IsDate()
+  createAT: Date;
+
+  @IsOptional()
+  @IsDate()
+  updateAT: Date;
+
+  @IsOptional()
+  @IsBoolean()
+  isDelete: boolean;
 }

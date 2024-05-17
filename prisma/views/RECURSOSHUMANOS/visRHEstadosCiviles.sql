@@ -1,0 +1,4 @@
+SELECT
+  RECURSOSHUMANOS.RHEstadosCiviles.*
+FROM
+  RECURSOSHUMANOS.RHEstadosCiviles;
