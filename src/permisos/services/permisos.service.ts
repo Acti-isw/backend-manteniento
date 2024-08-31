@@ -51,6 +51,15 @@ export class PermisosService {
   }
 
   async deletePermission(idPermisos: number): Promise<Permisos> {
+    const removedPermisoByUsers = await this.prisma.rolePermisos.deleteMany({
+      where: {
+        idPermisos: idPermisos,
+      },
+    });
+    console.log(
+      `se elimino el permiso con id :${idPermisos} de  ${removedPermisoByUsers.count} roles`,
+    );
+
     return await this.prisma.permisos.update({
       where: {
         idPermisos,

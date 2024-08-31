@@ -42,12 +42,23 @@ export class AuthService {
       username: getUser.usuario,
     };
 
+    // se eliminan los permisos asignados eliminados
+    const RolepermisosRemovedDelete = getUser.Role.RolePermisos.filter(
+      (permiso) => !permiso.isDelete,
+    );
+
+    // se filtra las propiedades de la tabla que conecta el role con el permiso
+    // y solo mandamos el arreglo de permisos
+    const permisosFiltered = RolepermisosRemovedDelete.map(
+      (rolePermiso) => rolePermiso.Permisos,
+    );
+
     return {
       idUsuario: user.idUsuario,
       nombreCompleto: user.nombreCompleto,
       usuario: user.usuario,
       role: getUser.Role.nombre,
-      permisos: getUser.Role.RolePermisos,
+      permisos: permisosFiltered,
       avatar: user.avatar,
       accesToken: await this.signJWT({
         payload,
