@@ -113,6 +113,7 @@ model SalidaEntradaHerramientas {
   isSalida                    Boolean?
   createAT                    DateTime?    @default(now(), map: "DF__SalidaEnt__creat__7B5B524B") @db.DateTime
   idUsuario                   Int
+  Empleados                   Empleados?   @relation(fields: [idEmpleado], references: [idEmpleado], onDelete: NoAction, onUpdate: NoAction, map: "FK_SalidaEntradaHerramientas_Empleados")
   Herramientas                Herramientas @relation(fields: [idHerramientas], references: [idHerramientas], onUpdate: NoAction, map: "FK_SalidaEntradaHerramientas_Herramientas")
   Usuarios                    Usuarios     @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK__SalidaEnt__idUsu__534D60F1")
 
@@ -232,6 +233,36 @@ model RolePermisos {
   Usuarios      Usuarios? @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "FK_RolePermisos_Usuarios")
 }
 
+model Departamentos {
+  idDepartamento     Int         @id(map: "PK__Departam__C225F98DA1FAD480") @default(autoincrement())
+  NombreDepartamento String      @db.VarChar(50)
+  Descripcion        String?     @db.VarChar(200)
+  Empleados          Empleados[]
+}
+
+model Empleados {
+  idEmpleado                Int                         @id(map: "PK__Empleado__5295297C4F670064") @default(autoincrement())
+  Nombre                    String                      @db.VarChar(50)
+  ApellidoPaterno           String                      @db.VarChar(50)
+  ApellidoMaterno           String                      @db.VarChar(50)
+  FechaNacimiento           DateTime?                   @db.Date
+  idItson                   Int?
+  CURP                      String?                     @unique(map: "UQ__Empleado__F46C4CBFBFC93A72") @db.VarChar(18)
+  RFC                       String?                     @unique(map: "UQ__Empleado__CAFFA85EA9C20712") @db.VarChar(13)
+  NSS                       String?                     @unique(map: "UQ__Empleado__C7DE920B21A58B7E") @db.VarChar(11)
+  Direccion                 String?                     @db.VarChar(200)
+  Telefono                  String?                     @db.VarChar(20)
+  Email                     String?                     @unique(map: "UQ__Empleado__A9D10534155895A5") @db.VarChar(100)
+  FechaContratacion         DateTime?                   @db.Date
+  Puesto                    String?                     @db.VarChar(50)
+  idDepartamento            Int?
+  updateAT                  DateTime?                   @db.DateTime
+  createAT                  DateTime                    @default(now(), map: "DF_Empleados_createAt") @db.DateTime
+  isDelete                  Boolean                     @default(false, map: "DF_Empleados_isDelete")
+  Departamentos             Departamentos?              @relation(fields: [idDepartamento], references: [idDepartamento], onDelete: NoAction, onUpdate: NoAction, map: "FK_Empleados_Departamentos")
+  SalidaEntradaHerramientas SalidaEntradaHerramientas[]
+}
+
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view visHerramientas {
   idHerramientas  Int       @id
@@ -285,7 +316,7 @@ view visSalidaEntradaItem {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view visSalidaEntradaHerramientas {
-  idSalidaEntradaHerramientas Int      @id
+  idSalidaEntradaHerramientas Int     @id
   createAT                    DateTime? @db.DateTime
   motivo                      String?   @db.VarChar(Max)
   idHerramientas              Int
@@ -298,6 +329,7 @@ view visSalidaEntradaHerramientas {
   nombreCategoria             String?   @db.VarChar(100)
   idCategoria                 Int?
   idEmpleado                  Int?
+  nombreEmpleado              String?   @db.VarChar(152)
   isSalida                    Boolean?
   idUsuario                   Int?
   usuario                     String?   @db.VarChar(45)

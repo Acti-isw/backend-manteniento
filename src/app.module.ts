@@ -17,6 +17,7 @@ import { RoleModule } from './roles/roles.module';
 import { SalidaEntradaItemModule } from './salida-entrada-item/salida-entrada-item.module';
 import { SalidaEntradaStockModule } from './salida-entrada-stock/salida-entrada-stock.module';
 import { PermisosModule } from './permisos/permisos.module';
+import { EmpleadosModule } from './empleados/empleados.module';
 
 @Module({
   // providers: [
@@ -45,6 +46,7 @@ import { PermisosModule } from './permisos/permisos.module';
     SalidaEntradaItemModule,
     SalidaEntradaStockModule,
     PermisosModule,
+    EmpleadosModule,
   ],
 })
 export class AppModule {}
