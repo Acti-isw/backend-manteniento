@@ -18,6 +18,7 @@ import { SalidaEntradaItemModule } from './salida-entrada-item/salida-entrada-it
 import { SalidaEntradaStockModule } from './salida-entrada-stock/salida-entrada-stock.module';
 import { PermisosModule } from './permisos/permisos.module';
 import { EmpleadosModule } from './empleados/empleados.module';
+import { DepartamentosModule } from './departamentos/departamentos.module';
 
 @Module({
   // providers: [
@@ -47,6 +48,7 @@ import { EmpleadosModule } from './empleados/empleados.module';
     SalidaEntradaStockModule,
     PermisosModule,
     EmpleadosModule,
+    DepartamentosModule,
   ],
 })
 export class AppModule {}
