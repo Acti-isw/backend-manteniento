@@ -144,6 +144,7 @@ model Usuarios {
   isDelete                  Boolean?                    @default(false, map: "DF__Usuarios__isDele__5070F446")
   AccionesStock             AccionesStock[]
   Categoria                 Categoria[]
+  Empleados                 Empleados[]
   Herramientas              Herramientas[]
   HistorialStock            HistorialStock[]
   Inventario                Inventario[]
@@ -237,6 +238,10 @@ model Departamentos {
   idDepartamento     Int         @id(map: "PK__Departam__C225F98DA1FAD480") @default(autoincrement())
   NombreDepartamento String      @db.VarChar(50)
   Descripcion        String?     @db.VarChar(200)
+  idUsuario          Int
+  updateAT           DateTime?   @db.DateTime
+  createAT           DateTime?   @default(now(), map: "DF_Departamentos_createAT") @db.DateTime
+  isDelete           Boolean     @default(false, map: "DF_Departamentos_isDelete")
   Empleados          Empleados[]
 }
 
@@ -245,21 +250,16 @@ model Empleados {
   Nombre                    String                      @db.VarChar(50)
   ApellidoPaterno           String                      @db.VarChar(50)
   ApellidoMaterno           String                      @db.VarChar(50)
-  FechaNacimiento           DateTime?                   @db.Date
   idItson                   Int?
-  CURP                      String?                     @unique(map: "UQ__Empleado__F46C4CBFBFC93A72") @db.VarChar(18)
-  RFC                       String?                     @unique(map: "UQ__Empleado__CAFFA85EA9C20712") @db.VarChar(13)
-  NSS                       String?                     @unique(map: "UQ__Empleado__C7DE920B21A58B7E") @db.VarChar(11)
-  Direccion                 String?                     @db.VarChar(200)
   Telefono                  String?                     @db.VarChar(20)
-  Email                     String?                     @unique(map: "UQ__Empleado__A9D10534155895A5") @db.VarChar(100)
-  FechaContratacion         DateTime?                   @db.Date
-  Puesto                    String?                     @db.VarChar(50)
+  Email                     String?                     @db.VarChar(100)
   idDepartamento            Int?
   updateAT                  DateTime?                   @db.DateTime
   createAT                  DateTime                    @default(now(), map: "DF_Empleados_createAt") @db.DateTime
   isDelete                  Boolean                     @default(false, map: "DF_Empleados_isDelete")
+  idUsuario                 Int
   Departamentos             Departamentos?              @relation(fields: [idDepartamento], references: [idDepartamento], onDelete: NoAction, onUpdate: NoAction, map: "FK_Empleados_Departamentos")
+  Usuarios                  Usuarios                    @relation(fields: [idUsuario], references: [idUsuario], onUpdate: NoAction, map: "FK_Empleados_Usuarios")
   SalidaEntradaHerramientas SalidaEntradaHerramientas[]
 }
 
@@ -316,7 +316,7 @@ view visSalidaEntradaItem {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view visSalidaEntradaHerramientas {
-  idSalidaEntradaHerramientas Int     @id
+  idSalidaEntradaHerramientas Int      @id
   createAT                    DateTime? @db.DateTime
   motivo                      String?   @db.VarChar(Max)
   idHerramientas              Int
