@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Empleados, Unidades } from '@prisma/client';
+import { Empleados } from '@prisma/client';
 import { isEmpty } from 'lodash';
 import { EmpleadosDTO, EmpleadosUpdateDTO } from '../dto/empleados.dto';
 
@@ -26,22 +26,27 @@ export class EmpleadosService {
   }
 
   async findEmployee(): Promise<Empleados[]> {
-    const employees = await this.prisma.empleados.findMany();
+    const employees = await this.prisma.empleados.findMany({
+      include: {
+        Departamentos: true,
+      },
+      where: { isDelete: false },
+    });
     if (isEmpty(employees)) {
       throw new NotFoundException('No se encontraron Empleados');
     }
     return employees;
   }
 
-  async findEmployeeById(id: number): Promise<Unidades> {
-    const unidad = await this.prisma.unidades.findFirst({
-      where: { idUnidad: id },
+  async findEmployeeById(id: number): Promise<Empleados> {
+    const empleado = await this.prisma.empleados.findFirst({
+      where: { idEmpleado: id, isDelete: false },
     });
 
-    if (!unidad) {
+    if (!empleado) {
       throw new NotFoundException(`No se encontro el empleado con id:${id}`);
     }
-    return unidad;
+    return empleado;
   }
 
   async deleteEmployee(idEmpleado: number): Promise<Empleados> {

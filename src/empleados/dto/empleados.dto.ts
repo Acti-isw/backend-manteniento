@@ -26,28 +26,8 @@ export class EmpleadosDTO implements Empleados {
   ApellidoMaterno: string;
 
   @IsOptional()
-  @IsDate()
-  FechaNacimiento: Date;
-
-  @IsOptional()
   @IsNumber()
   idItson: number;
-
-  @IsOptional()
-  @IsString()
-  CURP: string;
-
-  @IsOptional()
-  @IsString()
-  RFC: string;
-
-  @IsOptional()
-  @IsString()
-  NSS: string;
-
-  @IsOptional()
-  @IsString()
-  Direccion: string;
 
   @IsOptional()
   @IsString()
@@ -56,14 +36,6 @@ export class EmpleadosDTO implements Empleados {
   @IsNotEmpty()
   @IsString()
   Email: string;
-
-  @IsOptional()
-  @IsDate()
-  FechaContratacion: Date;
-
-  @IsOptional()
-  @IsString()
-  Puesto: string;
 
   @IsOptional()
   @IsNumber()
@@ -84,6 +56,29 @@ export class EmpleadosDTO implements Empleados {
   @IsOptional()
   @IsNumber()
   idUsuario: number;
+
+  // @IsOptional()
+  // @IsString()
+  // CURP: string;
+
+  // @IsOptional()
+  // @IsString()
+  // RFC: string;
+
+  // @IsOptional()
+  // @IsString()
+  // NSS: string;
+
+  // @IsOptional()
+  // @IsString()
+  // Direccion: string;
+  // @IsOptional()
+  // @IsString()
+  // FechaContratacion: Date;
+
+  // @IsOptional()
+  // @IsString()
+  // Puesto: string;
 }
 
 export class EmpleadosUpdateDTO implements Empleados {
@@ -104,28 +99,8 @@ export class EmpleadosUpdateDTO implements Empleados {
   ApellidoMaterno: string;
 
   @IsOptional()
-  @IsDate()
-  FechaNacimiento: Date;
-
-  @IsOptional()
   @IsNumber()
   idItson: number;
-
-  @IsOptional()
-  @IsString()
-  CURP: string;
-
-  @IsOptional()
-  @IsString()
-  RFC: string;
-
-  @IsOptional()
-  @IsString()
-  NSS: string;
-
-  @IsOptional()
-  @IsString()
-  Direccion: string;
 
   @IsOptional()
   @IsString()
@@ -134,14 +109,6 @@ export class EmpleadosUpdateDTO implements Empleados {
   @IsOptional()
   @IsString()
   Email: string;
-
-  @IsOptional()
-  @IsDate()
-  FechaContratacion: Date;
-
-  @IsOptional()
-  @IsString()
-  Puesto: string;
 
   @IsOptional()
   @IsNumber()
@@ -162,4 +129,27 @@ export class EmpleadosUpdateDTO implements Empleados {
   @IsOptional()
   @IsNumber()
   idUsuario: number;
+
+  // @IsOptional()
+  // @IsString()
+  // CURP: string;
+
+  // @IsOptional()
+  // @IsString()
+  // RFC: string;
+
+  // @IsOptional()
+  // @IsString()
+  // NSS: string;
+
+  // @IsOptional()
+  // @IsString()
+  // Direccion: string;
+  // @IsOptional()
+  // @IsString()
+  // FechaContratacion: Date;
+
+  // @IsOptional()
+  // @IsString()
+  // Puesto: string;
 }

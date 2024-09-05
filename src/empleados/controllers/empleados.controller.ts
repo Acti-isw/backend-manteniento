@@ -18,35 +18,37 @@ import { EmpleadosDTO, EmpleadosUpdateDTO } from '../dto/empleados.dto';
 @Controller('empleados')
 @ApiTags('empleados')
 export class EmpleadosController {
-  constructor(private readonly unidadesService: EmpleadosService) {}
+  constructor(private readonly empleadosService: EmpleadosService) {}
 
   @Post('create')
-  async createEmployee(@Body() unidad: EmpleadosDTO) {
-    return this.unidadesService.createEmployee(unidad);
+  async createEmployee(@Body() empleado: EmpleadosDTO) {
+    console.log(empleado);
+
+    return this.empleadosService.createEmployee(empleado);
   }
 
   @Put('update')
   async updateEmployee(@Body() categoria: EmpleadosUpdateDTO) {
-    return this.unidadesService.updateEmployee(categoria);
+    return this.empleadosService.updateEmployee(categoria);
   }
 
   @Get('all')
   async findEmployees() {
-    return this.unidadesService.findEmployee();
+    return this.empleadosService.findEmployee();
   }
 
   @Get('count')
   async countEmployees() {
-    return this.unidadesService.countEmpleados();
+    return this.empleadosService.countEmpleados();
   }
 
   @Get(':id')
   async findEmployeeById(@Param('id') id: number) {
-    return this.unidadesService.findEmployeeById(id);
+    return this.empleadosService.findEmployeeById(id);
   }
 
   @Delete(':id')
   async deleteEmployeeById(@Param('id') id: number) {
-    return this.unidadesService.deleteEmployee(id);
+    return this.empleadosService.deleteEmployee(id);
   }
 }
