@@ -21,27 +21,27 @@ export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
   @Post('create')
-  async createCategory(@Body() unidad: ItemDTO) {
-    return this.itemService.createItem(unidad);
+  async createItem(@Body() Item: ItemDTO) {
+    return this.itemService.createItem(Item);
   }
 
   @Put('update')
-  async updateCategory(@Body() categoria: ItemUpdateDTO) {
+  async updateItem(@Body() categoria: ItemUpdateDTO) {
     return this.itemService.updateItem(categoria);
   }
 
   @Get('all')
-  async findCategories() {
+  async findItems() {
     return this.itemService.findItems();
   }
 
   @Get('count')
-  async countCategories() {
-    return this.itemService.countCategories();
+  async countItems() {
+    return this.itemService.countItems();
   }
 
   @Get(':id')
-  async findCategoryById(@Param('id') id: number) {
+  async findItemById(@Param('id') id: number) {
     return this.itemService.findItemById(id);
   }
 
