@@ -17,7 +17,7 @@ SELECT
   seh.idUsuario,
   usu.usuario
 FROM
-  [dbo].[Herramientas] AS her
+  [dbo].[SalidaEntradaHerramientas] AS seh
   LEFT JOIN (
     SELECT
       idHerramientas,
@@ -26,11 +26,11 @@ FROM
       [dbo].[SalidaEntradaHerramientas]
     GROUP BY
       idHerramientas
-  ) AS max_seh ON her.idHerramientas = max_seh.idHerramientas
-  LEFT JOIN [dbo].[SalidaEntradaHerramientas] AS seh ON seh.idHerramientas = max_seh.idHerramientas
+  ) AS max_seh ON seh.idHerramientas = max_seh.idHerramientas
   AND seh.createAT = max_seh.max_createAT
-  LEFT JOIN [dbo].Categoria AS cat ON cat.idCategoria = her.idCategoria
-  LEFT JOIN [dbo].Usuarios AS usu ON usu.idUsuario = seh.idUsuario
-  LEFT JOIN [dbo].Empleados AS emp ON emp.idEmpleado = seh.idEmpleado
+  LEFT JOIN [dbo].[Herramientas] AS her ON her.idHerramientas = seh.idHerramientas
+  LEFT JOIN [dbo].[Categoria] AS cat ON cat.idCategoria = her.idCategoria
+  LEFT JOIN [dbo].[Usuarios] AS usu ON usu.idUsuario = seh.idUsuario
+  LEFT JOIN [dbo].[Empleados] AS emp ON emp.idEmpleado = seh.idEmpleado
 WHERE
   her.isDelete = 0;
