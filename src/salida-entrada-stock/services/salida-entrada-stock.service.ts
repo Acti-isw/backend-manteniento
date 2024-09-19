@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { SalidaEntStockDTO } from '../dto/dto/salidaEntStock.dto';
 import { SalidaEntradaItemService } from 'src/salida-entrada-item/services/salida-entrada-item.service';
 import { SalidaEntStockUpdateDTO } from '../dto/dto/salidaEntStock.dto';
-import { SalidaEntradaItem } from '@prisma/client';
+import { SalidaEntradaItem, SalidaEntradaStock } from '@prisma/client';
 
 @Injectable()
 export class SalidaEntradaStockService {
@@ -12,30 +12,9 @@ export class SalidaEntradaStockService {
     private readonly salidaEntradaItemService: SalidaEntradaItemService,
   ) {}
 
-  async findManySalEntStock(): Promise<SalidaEntStockDTO[]> {
+  async findManySalEntStock(): Promise<SalidaEntradaStock[]> {
     const salidaEntradaStock = await this.prisma.salidaEntradaStock.findMany({
       include: {
-        SalidaEntradaItem: {
-          include: {
-            Item: true,
-          },
-        },
-        Usuarios: true,
-      },
-      orderBy: {
-        createAT: 'desc',
-      },
-    });
-    return salidaEntradaStock;
-  }
-  async findEntradasStock(): Promise<SalidaEntStockDTO[]> {
-    const salidaEntradaStock = await this.prisma.salidaEntradaStock.findMany({
-      include: {
-        SalidaEntradaItem: {
-          include: {
-            Item: true,
-          },
-        },
         Usuarios: {
           select: {
             nombreCompleto: true,
@@ -43,8 +22,24 @@ export class SalidaEntradaStockService {
           },
         },
       },
+      orderBy: {
+        createAT: 'desc',
+      },
+    });
+    return salidaEntradaStock;
+  }
+  async findEntradasStock(): Promise<SalidaEntradaStock[]> {
+    const salidaEntradaStock = await this.prisma.salidaEntradaStock.findMany({
       where: {
         isSalida: false,
+      },
+      include: {
+        Usuarios: {
+          select: {
+            nombreCompleto: true,
+            usuario: true,
+          },
+        },
       },
       orderBy: {
         createAT: 'desc',
@@ -52,18 +47,15 @@ export class SalidaEntradaStockService {
     });
     return salidaEntradaStock;
   }
-  async findSalidasStock(): Promise<SalidaEntStockDTO[]> {
+  async findSalidasStock(): Promise<SalidaEntradaStock[]> {
     const salidaEntradaStock = await this.prisma.salidaEntradaStock.findMany({
       include: {
-        SalidaEntradaItem: {
-          include: {
-            Item: true,
+        Usuarios: {
+          select: {
+            nombreCompleto: true,
+            usuario: true,
           },
         },
-        Usuarios: true,
-      },
-      where: {
-        isSalida: true,
       },
       orderBy: {
         createAT: 'desc',
@@ -137,10 +129,12 @@ export class SalidaEntradaStockService {
   }
 
   async findSalEntStockById(id: number): Promise<SalidaEntStockDTO> {
-    const salEntrada = await this.prisma.salidaEntradaStock.findFirst({
+    const salEntrada = await this.prisma.salidaEntradaStock.findUnique({
       where: { idSalidaEntradaStock: id },
       include: {
-        SalidaEntradaItem: true,
+        SalidaEntradaItem: {
+          include: { Item: true },
+        },
       },
     });
 
