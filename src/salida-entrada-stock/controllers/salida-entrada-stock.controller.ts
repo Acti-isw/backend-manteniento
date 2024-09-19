@@ -32,6 +32,7 @@ export class SalidaEntradaStockController {
   async updateSalEntHer(@Body() registro: SalidaEntStockUpdateDTO) {
     return this.salidaEntStockServices.UpdateSalEntStock(registro);
   }
+
   @Get('all')
   async findSalEntInventario() {
     return this.salidaEntStockServices.findManySalEntStock();
@@ -45,6 +46,10 @@ export class SalidaEntradaStockController {
     return this.salidaEntStockServices.findSalidasStock();
   }
   @Get(':id')
+  async findSalidaEntradaById(@Param('id') id: number) {
+    return this.salidaEntStockServices.findSalEntStockById(id);
+  }
+  @Get('herramientas/:id')
   async findSalEntHerById(@Param('id') id: number) {
     return this.salidaEntStockServices.findSalEntStockById(id);
   }
