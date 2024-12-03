@@ -72,4 +72,69 @@ describe('InventarioService', () => {
       );
     });
   });
+
+  describe('updateInventory', () => {
+    it('should update an inventory', async () => {
+      const inventarioDTO = {
+        idInventario: 1,
+        idItem: 2,
+        stockActual: 50,
+        stockMin: 10,
+        stockMax: 100,
+        isDelete: false,
+        idUsuario: 3,
+        createAT: new Date(),
+        updateAT: new Date(),
+      };
+
+      (prisma.inventario.update as jest.Mock).mockResolvedValue({
+        ...inventarioDTO,
+        updateAT: new Date(),
+      });
+
+      const updatedInventory = await service.updateInventory(
+        inventarioDTO as InventarioDTO,
+      );
+
+      expect(updatedInventory).toEqual({
+        ...inventarioDTO,
+        updateAT: expect.any(Date),
+      });
+      expect(prisma.inventario.update).toHaveBeenCalledWith({
+        where: { idInventario: inventarioDTO.idInventario },
+        data: expect.objectContaining({
+          idItem: inventarioDTO.idItem,
+          stockActual: inventarioDTO.stockActual,
+          stockMin: inventarioDTO.stockMin,
+          stockMax: inventarioDTO.stockMax,
+          isDelete: inventarioDTO.isDelete,
+          idUsuario: inventarioDTO.idUsuario,
+          updateAT: expect.any(Date),
+        }),
+      });
+    });
+  });
+
+  describe('deleteInventory', () => {
+    it('should mark an inventory as deleted', async () => {
+      const mockInventory = {
+        idInventario: 1,
+        isDelete: true,
+        updateAT: new Date(),
+      };
+
+      (prisma.inventario.update as jest.Mock).mockResolvedValue(mockInventory);
+
+      const result = await service.deleteInventory(1);
+
+      expect(result).toEqual(mockInventory);
+      expect(prisma.inventario.update).toHaveBeenCalledWith({
+        where: { idInventario: 1 },
+        data: {
+          isDelete: true,
+          updateAT: expect.any(Date),
+        },
+      });
+    });
+  });
 });
